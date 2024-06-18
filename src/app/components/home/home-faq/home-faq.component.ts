@@ -9,24 +9,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home-faq.component.css'
 })
 export class HomeFaqComponent {
-  testimonials = [
-    {
-      quote: "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
-      name: "Sabo Masties",
-      title: "Founder @ Rolex",
-      image: "logo.jpg"
-    },
-    {
-      quote: "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
-      name: "Musharof Chowdhury",
-      title: "Founder @ Arya UI",
-      image: "logo.jpg"
-    },
-    {
-      quote: "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
-      name: "William Smith",
-      title: "Founder @ Trorex",
-      image: "logo.jpg"
-    }
+  activeIndex: number | null = null;
+
+  faqs = [
+    { question: 'Can I use TailGrids Pro for my clients projects?', answer: 'Yes, you can use TailGrids Pro for your clients projects.' },
+    { question: 'Which license type is suitable for me?', answer: 'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn\'t anything.' },
+    { question: 'Is Windy UI Well-documented?', answer: 'Yes, Windy UI is well-documented.' },
+    { question: 'Do you provide support?', answer: 'Yes, we provide support.' }
   ];
+
+  toggleAnswer(index: number): void {
+    this.activeIndex = this.activeIndex === index ? null : index;
+  }
 }
