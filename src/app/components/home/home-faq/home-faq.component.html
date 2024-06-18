@@ -1,0 +1,23 @@
+<div class="testimonials">
+  <h2>Testimonials</h2>
+  <h3>What our Client Say</h3>
+  <p>There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form.</p>
+
+  <div class="testimonials-container">
+    <div class="testimonial" *ngFor="let testimonial of testimonials">
+      <div class="stars">★★★★★</div>
+      <p>"{{testimonial.quote}}"</p>
+      <div class="author">
+        <div>
+          <h4>{{testimonial.name}}</h4>
+          <p>{{testimonial.title}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation">
+    <button (click)="previous()">←</button>
+    <button (click)="next()">→</button>
+  </div>
+</div>
