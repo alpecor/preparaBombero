@@ -67,3 +67,12 @@
   color: gray;
 }
 
+
+/*---------------------- RESPOSIVE PARA TABLET --------------------------------*/
+@media (min-width: 768px) and (max-width: 1024px) {
+  .testimonial-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; /* Espacio entre las tarjetas */
+  }
+}

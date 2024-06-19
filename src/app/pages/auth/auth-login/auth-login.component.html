@@ -1,18 +1,18 @@
-<div class="min-h-screen flex items-center justify-center bg-white-100">
-  <div class="bg-colorForm rounded-lg shadow-2xl  flex">
-    <div class="w-1/2">
-      <img ngSrc="formulario.png" alt="Bombero en incendio"  width="660" height="815" class="rounded-3xl" priority="">
+<div class="min-h-screen flex items-center justify-center ">
+  <div class="bg-colorForm rounded-lg shadow-2xl flex flex-col md:flex-row">
+    <div class="hidden md:block w-1/2">
+      <img ngSrc="formulario.png" alt="Bombero en incendio" width="660" height="815" class="rounded-3xl" priority="">
     </div>
-    <div class="w-1/2 ml-4 flex flex-col justify-center">
+    <div class="w-full md:w-1/2 p-4 flex flex-col justify-center bg-gray-100">
       <div class="flex items-center justify-center mb-6">
-        <img ngSrc="logo.png" alt="Prepara Bombero" width="125" height="175"  [routerLink]="['']" style="cursor: pointer;">
+        <img ngSrc="logo.png" alt="Prepara Bombero" width="125" height="116" [routerLink]="['']" style="cursor: pointer;">
       </div>
       <form>
         <div class="mb-4 flex justify-center">
-          <input type="email" class="form-input mt-1 w-2/3  border-gray-400 rounded-lg" placeholder="Email" />
+          <input type="email" class="form-input mt-1 w-2/3 border-gray-400 rounded-lg" placeholder="Email" />
         </div>
         <div class="mb-4 flex justify-center">
-          <input type="password" class="form-input mt-1 w-2/3 border border-gray-400 rounded-lg" placeholder="Password" />
+          <input type="password" class="form-input mt-1 w-2/3 border-gray-400 rounded-lg" placeholder="Password" />
         </div>
         <div class="flex justify-center">
           <button type="submit" class="w-2/3 bg-colorButtonPrimary text-white py-2 px-4 rounded-lg hover:bg-yellow-600">
@@ -21,7 +21,7 @@
         </div>
       </form>
       <p class="mt-4 text-center">
-        ¿No tienes cuenta?, <a href="#" class="text-blue-500" [routerLink]="['/register']" style="cursor: pointer;"> Regístrate </a>
+        ¿No tienes cuenta?, <a href="#" class="text-blue-500" [routerLink]="['/register']" style="cursor: pointer;">Regístrate</a>
       </p>
     </div>
   </div>

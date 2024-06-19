@@ -1,0 +1,43 @@
+/* Estilos base */
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.bg-white-100 {
+  background-color: #f8f9fa;
+}
+
+.bg-colorForm {
+  background-color: #ffffff;
+}
+
+.shadow-2xl {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.bg-colorButtonPrimary {
+  background-color: #DE9A17;
+}
+
+/* Estilos específicos para móviles */
+@media (max-width: 767px) {
+  .bg-colorForm {
+    background-color: #e0e0e0; /* Fondo gris para móviles */
+  }
+
+  .md\\:hidden {
+    display: none;
+  }
+
+  .md\\:flex-row {
+    flex-direction: column;
+  }
+
+  .md\\:block {
+    display: none;
+  }
+
+  .p-4 {
+    padding: 4rem;
+  }
+}

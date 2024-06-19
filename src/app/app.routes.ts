@@ -4,6 +4,7 @@ import { HomeComponent } from './pages/home/home.component';
 import AuthLoginComponent from './pages/auth/auth-login/auth-login.component';
 import { ExamenesComponent } from './pages/examenes/examenes.component';
 import { TemasUserComponent } from './pages/temas-user/temas-user.component';
+import { QuestionsComponent } from './pages/questions/questions.component';
 
 export const routes: Routes = [
   //URL DE LA HOME
@@ -27,6 +28,11 @@ export const routes: Routes = [
   //URL DE TEMAS USER
   {
     path:'temas', component: TemasUserComponent
+  },
+
+  //URL DE TEST
+  {
+    path:'test', component: QuestionsComponent
   },
 
   //URL QUE NO EXISTE, REDIRECCIONA A LA HOME
