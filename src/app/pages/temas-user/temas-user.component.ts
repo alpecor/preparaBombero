@@ -1,19 +1,8 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
-interface Subtema {
-  nombre: string;
-  preguntas: number;
-}
-
-interface Tema {
-  nombre: string;
-  preguntas: number;
-  expanded: boolean;
-  subtemas: Subtema[];
-}
 
 @Component({
   selector: 'app-temas-user',
@@ -31,7 +20,7 @@ export class TemasUserComponent {
         expanded: false,
         subtemas: [
           {nombre: 'Introducción a la informática', preguntas: 40 },
-          {nombre: 'String', preguntas: 48 },
+          {nombre: 'String', preguntas: 50 },
         ] },
 
       {
@@ -93,6 +82,8 @@ export class TemasUserComponent {
         ]
       }
     ];
+
+
 
 
 }

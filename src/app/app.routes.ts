@@ -28,4 +28,9 @@ export const routes: Routes = [
   {
     path:'temas', component: TemasUserComponent
   },
+
+  //URL QUE NO EXISTE, REDIRECCIONA A LA HOME
+  {
+    path:'**', redirectTo: ''
+  },
 ];

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { HomeTestimonialsComponent } from '../../components/home/home-testimonials/home-testimonials.component';
@@ -13,6 +13,5 @@ import { HomeFaqComponent } from '../../components/home/home-faq/home-faq.compon
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-
 
 }
