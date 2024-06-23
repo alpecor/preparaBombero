@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -12,6 +12,13 @@ import { FooterComponent } from '../../components/footer/footer.component';
   styleUrl: './temas-user.component.css'
 })
 export class TemasUserComponent {
+  @Input() isAdmin: boolean = true; //para cambiar la cabecera si es user o admin
+
+  examinarme(subtema: any) {
+    // Lógica para manejar el examen del subtema
+    console.log('Examinando el subtema:', subtema);
+    // Aquí puedes añadir la navegación a otra página, abrir un modal, etc.
+  }
 
     temasEspecificos = [
       {

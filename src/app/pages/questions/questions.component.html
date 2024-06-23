@@ -1,11 +1,11 @@
 <!--------------- Añadir header aquí ------------>
-<app-header/>
+<app-header [isAdmin]="isAdmin" />
 
 <!--------------- Añadir barra de progreso aquí ------------>
 <div class="flex justify-center">
-  <div class="width-bar bg-gray-300 h- rounded-full mt-4 mb-4">
-    <div [style.width.%]="progress" class="bg-[#DE9A17] h-6 rounded-full flex items-center justify-center text-white">
-      {{ currentPage * 20 }} de 100
+  <div class="progress-bar-container">
+    <div class="progress-bar" [style.width.%]="progress">
+      {{ progressText }}
     </div>
   </div>
 </div>
@@ -13,8 +13,8 @@
 <!--------------- Añadir preguntas del test aquí ------------>
 <div class="flex justify-center p-4">
   <div class="w-full max-w-3xl">
-    <div *ngFor="let question of questions; let i = index" class="p-6 mb-12 border border-gray-400 rounded-xl shadow-xl">
-      <h2 class="text-lg font-semibold mb-2">{{ i + 1 }}. {{ question.enunciado }}</h2>
+    <div *ngFor="let question of getPaginatedQuestions(); let i = index" class="p-6 mb-12 border border-gray-400 rounded-xl shadow-xl">
+      <h2 class="text-lg font-semibold mb-2">{{ (currentPage - 1) * questionsPerPage + i + 1 }}. {{ question.enunciado }}</h2>
       <div class="relative">
         <hr class="border-t border-gray-300 mb-4">
         <img src="shield.png" class="absolute top-[calc(50%-33px)]  right-0" width="24"  alt="reportar pregunta">
@@ -22,20 +22,22 @@
       <ul class="list-none space-y-2">
         <li *ngFor="let respuesta of question.respuestas">
           <label class="flex items-center space-x-3">
-            <input type="radio" name="question-{{ i }}" class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400">
+            <input type="radio" name="question-{{ (currentPage - 1) * questionsPerPage + i }}" class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400">
             <span class="text-gray-700">{{ respuesta }}</span>
           </label>
         </li>
       </ul>
     </div>
-    <div class="flex justify-center mt-6 space-x-2">
-      <button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">«</button>
-      <button (click)="setPage(1)" [ngClass]="{'bg-gray-300': currentPage === 1}" class="px-3 py-1 bg-white border border-gray-600 rounded-md hover:bg-gray-200">1</button>
-      <button (click)="setPage(2)" [ngClass]="{'bg-gray-300': currentPage === 2}" class="px-3 py-1 bg-white border border-gray-600 rounded-md hover:bg-gray-200">2</button>
-      <button (click)="setPage(3)" [ngClass]="{'bg-gray-300': currentPage === 3}" class="px-3 py-1 bg-white border border-gray-600 rounded-md hover:bg-gray-200">3</button>
-      <button (click)="setPage(currentPage + 1)" [disabled]="currentPage === 3" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">»</button>
-    </div>
+
+  <!-- Paginación -->
+  <div class="flex justify-center mt-6 space-x-2">
+    <button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">«</button>
+    <button *ngFor="let page of pages" (click)="setPage(page)" [ngClass]="{'selected': currentPage === page}" class="px-3 py-1 bg-white border border-gray-600 rounded-md hover:bg-gray-200">
+      {{ page }}
+    </button>
+    <button (click)="setPage(currentPage + 1)" [disabled]="currentPage * questionsPerPage >= totalQuestions" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">»</button>
   </div>
 </div>
+
 
 

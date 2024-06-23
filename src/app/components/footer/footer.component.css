@@ -59,3 +59,12 @@
 .footer-section .social-icons a:hover {
   color: #DE9A17;
 }
+
+
+
+/* Estilos para ocultar el texto en dispositivos móviles */
+@media (max-width: 767px) {
+  .lorem-text {
+    display: none;
+  }
+}

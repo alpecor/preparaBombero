@@ -5,6 +5,7 @@ import AuthLoginComponent from './pages/auth/auth-login/auth-login.component';
 import { ExamenesComponent } from './pages/examenes/examenes.component';
 import { TemasUserComponent } from './pages/temas-user/temas-user.component';
 import { QuestionsComponent } from './pages/questions/questions.component';
+import { ExamsListComponent } from './pages/admin/exams-list/exams-list.component';
 
 export const routes: Routes = [
   //URL DE LA HOME
@@ -20,12 +21,12 @@ export const routes: Routes = [
     path:'register', component: AuthRegisterComponent
   },
 
-  //URL DE EXAMENES
+  //URL DE EXAMENES y ADMIN
   {
     path:'examenes', component: ExamenesComponent
   },
 
-  //URL DE TEMAS USER
+  //URL DE TEMAS USER y ADMIN
   {
     path:'temas', component: TemasUserComponent
   },
@@ -34,9 +35,22 @@ export const routes: Routes = [
   {
     path:'test', component: QuestionsComponent
   },
+   //URLs DE ADMIN
+   {
+    path:'lista', component: ExamsListComponent
+  },
 
+
+
+
+
+  
   //URL QUE NO EXISTE, REDIRECCIONA A LA HOME
   {
     path:'**', redirectTo: ''
   },
+
+
+
+
 ];

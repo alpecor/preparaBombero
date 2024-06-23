@@ -1,4 +1,34 @@
-/* TAMAÑO DE LA BARRA DE PROGRESO*/
-.width-bar {
-  width: 75%;
+/* Contenedor de la barra de progreso */
+.progress-bar-container {
+  background-color: #e9ebee; /* Color de fondo del contenedor */
+  border-radius: 9999px; /* Bordes redondeados */
+  height: 1.rem; /* Altura de la barra */
+  position: relative; /* Posicionamiento relativo para el texto */
+  width: 75%; /* Ancho del contenedor */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
+
+/* Barra de progreso */
+.progress-bar {
+  background-color: #DE9A17; /* Color de la barra de progreso */
+  height: 100%; /* Altura completa */
+  border-radius: 9999px; /* Bordes redondeados */
+  width: 0; /* Ancho inicial de 0 */
+  display: flex; /* Usar flexbox */
+  align-items: center; /* Centrar elementos verticalmente */
+  justify-content: center; /* Centrar elementos horizontalmente */
+  color: white; /* Color del texto */
+  white-space: nowrap; /* Evitar que el texto se envuelva */
+  overflow: hidd; /* Ocultar el desbordamiento */
+  text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
+  transition: width 0.5s ease; /* Añadir una transición suave al cambiar el ancho */
+}
+
+/* Para cuando el paginador está seleccionado*/
+.selected {
+  background-color: #DE9A17 !important;
+  color: white; /* Opcional: cambia el color del texto si es necesario */
+}
+
+

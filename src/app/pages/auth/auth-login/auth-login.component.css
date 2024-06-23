@@ -1,43 +1,49 @@
 /* Estilos base */
-.min-h-screen {
-  min-height: 100vh;
+.input-width {
+  width: 19rem;
 }
 
-.bg-white-100 {
-  background-color: #f8f9fa;
-}
 
-.bg-colorForm {
-  background-color: #ffffff;
-}
-
-.shadow-2xl {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.bg-colorButtonPrimary {
-  background-color: #DE9A17;
-}
-
-/* Estilos específicos para móviles */
-@media (max-width: 767px) {
-  .bg-colorForm {
-    background-color: #e0e0e0; /* Fondo gris para móviles */
+/* Estilos para dispositivos móviles */
+@media (max-width: 1023px){
+  .min-h-screen {
+    padding: 1rem;
+    background-image: url("../../../../../public/formulario.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
-  .md\\:hidden {
-    display: none;
-  }
-
-  .md\\:flex-row {
+  .flex-col {
+    display: flex;
     flex-direction: column;
   }
 
-  .md\\:block {
-    display: none;
+  .items-center {
+    align-items: center;
   }
 
-  .p-4 {
-    padding: 4rem;
+  .justify-center {
+    justify-content: center;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .hidden-md {
+    display: none; /* Oculta el contenedor de la imagen completamente */
+  }
+
+
+  .input-width {
+    width: 100%;
+  }
+
+  .bg-colorForm {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con 80% de opacidad */
   }
 }
+
+
+

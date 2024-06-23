@@ -74,5 +74,36 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px; /* Espacio entre las tarjetas */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    max-width: 700px; /* Ajusta este valor según necesites */
+    margin: 0 auto; /* Centra el contenedor de tarjetas */
+
   }
 }
+
+
+@media (min-width: 1025px) and (max-width: 1479px) {
+  .testimonial-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; /* Espacio entre las tarjetas */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    max-width: 750px; /* Ajusta este valor según necesites */
+    margin: 0 auto; /* Centra el contenedor de tarjetas */
+
+  }
+}
+
+
+@media (min-width: 1771px){
+  .testimonial-cards {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px; /* Espacio entre las tarjetas */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    max-width: 1500px; /* Ajusta este valor según necesites */
+    margin: 0 auto; /* Centra el contenedor de tarjetas */
+
+  }
+}
+

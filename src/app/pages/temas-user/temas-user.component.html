@@ -1,5 +1,5 @@
 <!--------------- Añadir header aquí ---------------->
-<app-header/>
+<app-header [isAdmin]="isAdmin" />
 
 <!--------------- Añadir temas aquí ---------------->
 <div class="container mx-auto py-8">
@@ -24,7 +24,12 @@
                 <input type="checkbox" class="form-checkbox h-5 w-5 text-yellow-500">
                 <span class="ml-2">{{ subtema.nombre }}</span>
               </div>
-              <span>{{ subtema.preguntas }}</span>
+              <div class="flex items-center">
+                <span>{{ subtema.preguntas }}</span>
+                <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4" (click)="examinarme(subtema)">
+                  Examinarme
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -51,7 +56,12 @@
                 <input type="checkbox" class="form-checkbox h-5 w-5 text-yellow-500">
                 <span class="ml-2">{{ subtema.nombre }}</span>
               </div>
-              <span>{{ subtema.preguntas }}</span>
+              <div class="flex items-center">
+                <span>{{ subtema.preguntas }}</span>
+                <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4" (click)="examinarme(subtema)">
+                  Examinarme
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -78,7 +88,12 @@
                 <input type="checkbox" class="form-checkbox h-5 w-5 text-yellow-500">
                 <span class="ml-2">{{ subtema.nombre }}</span>
               </div>
-              <span>{{ subtema.preguntas }}</span>
+              <div class="flex items-center">
+                <span>{{ subtema.preguntas }}</span>
+                <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4" (click)="examinarme(subtema)">
+                  Examinarme
+                </button>
+              </div>
             </div>
           </div>
         </div>
