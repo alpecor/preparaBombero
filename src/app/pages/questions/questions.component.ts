@@ -14,17 +14,18 @@ export class QuestionsComponent {
 
   @Input() isAdmin: boolean = true; //para cambiar la cabecera si es user o admin
 
+  //FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL
   openModal() {
-    const modal = document.getElementById('reportModal');
-    if (modal) {
-      modal.classList.remove('hidden');
+    const modalReport = document.getElementById('reportModal');
+    if (modalReport) {
+      modalReport.classList.remove('hidden');
     }
   }
 
   closeModal() {
-    const modal = document.getElementById('reportModal');
-    if (modal) {
-      modal.classList.add('hidden');
+    const modalReport = document.getElementById('reportModal');
+    if (modalReport) {
+      modalReport.classList.add('hidden');
       console.log("se da en cancelar");
     }
   }
@@ -37,6 +38,7 @@ export class QuestionsComponent {
     }
   }
 
+  //FUNCIONES PARA CONTROLAR LA PAGINACIÓN Y PREGUNTAS POR PÁGINA
   currentPage: number = 1; // página actual
   questionsPerPage = 20; // preguntas por página
 
@@ -73,6 +75,35 @@ export class QuestionsComponent {
     const endQuestion = Math.min(this.currentPage * this.questionsPerPage, this.totalQuestions);
     return `${startQuestion}-${endQuestion} de ${this.totalQuestions}`;
   }
+
+  isLastPage(): boolean {
+    return this.currentPage === this.totalPages;
+  }
+
+  //FUNCIÓN PARA EL ENVÍO DEL TEST
+  openModalTest() {
+    const modalTest = document.getElementById('finishTest');
+    if (modalTest) {
+      modalTest.classList.remove('hidden');
+    }
+  }
+
+  closeModalTest() {
+    const modalTest = document.getElementById('finishTest');
+    if (modalTest) {
+      modalTest.classList.add('hidden');
+      console.log("se da en cancelar envio del test");
+    }
+  }
+
+  sendTest() {
+    const modalTest = document.getElementById('finishTest');
+    if (modalTest) {
+      modalTest.classList.add('hidden');
+      console.log("se termina el test");
+    }
+  }
+
 
 
 
