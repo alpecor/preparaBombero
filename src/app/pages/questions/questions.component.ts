@@ -14,6 +14,29 @@ export class QuestionsComponent {
 
   @Input() isAdmin: boolean = true; //para cambiar la cabecera si es user o admin
 
+  openModal() {
+    const modal = document.getElementById('reportModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
+  }
+
+  closeModal() {
+    const modal = document.getElementById('reportModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      console.log("se da en cancelar");
+    }
+  }
+
+  sendReport() {
+    const modal = document.getElementById('reportModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      console.log("se da en enviar");
+    }
+  }
+
   currentPage: number = 1; // página actual
   questionsPerPage = 20; // preguntas por página
 

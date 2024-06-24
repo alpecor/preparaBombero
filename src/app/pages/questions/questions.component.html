@@ -17,7 +17,7 @@
       <h2 class="text-lg font-semibold mb-2">{{ (currentPage - 1) * questionsPerPage + i + 1 }}. {{ question.enunciado }}</h2>
       <div class="relative">
         <hr class="border-t border-gray-300 mb-4">
-        <img src="shield.png" class="absolute top-[calc(50%-33px)]  right-0" width="24"  alt="reportar pregunta">
+        <img src="shield.png" class="absolute top-[calc(50%-33px)]  right-0" width="24"  alt="reportar pregunta"  (click)="openModal()">
       </div>
       <ul class="list-none space-y-2">
         <li *ngFor="let respuesta of question.respuestas">
@@ -29,6 +29,18 @@
       </ul>
     </div>
 
+    <!-------------------- Modal de reporte ----------------->
+  <div id="reportModal" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-8 rounded-lg">
+      <h2 class="text-xl mb-4 font-bold">Indique el motivo de reportar esta pregunta</h2>
+      <textarea id="reportReason" class="w-full p-2 border border-gray-300 rounded-lg mb-4" rows="4" placeholder="Motivo del reporte"></textarea>
+      <div class="flex justify-center">
+        <button class="text-gray-900 hover:bg-gray-300 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-2 py-2 mr-2" (click)="closeModal()">Cancelar</button>
+        <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-4 py-2 mr-2" (click)="sendReport()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Paginación -->
   <div class="flex justify-center mt-6 space-x-2">
     <button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">«</button>
@@ -38,6 +50,8 @@
     <button (click)="setPage(currentPage + 1)" [disabled]="currentPage * questionsPerPage >= totalQuestions" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">»</button>
   </div>
 </div>
+
+
 
 
 
