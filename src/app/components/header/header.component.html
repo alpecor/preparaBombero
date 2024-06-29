@@ -43,8 +43,8 @@
       </ng-container>
 
       <!--------------- Botones e iconos si eres ADMIN ---------------->
-      <ng-container *ngIf="isAdmin && (currentRoute === 'temas' || currentRoute === 'examenes' || currentRoute === 'ips' || currentRoute === 'reportes' || currentRoute === 'test' || currentRoute === 'perfil')">
-        <div class="icon-text hover:bg-gray-400" [routerLink]="['/lista']" style="margin-right: 0.7rem">
+      <ng-container *ngIf="isAdmin && (currentRoute === 'temas' || currentRoute === 'examenes' || currentRoute === 'ips' || currentRoute === 'reportes' || currentRoute === 'test' || currentRoute === 'perfil' || currentRoute === 'lista')">
+        <div class="icon-text hover:bg-gray-100" [routerLink]="['/lista']" style="margin-right: 0.7rem; cursor: pointer" >
           <svg
             class="w-7 h-7 text-gray-800 dark:text-white"
             aria-hidden="true"
@@ -62,7 +62,7 @@
           </svg>
           <span>IPs</span>
         </div>
-        <div class="icon-text hover:bg-gray-400" [routerLink]="['/examenes']" style="margin-right: 0.7rem">
+        <div class="icon-text hover:bg-gray-400" [routerLink]="['/lista']" style="margin-right: 0.7rem">
           <svg
             class="w-7 h-7 text-gray-800 dark:text-white"
             aria-hidden="true"

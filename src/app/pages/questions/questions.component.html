@@ -17,7 +17,7 @@
       <h2 class="text-lg font-semibold mb-2">{{ (currentPage - 1) * questionsPerPage + i + 1 }}. {{ question.enunciado }}</h2>
       <div class="relative">
         <hr class="border-t border-gray-300 mb-4">
-        <img src="shield.png" class="absolute top-[calc(50%-33px)] right-0" width="24"  alt="reportar pregunta" style="cursor: pointer"  (click)="openModal()">
+        <img ngSrc="reporte2.png" class="absolute top-[calc(50%-33px)] right-0" width="24" height="24" alt="reportar pregunta" style="cursor: pointer"  (click)="openModal()">
       </div>
       <ul class="list-none space-y-2">
         <li *ngFor="let respuesta of question.respuestas">
@@ -50,7 +50,7 @@
     </button>
     <button (click)="setPage(currentPage + 1)" [disabled]="currentPage * questionsPerPage >= totalQuestions" class="px-4 py-1 bg-white border border-gray-400 rounded-md hover:bg-gray-200">»</button>
   </div>
-  <button *ngIf="isLastPage()"  class="finish-button text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-4 py-1" (click)="openModalTest()">Terminar</button>
+  <button *ngIf="isLastPage()"  class="finish-button text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-5 py-2.5" (click)="openModalTest()">Terminar</button>
 
   <!-------------------- Modal de fin de test ----------------->
   <div id="finishTest" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">

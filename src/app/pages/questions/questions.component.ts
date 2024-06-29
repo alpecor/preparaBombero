@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 
 
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [NgOptimizedImage, CommonModule, HeaderComponent],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.css'
 })

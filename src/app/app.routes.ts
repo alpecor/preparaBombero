@@ -21,12 +21,12 @@ export const routes: Routes = [
     path:'register', component: AuthRegisterComponent
   },
 
-  //URL DE EXAMENES y ADMIN
+  //URL DE EXAMENES
   {
     path:'examenes', component: ExamenesComponent
   },
 
-  //URL DE TEMAS USER y ADMIN
+  //URL DE TEMAS
   {
     path:'temas', component: TemasUserComponent
   },
@@ -35,6 +35,7 @@ export const routes: Routes = [
   {
     path:'test', component: QuestionsComponent
   },
+
    //URLs DE ADMIN
    {
     path:'lista', component: ExamsListComponent
@@ -44,7 +45,7 @@ export const routes: Routes = [
 
 
 
-  
+
   //URL QUE NO EXISTE, REDIRECCIONA A LA HOME
   {
     path:'**', redirectTo: ''
