@@ -43,160 +43,50 @@
       </ng-container>
 
       <!--------------- Botones e iconos si eres ADMIN ---------------->
-      <ng-container *ngIf="isAdmin && (currentRoute === 'temas' || currentRoute === 'examenes' || currentRoute === 'ips' || currentRoute === 'reportes' || currentRoute === 'test' || currentRoute === 'perfil' || currentRoute === 'lista')">
-        <div class="icon-text hover:bg-gray-100" [routerLink]="['/lista']" style="margin-right: 0.7rem; cursor: pointer" >
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
+      <ng-container *ngIf="isAdmin && (currentRoute === 'temas' || currentRoute === 'examenes' || currentRoute === 'ips' || currentRoute === 'reportes' || currentRoute === 'test' || currentRoute === 'perfil' || currentRoute === 'lista' || currentRoute === 'create-question' || currentRoute === 'reported-question')">
+        <div class="flex items-center space-x-4">
+          <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer" >
+            <i class="fa-solid fa-globe fa-lg mb-3"></i>
+            <span>IPs</span>
+          </div>
+          <div class="icon-text mt-4" [routerLink]="['/lista']" style="margin-right: 0.8rem; cursor: pointer">
+            <i class="fa-solid fa-table-list fa-lg mb-3"></i>
+            <span>Exámenes</span>
+          </div>
+          <div class="icon-text mt-4" [routerLink]="['/reported-question']" style="margin-right: 0.8rem; cursor: pointer">
+            <i class="fa-solid fa-ban fa-lg mb-3"></i>
+            <span>Reportes</span>
+          </div>
+          <div class="icon-text mt-4" [routerLink]="['/temas']" style="margin-right: 0.8rem; cursor: pointer">
+            <i class="fa-solid fa-house fa-lg mb-3"></i>
+            <span>Home</span>
+          </div>
+          <div class="icon-text mt-4" [routerLink]="['/temas']" style="margin-right: 0.8rem; cursor: pointer">
+            <i class="fa-solid fa-book fa-lg mb-3"></i>
+            <span>Temas</span>
+          </div>
+          <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer">
+            <i class="fa-solid fa-user fa-lg mb-3"></i>
+            <span>Perfil</span>
+          </div>
+          <button
+            class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            [routerLink]="['']"
+            style="cursor: pointer"
           >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>IPs</span>
+            Cerrar sesión
+          </button>
         </div>
-        <div class="icon-text hover:bg-gray-400" [routerLink]="['/lista']" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>Examenes</span>
-        </div>
-        <div class="icon-text hover:bg-gray-400" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>Reportes</span>
-        </div>
-        <div class="icon-text hover:bg-gray-400" [routerLink]="['/temas']" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>Tests</span>
-        </div>
-        <div class="icon-text hover:bg-gray-400" [routerLink]="['/temas']" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white "
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>Temas</span>
-        </div>
-        <div class="icon-text hover:bg-gray-400" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white "
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span>Perfil</span>
-        </div>
-        <button
-          class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          [routerLink]="['']"
-          style="cursor: pointer"
-        >
-          Cerrar sesión
-        </button>
       </ng-container>
 
       <!------------------------------ Botones e iconos de USER -------------------------->
       <ng-container *ngIf="!isAdmin && (currentRoute ==='temas' || currentRoute === 'test' || currentRoute === 'examanes')">
-        <div class="icon-text hover:bg-gray-400" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
+        <div class="icon-text mt-4" [routerLink]="['/temas']" style="margin-right: 0.8rem; cursor: pointer">
+          <i class="fa-solid fa-house fa-lg mb-3"></i>
           <span>Tests</span>
         </div>
-        <div class="icon-text hover:bg-gray-400" style="margin-right: 0.7rem">
-          <svg
-            class="w-7 h-7 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M11.293 3.293a1 1 0 0 1 1.414 0l6 6 2 2a1 1 0 0 1-1.414 1.414L19 12.414V19a2 2 0 0 1-2 2h-3a1 1 0 0 1-1-1v-3h-2v3a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2v-6.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2 6-6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
+        <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer">
+          <i class="fa-solid fa-user fa-lg mb-3"></i>
           <span>Perfil</span>
         </div>
         <button

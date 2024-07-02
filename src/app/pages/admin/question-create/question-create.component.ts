@@ -1,58 +1,33 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
 
 @Component({
-  selector: 'app-report-questions-list',
+  selector: 'app-question-create',
   standalone: true,
   imports: [CommonModule, HeaderComponent, FooterComponent],
-  templateUrl: './report-questions-list.component.html',
-  styleUrl: './report-questions-list.component.css'
+  templateUrl: './question-create.component.html',
+  styleUrl: './question-create.component.css'
 })
-export class ReportQuestionsListComponent {
+export class QuestionCreateComponent {
   @Input() isAdmin: boolean = true; //para cambiar la cabecera si es user o admin
 
- //FUNCIÓN PARA ELIMINACIÓN DE PREGUNTA REPORTADA
- openRemoveModal() {
-  const modalRemove = document.getElementById('removeQuestion');
-  if (modalRemove) {
-    modalRemove.classList.remove('hidden');
-    console.log("se abre eliminación de pregunta");
-  }
-}
+    //FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL
+    openModal() {
+      const modalCreate = document.getElementById('createQuestion');
+      if (modalCreate) {
+        modalCreate.classList.remove('hidden');
+      }
+    }
 
-closeRemoveModal() {
-  const modalRemove = document.getElementById('removeQuestion');
-  if (modalRemove) {
-    modalRemove.classList.add('hidden');
-    console.log("se da en cancelar eliminación de pregunta");
-  }
-}
-
-RemoveQuestion() {
-  const modalRemove = document.getElementById('removeQuestion');
-  if (modalRemove) {
-    console.log("se da en eliminación de pregunta");
-  }
-}
-
- //FUNCIÓN PARA VISUALIZACIÓN DE PREGUNTA REPORTADA
- openSeeModal() {
-  const modalSee = document.getElementById('seeQuestion');
-  if (modalSee) {
-    modalSee.classList.remove('hidden');
-    console.log("se abre visualización de pregunta");
-  }
-}
-
-closeSeeModal() {
-  const modalSee = document.getElementById('seeQuestion');
-  if (modalSee) {
-    modalSee.classList.add('hidden');
-    console.log("se ve el motivo del reporte de la pregunta");
-  }
-}
+    closeModal() {
+      const modalCreate = document.getElementById('createQuestion');
+      if (modalCreate) {
+        modalCreate.classList.add('hidden');
+        console.log("se da en cancelar");
+      }
+    }
 
   questions = [
     {

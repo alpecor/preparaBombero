@@ -6,6 +6,8 @@ import { ExamenesComponent } from './pages/examenes/examenes.component';
 import { TemasUserComponent } from './pages/temas-user/temas-user.component';
 import { QuestionsComponent } from './pages/questions/questions.component';
 import { ExamsListComponent } from './pages/admin/exams-list/exams-list.component';
+import { QuestionCreateComponent } from './pages/admin/question-create/question-create.component';
+import { ReportQuestionsListComponent } from './pages/admin/report-questions-list/report-questions-list.component';
 
 export const routes: Routes = [
   //URL DE LA HOME
@@ -39,6 +41,14 @@ export const routes: Routes = [
    //URLs DE ADMIN
    {
     path:'lista', component: ExamsListComponent
+  },
+
+  {
+    path:'create-question', component: QuestionCreateComponent
+  },
+
+  {
+    path:'reported-question', component: ReportQuestionsListComponent
   },
 
 

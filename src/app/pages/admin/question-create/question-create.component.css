@@ -1,7 +1,7 @@
-.icon-text:hover i {
-  color: #DE9A17; /* Cambia este valor al color deseado */
+/* ------ MODAL ------------- */
+.modal.hidden {
+  display: none;
 }
-
 
 .modal {
   position: fixed;
@@ -16,12 +16,10 @@
   z-index: 1; /* Asegúrate de que el modal esté por encima de otros elementos */
 }
 
-.hidden {
-  display: none;
-}
-
 .modal .bg-white {
   background-color: white;
   padding: 1.5rem;
   border-radius: 0.7rem;
 }
+
+
