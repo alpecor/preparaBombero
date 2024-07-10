@@ -1,0 +1,49 @@
+.input-width {
+  width: 19rem;
+}
+
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 1023px){
+  .min-h-screen {
+    padding: 1rem;
+    background-image: url("../../../../../public/formulario.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .flex-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .md\\:block {
+    display: none;
+  }
+
+  .hidden-md {
+    display: none; /* Oculta el contenedor de la imagen completamente */
+  }
+
+
+  .input-width {
+    width: 100%;
+  }
+
+  .bg-colorForm {
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con 80% de opacidad */
+  }
+}
