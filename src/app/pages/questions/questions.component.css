@@ -33,10 +33,6 @@
 
 
 /* ------ Paginación ------------- */
-.pagination-container {
-  position: relative;
-}
-
 .finish-button {
   position: absolute;
   right: 0;
