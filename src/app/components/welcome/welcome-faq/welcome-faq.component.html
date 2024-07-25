@@ -1,6 +1,7 @@
 <div class="faq-container">
-  <h2 class="text-colorButtonPrimary text-center text-lg font-bold mb-4">FAQs</h2>
+  <h2 class="text-primaryColor text-center text-lg font-bold mb-4">FAQs</h2>
   <h3 class="text-gray-900 text-center text-3xl font-bold mb-2">¿Tienes alguna pregunta? Mira aquí</h3>
+  <!-- // TODO - Esto no hace falta hacerlo con un bucle, hardcodealo -->
   <div class="faq-item" *ngFor="let faq of faqs; let i = index">
     <div class="faq-question" (click)="toggleAnswer(i)">
       {{ faq.question }}

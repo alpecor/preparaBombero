@@ -1,0 +1,13 @@
+.testimonials {
+  padding: 50px;
+}
+
+.testimonials h2 {
+  font-size: 26px;
+  color: var(--primary-color);
+}
+
+.testimonials h3 {
+  font-size: 28px;
+  font-weight: bold;
+}

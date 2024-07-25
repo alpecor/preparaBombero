@@ -18,17 +18,17 @@ export default class AuthLoginComponent {
 
   email:string ='';
   password:string='';
-  status: undefined;
+  status: string[] | undefined;
 
 
   async login(){
     try{
       const response = await this.requestService.request('POST', `http://localhost:3000/auth/login`, {email: this.email, password:this.password}, {}, false);
       localStorage.setItem("access_token", response.access_token);
-      this.status = undefined
+      this.status = undefined;
       this.router.navigate(['/home']);
     }catch(error: any){
-      this.status = Array.isArray(error.error.message) ? error.error.message : [error.error.message];
+      this.status = Array.isArray(error.error.errors) ? error.error.errors : [error.error.errors];
     }
   }
 

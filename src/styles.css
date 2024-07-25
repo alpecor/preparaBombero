@@ -10,4 +10,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --primary-color: #DE9A17;
+    --primary-hover-color: #faebce;
+    --form-color: #F6F6F6;
+}
+
 

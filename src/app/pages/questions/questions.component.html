@@ -1,3 +1,10 @@
+<!-- // TODO
+1. Obtener el topicId de la url y hacerme una petición a POST /quiz/generate para obtener las preguntas del examen
+2. Cuando se pase de paginación, se debe almacenar las respuestas seleccionadas
+3. Al enviar el examen, te tiene que llevar a una nueva vista que hagas y enviarle por body(no por la url) las preguntas seleccionadas, esta nueva pagina hará una petición a /POST /quiz/check para obtener la nota
+4. Hacer una petición a POST /report cuando se envíe un reporte
+-->
+
 <!--------------- Añadir header aquí ------------>
 <app-header />
 
@@ -15,7 +22,7 @@
   <div class="w-full max-w-3xl">
     <div
       *ngFor="let question of questions.slice(page.first, page.first + questionsPerPage); let i = index"
-      class="p-6 mb-12 border border-gray-400 rounded-xl shadow-xl"
+      class="p-6 mb-12 border rounded-xl"
     >
       <h2 class="text-lg font-semibold mb-2">
         {{ (page.page) * questionsPerPage + i + 1 }}.
@@ -64,13 +71,13 @@
         ></textarea>
         <div class="flex justify-center mt-8">
           <button
-            class="text-gray-900 hover:bg-gray-300 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+            class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
             (click)="closeModal()"
           >
             Cancelar
           </button>
           <button
-            class="text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-4 py-2"
+            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
             (click)="sendReport()"
           >
             Enviar
@@ -98,7 +105,7 @@
 
       @if (progress() == 100) {
         <button
-          class="finish-button text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
           (click)="openModalTest()">
           Terminar
         </button>
@@ -132,13 +139,13 @@
           </h2>
           <div class="flex justify-center">
             <button
-              class="text-gray-900 hover:bg-gray-300 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+              class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
               (click)="closeModalTest()"
             >
               Cancelar
             </button>
             <button
-              class="text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-4 py-2"
+              class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
               (click)="sendTest()"
             >
               Enviar

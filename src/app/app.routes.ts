@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
-import { HomeComponent } from './pages/home/home.component';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
 import AuthLoginComponent from './pages/auth/auth-login/auth-login.component';
 import { ExamenesComponent } from './pages/examenes/examenes.component';
-import { TopicsComponent } from './pages/topics/topics.component';
+import { HomeComponent } from './pages/home/home.component';
 import { QuestionsComponent } from './pages/questions/questions.component';
 import { ExamsListComponent } from './pages/admin/exams-list/exams-list.component';
 import { QuestionCreateComponent } from './pages/admin/question-create/question-create.component';
@@ -16,7 +16,7 @@ import { userAuthGuard } from './guards/user-auth.guard';
 export const routes: Routes = [
   //URL DE LA HOME
   {
-    path:'', component: HomeComponent, canActivate:[noAuthGuard]
+    path:'', component: WelcomeComponent, canActivate:[noAuthGuard]
   },
 
   //URLs DEL LOGIN
@@ -28,6 +28,12 @@ export const routes: Routes = [
     path:'register', component: AuthRegisterComponent, canActivate:[noAuthGuard]
   },
 
+
+
+
+
+
+
   //URL DE EXAMENES
   {
     path:'listado-de-examenes', component: ExamenesComponent
@@ -35,7 +41,7 @@ export const routes: Routes = [
 
   //URL DE Home
   {
-    path:'home', component: TopicsComponent, canActivate:[userAuthGuard]
+    path:'home', component: HomeComponent, canActivate:[userAuthGuard]
   },
 
   //URL DE TEST
@@ -43,24 +49,25 @@ export const routes: Routes = [
     path:'test', component: QuestionsComponent, canActivate:[userAuthGuard]
   },
 
+
+
+
+
+
    //URLs DE ADMIN
-   {
+  {
     path:'admin/examenes', component: ExamsListComponent, canActivate:[adminAuthGuard]
   },
-
-  {
-    path:'admin/temario/{id}', component: QuestionCreateComponent, canActivate:[adminAuthGuard]
-  },
-
   {
     path:'admin/reportes', component: ReportQuestionsListComponent, canActivate:[adminAuthGuard]
   },
-
+  
   {
     path:'admin/temario', component: TopicsListComponent, canActivate:[adminAuthGuard]
   },
-
-
+  {
+    path:'admin/temario/10', component: QuestionCreateComponent, canActivate:[adminAuthGuard] // TODO cambiar el 10
+  },
 
 
 
@@ -69,8 +76,4 @@ export const routes: Routes = [
   {
     path:'**', redirectTo: ''
   },
-
-
-
-
 ];

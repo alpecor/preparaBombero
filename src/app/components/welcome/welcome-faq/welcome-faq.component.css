@@ -16,7 +16,6 @@
 }
 
 .faq-question {
-  background: #f1eee6;
   padding: 15px;
   cursor: pointer;
   display: flex;
@@ -28,16 +27,12 @@
 }
 
 .faq-question:hover {
-  background: #DE9A17; /* Color de fondo al pasar el ratón */
+  background: var(--primary-hover-color); /* Color de fondo al pasar el ratón */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .faq-answer {
-  background: #f0f0f0; /* Fondo gris claro para las respuestas */
   padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-top: none;
-  border-radius: 0 0 5px 5px;
 }
 
 .toggle-icon {

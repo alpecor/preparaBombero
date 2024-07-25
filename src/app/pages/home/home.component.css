@@ -1,0 +1,42 @@
+.container {
+  max-width: 650px;
+  margin: auto;
+}
+
+h2 {
+  color: #333;
+}
+
+.flex {
+  display: flex;
+}
+
+
+.ml-4 {
+  margin-left: 2.5rem; /* margen de los temas */
+}
+
+.ml-8 {
+  margin-left: 3rem; /* margen de los subtemas */
+}
+
+.button-examinarme {
+  color: white; /* text-white */
+  background-color: var(--primary-color); /* bg-primaryColor with fallback */
+  font-weight: 500; /* font-medium */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.875rem; /* text-sm */
+  padding: 0.5rem 0.5rem; /* px-5 py-2.5 */
+  text-align: center; /* text-center */
+
+
+}
+
+/*hover para cambiar de imagen de examen*/
+
+
+
+
+
+
+

@@ -19,7 +19,7 @@ export class AuthRegisterComponent {
   email:string ='';
   password:string ='';
   repeatPassword:string ='';
-  status: undefined;
+  status: string[] | undefined;
 
 
   async register(){
@@ -29,7 +29,7 @@ export class AuthRegisterComponent {
       this.status = undefined
       this.router.navigate(['/login']);
     }catch(error: any){
-      this.status = Array.isArray(error.error.message) ? error.error.message : [error.error.message];
+      this.status = Array.isArray(error.error.errors) ? error.error.errors : [error.error.errors];
     }
   }
 }

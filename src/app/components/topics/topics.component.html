@@ -1,4 +1,4 @@
-@for (item of subtopic; track $index) {
+@for (item of topics; track $index) {
   <div [ngStyle]="{'margin-left': margin + 'rem' }" class="mt-1">
     <div class="flex justify-between items-center py-2 border-b border-gray-200">
       <div class="mb-1 flex items-center">
@@ -22,7 +22,7 @@
     </div>
   </div>
 
-  @if (subtopic.length > 0) {
-    <app-subtopics [margin]="margin + 2" [subtopic]="item.subtopics"/>
+  @if (topics.length > 0) {
+    <app-topics [margin]="margin + 2" [topics]="item.topics"/>
   }
 }

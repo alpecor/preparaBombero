@@ -1,85 +1,166 @@
-<!--------------- Añadir header aquí ------------>
-<app-header/>
+<!-- // TODO
+1. Hacer que se quede selecciona los topics, guardandolos en localStorage
+2. Añadir modal de aviso multicuentas
+2.1 Arreglar el icono que está alado del número de preguntas
+2.2 Alinear el número de preguntas
+3. Al hacer click en el boton de examen y de repaso, que te lleve a /test?topicId=1&topicId=10&topicId=564 -> Todos los id de los topic seleccionados, tanto topic como subtopics
+-->
 
-<!--------------- Añadir la imagen del bombero aquí ------------>
-<div class="container mx-auto mt-4 flex items-center justify-center">
-  <img ngSrc="background_home.jpg" alt="Bombero" width="1520" height="855" priority>
-</div>
+<!-- Para el footer -->
+<div class="flex flex-col h-screen">
+  <!--------------- Añadir header aquí ---------------->
+  <app-header />
 
-<!--------------- Añadir nuestros servicios aquí ---------------->
-<div class="container mx-auto px-4 py-14">
-  <h2 class="text-colorButtonPrimary text-center text-lg font-bold mb-4">Nuestros Servicios</h2>
-  <h3 class="text-gray-900 text-center text-3xl font-bold mb-2">Qué Ofrecemos</h3>
-  <p class="text-center text-gray-600 mb-8">
-      There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form.
-  </p>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <div class="flex justify-center mb-4">
-              <svg class="w-12 h-12 text-colorButtonPrimary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z"></path>
-              </svg>
+  <!--------------- Añadir temas aquí ---------------->
+  <div class="container mx-auto py-8">
+    <div class="space-y-6">
+      <div>
+        @for(item of objectKeys(topics); track $index){
+          <h2 class="text-xl font-bold mt-8">{{item}}</h2>
+          <div class="mt-2 ml-4">
+            @for (topic of topics[item]; track $index) {
+              <div class="flex flex-col">
+                <div
+                  class="flex justify-between items-center py-2 border-b border-gray-300">
+                  <div class="flex items-center">
+                    <button (click)="topic.expanded = !topic.expanded" class="mr-2 focus:outline-none">
+                      {{ topic.expanded ? "+" : "-" }}
+                    </button>
+                    <input
+                      [checked]="topic.selected"
+                      type="checkbox"
+                      class="form-checkbox h-5 w-5 text-yellow-500"
+                    />
+                    <span class="ml-2">{{ topic.title }}</span>
+                  </div>
+                  <span>{{ topic.quizCount }}</span>
+                </div>
+                <div [hidden]="topic.expanded">
+                  <app-topics [topics]="topic.topics" [margin]="3" />
+                </div>
+              </div>
+            }
           </div>
-          <h4 class="text-lg font-semibold mb-2">Refreshing Design</h4>
-          <p class="text-gray-600">We enjoy working with dining clients, people for whom quality, service, integrity & aesthetics.</p>
+        }
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <div class="flex justify-center mb-4">
-              <svg class="w-12 h-12 text-colorButtonPrimary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z"></path>
-              </svg>
+
+      <!-- <div>
+        <h2 class="text-xl font-bold">Legislación</h2>
+        <div class="mt-4 ml-4">
+          <div *ngFor="let tema of temasLegislacion" class="flex flex-col">
+            <div
+              class="flex justify-between items-center py-2 border-b border-gray-300"
+            >
+              <div class="flex items-center">
+                <button
+                  (click)="tema.expanded = !tema.expanded"
+                  class="mr-2 focus:outline-none"
+                >
+                  {{ tema.expanded ? "-" : "+" }}
+                </button>
+                <input
+                  type="checkbox"
+                  class="form-checkbox h-5 w-5 text-yellow-500"
+                />
+                <span class="ml-2">{{ tema.nombre }}</span>
+              </div>
+              <span>{{ tema.preguntas }}</span>
+            </div>
+            <div *ngIf="tema.expanded && tema.subtemas.length > 0" class="ml-8">
+              <div
+                *ngFor="let subtema of tema.subtemas"
+                class="flex justify-between items-center py-2 border-b border-gray-200"
+              >
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-5 w-5 text-yellow-500"
+                  />
+                  <span class="ml-2">{{ subtema.nombre }}</span>
+                </div>
+                <div class="flex items-center">
+                  <span>{{ subtema.preguntas }}</span>
+                  <button
+                    class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4"
+
+                  >
+                    Examinarme
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <h4 class="text-lg font-semibold mb-2">Based on Tailwind CSS</h4>
-          <p class="text-gray-600">We enjoy working with dining clients, people for whom quality, service, integrity & aesthetics.</p>
+        </div>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <div class="flex justify-center mb-4">
-              <svg class="w-12 h-12 text-colorButtonPrimary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z"></path>
-              </svg>
+
+      <div>
+        <h2 class="text-xl font-bold">Otros</h2>
+        <div class="mt-4 ml-4">
+          <div *ngFor="let tema of temasOtros" class="flex flex-col">
+            <div
+              class="flex justify-between items-center py-2 border-b border-gray-300"
+            >
+              <div class="flex items-center">
+                <button
+                  (click)="tema.expanded = !tema.expanded"
+                  class="mr-2 focus:outline-none"
+                >
+                  {{ tema.expanded ? "-" : "+" }}
+                </button>
+                <input
+                  type="checkbox"
+                  class="form-checkbox h-5 w-5 text-yellow-500"
+                />
+                <span class="ml-2">{{ tema.nombre }}</span>
+              </div>
+              <span>{{ tema.preguntas }}</span>
+            </div>
+            <div *ngIf="tema.expanded && tema.subtemas.length > 0" class="ml-8">
+              <div
+                *ngFor="let subtema of tema.subtemas"
+                class="flex justify-between items-center py-2 border-b border-gray-200"
+              >
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox h-5 w-5 text-yellow-500"
+                  />
+                  <span class="ml-2">{{ subtema.nombre }}</span>
+                </div>
+                <div class="flex items-center">
+                  <span>{{ subtema.preguntas }}</span>
+                  <button
+                    class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4"
+                  >
+                    Examinarme
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <h4 class="text-lg font-semibold mb-2">100+ Components</h4>
-          <p class="text-gray-600">We enjoy working with dining clients, people for whom quality, service, integrity & aesthetics.</p>
+        </div>
+      </div> -->
+
+      <div class="flex justify-center">
+        <div class="space-x-8 mt-8">
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          >
+            Examen
+          </button>
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          >
+            Repaso
+          </button>
+        </div>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <div class="flex justify-center mb-4">
-              <svg class="w-12 h-12 text-colorButtonPrimary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z"></path>
-              </svg>
-          </div>
-          <h4 class="text-lg font-semibold mb-2">Speed Optimized</h4>
-          <p class="text-gray-600">We enjoy working with dining clients, people for whom quality, service, integrity & aesthetics.</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <div class="flex justify-center mb-4">
-              <svg class="w-12 h-12 text-colorButtonPrimary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z"></path>
-              </svg>
-          </div>
-          <h4 class="text-lg font-semibold mb-2">Fully Customizable</h4>
-          <p class="text-gray-600">We enjoy working with dining clients, people for whom quality, service, integrity & aesthetics.</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow-md text-center">
-          <div class="flex justify-center mb-4">
-              <svg class="w-12 h-12 text-colorButtonPrimary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 18a8 8 0 100-16 8 8 0 000 16z"></path>
-              </svg>
-          </div>
-          <h4 class="text-lg font-semibold mb-2">Regular Updates</h4>
-          <p class="text-gray-600">We enjoy working with dining clients, people for whom quality, service, integrity & aesthetics.</p>
-      </div>
+    </div>
   </div>
+
+
+  <!--------------- Añadir modal aquí ---------------->
+
+  <!--------------- Añadir footer aquí ---------------->
+  <app-footer />
 </div>
-
-
-
-<!------------------------ Añadir FAQs aquí ------------------------->
-<app-home-faq/>
-
-<!------------------------ Añadir Testimonials aquí ------------------------->
-<app-home-testimonials/>
-
-<!------------------------ Añadir Footer aquí ------------------------->
-<app-footer/>
-
-

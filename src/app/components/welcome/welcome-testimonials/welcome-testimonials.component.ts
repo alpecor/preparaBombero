@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-home-testimonials',
+  selector: 'app-welcome-testimonials',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './home-testimonials.component.html',
-  styleUrl: './home-testimonials.component.css'
+  templateUrl: './welcome-testimonials.component.html',
+  styleUrl: './welcome-testimonials.component.css'
 })
-export class HomeTestimonialsComponent {
+export class WelcomeTestimonialsComponent {
   testimonials = [
     {
       quote: "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
