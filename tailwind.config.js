@@ -4,10 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        colorNavBar: "#3C3C3C",
-        colorButtonPrimary: "#DE9A17",
-        colorForm: "#F6F6F6",
-        colorPlaceholderForm: "#9CA3AF",
+        primaryColor: "var(--primary-color)",
+        primaryColorHover: "var(--primary-hover-color)",
+        formColor: "var(--form-color)",
       },
     },
   },

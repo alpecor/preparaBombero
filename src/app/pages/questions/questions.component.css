@@ -11,7 +11,7 @@
 
 /* Barra de progreso */
 .progress-bar {
-  background-color: #DE9A17; /* Color de la barra de progreso */
+  background-color: var(--primary-color); /* Color de la barra de progreso */
   height: 100%; /* Altura completa */
   border-radius: 9999px; /* Bordes redondeados */
   width: 0; /* Ancho inicial de 0 */
@@ -27,16 +27,12 @@
 
 /* Para cuando el paginador está seleccionado*/
 .selected {
-  background-color: #DE9A17 !important;
+  background-color: var(--primary-color) !important;
   color: white; /* Opcional: cambia el color del texto si es necesario */
 }
 
 
 /* ------ Paginación ------------- */
-.pagination-container {
-  position: relative;
-}
-
 .finish-button {
   position: absolute;
   right: 0;

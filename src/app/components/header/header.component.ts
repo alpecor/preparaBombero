@@ -1,7 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { Component} from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -11,23 +12,17 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit{
-  @Input() isAdmin: boolean = false;
-  currentRoute: string;
+export class HeaderComponent {
 
-  constructor(private route: ActivatedRoute) {
-    this.currentRoute = '';
+  constructor(private router: Router, private authService: AuthService) {}
+
+  isAdmin: boolean = this.authService.isAdmin();
+  isUser: boolean = this.authService.isUser();
+  isNotAuth: boolean = this.authService.isNotAuth();
+
+  logout(){
+    localStorage.removeItem('access_token');
+    this.router.navigate(['']);
   }
-
-  ngOnInit(): void {
-    // para obtener la ruta actual
-    this.route.url.subscribe(url => {
-      this.currentRoute = url.join('');
-      console.log('Current route:', this.currentRoute); // <-- Aquí imprimimos el valor en consola
-    });
-  }
-
-
-
-
+  
 }

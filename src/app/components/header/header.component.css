@@ -20,7 +20,11 @@
 }
 
 .icon-text:hover i {
-  color: #DE9A17; /* Cambia este valor al color deseado */
+  color: var(--primary-color); /* Cambia este valor al color deseado */
+}
+
+.icon-text-hover i {
+  color: var(--primary-color); /* Cambia este valor al color deseado */
 }
 
 

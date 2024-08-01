@@ -1,18 +1,27 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [NgOptimizedImage, CommonModule, HeaderComponent],
+  imports: [NgOptimizedImage, CommonModule, HeaderComponent, PaginatorModule],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.css'
 })
 export class QuestionsComponent {
 
-  @Input() isAdmin: boolean = true; //para cambiar la cabecera si es user o admin
+  page: any = {page: 0, first:0}
+  questionsPerPage:number = 20;
+
+  onPageChange($event: PaginatorState) {
+    this.page = $event;
+    console.log($event)
+  }
+
+
 
   //FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL
   openModal() {
@@ -39,46 +48,20 @@ export class QuestionsComponent {
   }
 
   //FUNCIONES PARA CONTROLAR LA PAGINACIÓN Y PREGUNTAS POR PÁGINA
-  currentPage: number = 1; // página actual
-  questionsPerPage = 20; // preguntas por página
 
-  setPage(page: number) {
-    this.currentPage = page;
-  }
 
-  get totalQuestions() {  //devuelve el nº de preguntas del array de preguntas
-    return this.questions.length;
-  }
-
-  get totalPages() {  //para calcular cuantas páginas debe mostrar la paginación en función del total de preguntas del examen
-    return Math.ceil(this.totalQuestions / this.questionsPerPage);
-  }
-
-  getPaginatedQuestions() {  //devuelve 20 preguntas del array por página
-    const start = (this.currentPage - 1) * this.questionsPerPage;
-    const end = start + this.questionsPerPage;
-    return this.questions.slice(start, end);
-  }
-
-  get pages() {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
-  get progress() {
-    const endQuestion = Math.min(this.currentPage * this.questionsPerPage, this.totalQuestions);
-    const progress = (endQuestion / this.totalQuestions) * 100;
+  progress() {
+    const endQuestion = Math.min((this.page.page + 1) * this.questionsPerPage, this.questions.length);
+    const progress = (endQuestion / this.questions.length) * 100;
     return Math.min(progress, 100); // para asegurar de que el valor no exceda 100%
   }
 
-  get progressText() {
-    const startQuestion = (this.currentPage - 1) * this.questionsPerPage + 1;
-    const endQuestion = Math.min(this.currentPage * this.questionsPerPage, this.totalQuestions);
-    return `${startQuestion}-${endQuestion} de ${this.totalQuestions}`;
+  progressText() {
+    const startQuestion = this.page.page  * this.questionsPerPage + 1;
+    const endQuestion = Math.min((this.page.page+1) * this.questionsPerPage, this.questions.length);
+    return `${startQuestion}-${endQuestion} de ${this.questions.length}`;
   }
 
-  isLastPage(): boolean {
-    return this.currentPage === this.totalPages;
-  }
 
   //FUNCIÓN PARA EL ENVÍO DEL TEST
   openModalTest() {

@@ -1,8 +1,13 @@
+<!-- // TODO -
+ 1. Se quede seleccionada la pagina en la que estamos
+ 2. Mostrar el titulo del header consultando la api GET /info
+-->
+ 
 <header class="bg-gray-800 text-white py-2">
   <div class="header-container mx-auto flex justify-center items-center">
     <div
       class="text-sm items-center"
-      [routerLink]="['/examenes']"
+      [routerLink]="['/listado-de-examenes']"
       style="cursor: pointer"
     >
       <p>Actualmente contamos con 10 temas y 260 preguntas</p>
@@ -25,78 +30,61 @@
 
     <div class="flex-1 flex justify-end items-center space-x-6">
       <!--------------- Botones e iconos de la home y examenes ---------------->
-      <ng-container *ngIf="currentRoute === ''">
+      @if(isNotAuth){
         <button
-          class="text-gray-900 bg-white hover:bg-gray-300 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          class="text-gray-900 bg-white hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           [routerLink]="['/login']"
           style="cursor: pointer"
         >
           Login
         </button>
         <button
-          class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           [routerLink]="['/register']"
           style="cursor: pointer"
         >
           Sign Up
         </button>
-      </ng-container>
+      }
 
       <!--------------- Botones e iconos si eres ADMIN ---------------->
-      <ng-container *ngIf="isAdmin && (currentRoute === 'temas' || currentRoute === 'examenes' || currentRoute === 'ips' || currentRoute === 'reportes' || currentRoute === 'test' || currentRoute === 'perfil' || currentRoute === 'lista' || currentRoute === 'create-question' || currentRoute === 'reported-question')">
+      @if(isAdmin || isUser){
         <div class="flex items-center space-x-4">
-          <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer" >
-            <i class="fa-solid fa-globe fa-lg mb-3"></i>
-            <span>IPs</span>
-          </div>
-          <div class="icon-text mt-4" [routerLink]="['/lista']" style="margin-right: 0.8rem; cursor: pointer">
-            <i class="fa-solid fa-table-list fa-lg mb-3"></i>
-            <span>Exámenes</span>
-          </div>
-          <div class="icon-text mt-4" [routerLink]="['/reported-question']" style="margin-right: 0.8rem; cursor: pointer">
-            <i class="fa-solid fa-ban fa-lg mb-3"></i>
-            <span>Reportes</span>
-          </div>
-          <div class="icon-text mt-4" [routerLink]="['/temas']" style="margin-right: 0.8rem; cursor: pointer">
+          <div class="icon-text mt-4" [routerLink]="['/home']" style="margin-right: 0.8rem; cursor: pointer">
             <i class="fa-solid fa-house fa-lg mb-3"></i>
             <span>Home</span>
           </div>
-          <div class="icon-text mt-4" [routerLink]="['/temas']" style="margin-right: 0.8rem; cursor: pointer">
-            <i class="fa-solid fa-book fa-lg mb-3"></i>
-            <span>Temas</span>
-          </div>
+          @if(isAdmin){
+            <!-- <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer" >
+              <i class="fa-solid fa-globe fa-lg mb-3"></i>
+              <span>IPs</span>
+            </div> -->
+            <div class="icon-text mt-4" [ngClass]="{'icon-text-hover': true === true}" [routerLink]="['/admin/examenes']" style="margin-right: 0.8rem; cursor: pointer">
+              <i class="fa-solid fa-table-list fa-lg mb-3"></i>
+              <span>Exámenes</span>
+            </div>
+            <div class="icon-text mt-4" [routerLink]="['/admin/reportes']" style="margin-right: 0.8rem; cursor: pointer">
+              <i class="fa-solid fa-ban fa-lg mb-3"></i>
+              <span>Reportes</span>
+            </div>
+            <div class="icon-text mt-4" [routerLink]="['/admin/temario']" style="margin-right: 0.8rem; cursor: pointer">
+              <i class="fa-solid fa-book fa-lg mb-3"></i>
+              <span>Temario</span>
+            </div>
+          }
+
           <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer">
             <i class="fa-solid fa-user fa-lg mb-3"></i>
             <span>Perfil</span>
           </div>
           <button
-            class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            [routerLink]="['']"
-            style="cursor: pointer"
-          >
+            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            style="cursor: pointer" (click)="logout()">
             Cerrar sesión
           </button>
         </div>
-      </ng-container>
+      }
 
-      <!------------------------------ Botones e iconos de USER -------------------------->
-      <ng-container *ngIf="!isAdmin && (currentRoute ==='temas' || currentRoute === 'test' || currentRoute === 'examanes')">
-        <div class="icon-text mt-4" [routerLink]="['/temas']" style="margin-right: 0.8rem; cursor: pointer">
-          <i class="fa-solid fa-house fa-lg mb-3"></i>
-          <span>Tests</span>
-        </div>
-        <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer">
-          <i class="fa-solid fa-user fa-lg mb-3"></i>
-          <span>Perfil</span>
-        </div>
-        <button
-          class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          [routerLink]="['']"
-          style="cursor: pointer"
-        >
-          Cerrar sesión
-        </button>
-      </ng-container>
     </div>
   </div>
 </nav>

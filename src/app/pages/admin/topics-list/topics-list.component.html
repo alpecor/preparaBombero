@@ -1,0 +1,250 @@
+<!-- // TODO
+1. El titulo y los subtemas son input (puedes crear otro componente topics, llamado admin-topics por ejemplo)
+  Son input porque se puede editar los titulos, haciendo una petición a PUT /topic/<topicId>
+2. Yo cambiaría los botones
+3. Hay que implementar el orden, lo hablamos.
+4. Implementar el boton eliminar. petición a DELETE /topic/<topicId>
+5. Implementar el boton añadir subtema y tema(esto con un modal). petición a POST /topic. Yo a crear el tema le he puesto type=primary y para crear el subtema, type=secondary.
+6. El icono - lo cambiaría por una papelera tambien
+7. Añadir el boton que te lleve a la vista con todas las preguntas. /preguntas?topicId=10, creo que lo has llamado /admin/temario/10, pues tambien. Pero es una page nueva
+-->
+
+<!-- Para el footer -->
+<div class="flex flex-col h-screen">
+  <!--------------- Añadir header aquí ---------------->
+  <app-header />
+
+  <!--------------- Recorrer los arryas del temario aquí ---------------->
+  <div class="container mx-auto mt-8 max-w-3xl">
+    <!--------------- Recorrer temario especifco ---------------->
+    <div class="mb-16">
+      <h1 class="text-xl font-bold mb-2">Específico</h1>
+      <div class="question-block mb-6 relative" *ngFor="let topic of especifico">
+        <div
+          class="max-w-xl mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
+          style="margin-right: 4rem"
+        >
+          <p>{{ topic.title }}</p>
+        </div>
+        <div class="icon-text absolute right-24 top-2">
+          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        </div>
+        <div class="icon-text absolute right-24 top-2">
+          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        </div>
+        <ul class="ml-10">
+          <li *ngFor="let subtopic of topic.topics" class="mb-2">
+            <div class="flex items-center max-w-2xl">
+              <div
+                class="flex-grow p-2 bg-white rounded-md border border-gray-300 max-w-xl"
+              >
+                {{ subtopic.name }}
+              </div>
+              <div class="icon-text absolute right-24 top-14">
+                <i
+                  class="fa-solid fa-trash-can fa-xl"
+                  style="cursor: pointer"
+                ></i>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!--------------- Recorrer temario legislación ---------------->
+    <div class="mb-16">
+      <h1 class="text-xl font-bold mb-2">Legislación</h1>
+      <div class="question-block mb-6 relative" *ngFor="let topic of legislacion">
+        <div
+          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
+          style="margin-right: 4rem"
+        >
+          <p>{{ topic.title }}</p>
+        </div>
+        <div class="icon-text absolute right-9 top-2">
+          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        </div>
+        <div class="icon-text absolute right-0 top-2">
+          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        </div>
+        <ul class="ml-8">
+          <li *ngFor="let subtopic of topic.topics" class="mb-2">
+            <div class="flex items-center">
+              <div
+                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
+              >
+                {{ subtopic.name }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!--------------- Recorrer temario otros ---------------->
+    <div class="mb-16">
+      <h1 class="text-xl font-bold mb-2">Otros</h1>
+      <div class="question-block mb-6 relative" *ngFor="let topic of otros">
+        <div
+          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
+          style="margin-right: 4rem"
+        >
+          <p>{{ topic.title }}</p>
+        </div>
+        <div class="icon-text absolute right-9 top-2">
+          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        </div>
+        <div class="icon-text absolute right-0 top-2">
+          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        </div>
+        <ul class="ml-8">
+          <li *ngFor="let subtopic of topic.topics" class="mb-2">
+            <div class="flex items-center">
+              <div
+                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
+              >
+                {{ subtopic.name }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--------------- Recorrer los arryas del temario aquí ---------------->
+  <div class="container mx-auto mt-8 max-w-3xl">
+    <!--------------- Recorrer temario especifco ---------------->
+    <div class="mb-16">
+      <h1 class="text-xl font-bold mb-2">Específico</h1>
+      <div class="question-block mb-6 relative" *ngFor="let topic of especifico">
+        <div
+          class="max-w-xl mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
+          style="margin-right: 4rem"
+        >
+          <p>{{ topic.title }}</p>
+        </div>
+        <div class="icon-text absolute right-24 top-2">
+          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        </div>
+        <div class="icon-text absolute right-24 top-2">
+          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        </div>
+        <ul class="ml-10">
+          <li *ngFor="let subtopic of topic.topics" class="mb-2">
+            <div class="flex items-center max-w-2xl">
+              <div
+                class="flex-grow p-2 bg-white rounded-md border border-gray-300 max-w-xl"
+              >
+                {{ subtopic.name }}
+              </div>
+              <div class="icon-text absolute right-24 top-14">
+                <i
+                  class="fa-solid fa-trash-can fa-xl"
+                  style="cursor: pointer"
+                ></i>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!--------------- Recorrer temario legislación ---------------->
+    <div class="mb-16">
+      <h1 class="text-xl font-bold mb-2">Legislación</h1>
+      <div class="question-block mb-6 relative" *ngFor="let topic of legislacion">
+        <div
+          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
+          style="margin-right: 4rem"
+        >
+          <p>{{ topic.title }}</p>
+        </div>
+        <div class="icon-text absolute right-9 top-2">
+          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        </div>
+        <div class="icon-text absolute right-0 top-2">
+          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        </div>
+        <ul class="ml-8">
+          <li *ngFor="let subtopic of topic.topics" class="mb-2">
+            <div class="flex items-center">
+              <div
+                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
+              >
+                {{ subtopic.name }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!--------------- Recorrer temario otros ---------------->
+    <div class="mb-16">
+      <h1 class="text-xl font-bold mb-2">Otros</h1>
+      <div class="question-block mb-6 relative" *ngFor="let topic of otros">
+        <div
+          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
+          style="margin-right: 4rem"
+        >
+          <p>{{ topic.title }}</p>
+        </div>
+        <div class="icon-text absolute right-9 top-2">
+          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        </div>
+        <div class="icon-text absolute right-0 top-2">
+          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        </div>
+        <ul class="ml-8">
+          <li *ngFor="let subtopic of topic.topics" class="mb-2">
+            <div class="flex items-center">
+              <div
+                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
+              >
+                {{ subtopic.name }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--------------- Añadir footer aquí ---------------->
+  <app-footer />
+</div>

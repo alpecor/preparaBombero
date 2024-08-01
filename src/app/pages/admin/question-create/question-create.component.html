@@ -1,87 +1,128 @@
-<!--------------- Añadir header aquí ---------------->
-<app-header [isAdmin]="isAdmin" />
-
-
-<!--------------- Añadir boton de + preguntas ---------------->
-  <div class="flex justify-end mr-24">
-    <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-full px-5 py-3.5"  (click)="openModal()">+</button>
-  </div>
-
-
-<!--------------- Añadir modal aquí ---------------->
-<!--
-<div id="createQuestion" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white p-8 rounded-lg">
-    <h2 class="text-xl mb-4 font-bold">Crear preguntas</h2>
-    <div class="flex justify-center">
-      <button (click)="closeModal()" class="text-gray-900 hover:bg-gray-300 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-2 py-2 mr-2">Cancelar</button>
-      <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-4 py-2 mr-2">Crear</button>
-    </div>
-  </div>
-</div>
+<!-- // TODO
+0. Validar que en la url siempre tienes admin/temario/<el id del topicId>
+1. El titulo y las opciones son input, cuando escribas debes hacer una petición a /PUT /quiz/<quizId>
+2. Cambiaría el boton eliminar
+3. Implementar la logica del boton eliminar, petición a DELETE /quiz/<quizId>
+4. Implementar la logica de añadir preguntas, petición a POST /quiz
 -->
 
-<div id="createQuestion" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white p-8 rounded-lg max-w-lg w-full">
-    <h2 class="text-xl mb-4 font-bold text-center">Crear pregunta</h2>
-    <label class="block text-sm font-medium text-gray-700">Enunciado</label>
-    <textarea id="question" rows="2" class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+<!-- Para el footer -->
+<div class="flex flex-col h-screen">
+  <!--------------- Añadir header aquí ---------------->
+  <app-header />
 
-    <div class="mt-4">
-      <label class="block text-sm font-medium text-gray-700">Opciones</label>
-      <div class="mt-1">
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">A</span>
-          <textarea rows="1" class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-        </div>
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">B</span>
-          <textarea rows="1" class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-        </div>
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">C</span>
-          <textarea rows="1" class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-        </div>
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">D</span>
-          <textarea rows="1" class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-        </div>
+  <!--------------- Añadir boton de + preguntas ---------------->
+  <div class="flex justify-end mr-24">
+    <button
+      class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-full px-5 py-3.5"
+      (click)="openModal()"
+    >
+      +
+    </button>
+  </div>
+
+  <!--------------- Añadir modal aquí ---------------->
+  <!--
+  <div id="createQuestion" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-8 rounded-lg">
+      <h2 class="text-xl mb-4 font-bold">Crear preguntas</h2>
+      <div class="flex justify-center">
+        <button (click)="closeModal()" class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-2">Cancelar</button>
+        <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2 mr-2">Crear</button>
       </div>
     </div>
-
-    <div class="flex justify-center mt-6">
-      <button class="text-gray-900 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2 mr-8" (click)="closeModal()">Cancelar</button>
-      <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 border border-colorButtonPrimary focus:outline-none font-medium rounded-lg px-8 py-2" >Crear</button>
-    </div>
   </div>
-</div>
+  -->
 
+  <div
+    id="createQuestion"
+    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+  >
+    <div class="bg-white p-8 rounded-lg max-w-lg w-full">
+      <h2 class="text-xl mb-4 font-bold text-center">Crear pregunta</h2>
+      <label class="block text-sm font-medium text-gray-700">Enunciado</label>
+      <textarea
+        id="question"
+        rows="2"
+        class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      ></textarea>
 
-<!--------------- Añadir preguntas aquí ---------------->
-<div class="container mx-auto mt-8 max-w-2xl">
-  <div class="question-block mb-12 relative" *ngFor="let question of questions; let i = index">
-    <h2 class="text-lg font-medium mb-2">
-      Pregunta {{ i + 1 }}
-    </h2>
-    <div class="mb-4 p-2 mr-12 bg-gray-100 rounded-md border border-gray-300">
-      <p>{{ question.question }}</p>
-    </div>
-    <div class="absolute right-3 top-11">
-      <i class="fa-solid fa-trash-can fa-xl" style="color: #1a1339;"></i>
-    </div>
-    <ul class="ml-8">
-      <li *ngFor="let option of question.options" class="mb-2">
-        <div class="flex items-center">
-          <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
-          <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
-            {{ option.text }}
+      <div class="mt-4">
+        <label class="block text-sm font-medium text-gray-700">Opciones</label>
+        <div class="mt-1">
+          <div class="flex items-center mb-2">
+            <span class="w-6 text-sm font-medium text-gray-700">A</span>
+            <textarea
+              rows="1"
+              class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
+          <div class="flex items-center mb-2">
+            <span class="w-6 text-sm font-medium text-gray-700">B</span>
+            <textarea
+              rows="1"
+              class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
+          <div class="flex items-center mb-2">
+            <span class="w-6 text-sm font-medium text-gray-700">C</span>
+            <textarea
+              rows="1"
+              class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
+          </div>
+          <div class="flex items-center mb-2">
+            <span class="w-6 text-sm font-medium text-gray-700">D</span>
+            <textarea
+              rows="1"
+              class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            ></textarea>
           </div>
         </div>
-      </li>
-    </ul>
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button
+          class="text-gray-900 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2 mr-8"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-8 py-2"
+        >
+          Crear
+        </button>
+      </div>
+    </div>
   </div>
+
+  <!--------------- Añadir preguntas aquí ---------------->
+  <div class="container mx-auto mt-8 max-w-2xl">
+    <div
+      class="question-block mb-12 relative"
+      *ngFor="let question of questions; let i = index"
+    >
+      <h2 class="text-lg font-medium mb-2">Pregunta {{ i + 1 }}</h2>
+      <div class="mb-4 p-2 mr-12 bg-gray-100 rounded-md border border-gray-300">
+        <p>{{ question.question }}</p>
+      </div>
+      <div class="absolute right-3 top-11">
+        <i class="fa-solid fa-trash-can fa-xl" style="color: #1a1339"></i>
+      </div>
+      <ul class="ml-8">
+        <li *ngFor="let option of question.options" class="mb-2">
+          <div class="flex items-center">
+            <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
+            <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
+              {{ option.text }}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!--------------- Añadir footer aquí ---------------->
+  <app-footer />
 </div>
-
-<!--------------- Añadir footer aquí ---------------->
-<app-footer/>
-

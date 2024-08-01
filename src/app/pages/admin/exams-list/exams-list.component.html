@@ -1,24 +1,32 @@
-<!--------------- Añadir header aquí ---------------->
-<app-header [isAdmin]="isAdmin" />
+<!-- // TODO
+1. Hacer una petición PUT /info para enviar el contenido
+2. Al entrar en la vista tienes que hacer una petición a GET /info para obtener la info y ponerla en los input
+-->
 
-<!------------------ text area -------------------->
-<div class="flex justify-center mb-8">
-  <div>
-    <textarea id="comments"  class="block text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 " placeholder="Actualmente contamos con..." style="width: 650px;"></textarea>
+<!-- Para el footer -->
+<div class="flex flex-col h-screen">
+  <!--------------- Añadir header aquí ---------------->
+  <app-header/>
+
+  <!------------------ text area -------------------->
+  <div class="flex justify-center mb-8">
+    <div>
+      <textarea id="comments"  class="block text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 " placeholder="Actualmente contamos con..." style="width: 650px;"></textarea>
+    </div>
   </div>
-</div>
 
-<!------------------ editor de texto -------------------->
-<div  class="flex justify-center mb-12" >
-  <p-editor [style]="{ height: '300px' , width:'650px' }" />
-</div>
+  <!------------------ editor de texto -------------------->
+  <div  class="flex justify-center mb-12" >
+    <p-editor [style]="{ height: '300px' , width:'650px' }" />
+  </div>
 
-<!------------------ botón guardar -------------------->
-<div class="flex justify-center mb-12 ">
-    <button class="text-white bg-colorButtonPrimary hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5">
-      Guardar
-    </button>
-</div>
+  <!------------------ botón guardar -------------------->
+  <div class="flex justify-center mb-12 ">
+      <button class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5">
+        Guardar
+      </button>
+  </div>
 
-<!--------------- Añadir footer aquí ---------------->
-<app-footer/>
+  <!--------------- Añadir footer aquí ---------------->
+  <app-footer/>
+</div>

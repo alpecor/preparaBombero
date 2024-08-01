@@ -1,27 +1,41 @@
-<footer class="footer">
-  <div class="footer-content ">
-    <div class="footer-section">
-      <h2>PREPARA BOMBERO</h2>
-      <p class="lorem-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      <p><i class="fas fa-phone"></i> +34 666666666</p>
-    </div>
-    <div class="footer-section">
-      <h3>Páginas</h3>
-      <ul>
-        <li class="lorem-text"><a href="#">Home</a></li>
-        <li><a href="#">Terms & Conditions</a></li>
-        <li><a href="#">Privacy Policy</a></li>
-      </ul>
-    </div>
-    <div class="footer-section">
-      <h3>Síguenos</h3>
-      <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-youtube"></i></a>
-        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+<!-- // TODO - Lo he pasado de html a flowbite, se ha reducido el css -->
+<footer class="bg-white dark:bg-gray-900">
+  <div class="mx-auto w-full max-w-screen-xl">
+    <div class="grid grid-cols-1 gap-8 px-4 py-6 lg:pt-8 md:grid-cols-3">
+      <div>
+        <h1 class="mb-6 text-xl font-bold text-gray-900 uppercase dark:text-white">PREPARA BOMBERO</h1>
+        <p class="text-gray-500 mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex items-center mt-2 text-gray-500">
+            <i class="fas fa-phone mr-2 text-yellow-500"></i>
+            <span>+34 666666666</span>
+        </div>
       </div>
-      <p>© 2024 preparaBombero</p>
+      <div>
+          <h3 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Páginas</h3>
+          <ul class="text-gray-500 dark:text-gray-400">
+            <li class="text-gray-500 hover:text-gray-700"><a href="#">Home</a></li>
+            <li class="text-gray-500 hover:text-gray-700"><a href="#">Terms & Conditions</a></li>
+            <li class="text-gray-500 hover:text-gray-700"><a href="#">Privacy Policy</a></li>
+          </ul>
+      </div>
+      <div>
+        <h3 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Síguenos</h3>
+        <div class="flex space-x-4 mt-2">
+            <a href="#" class="text-gray-500 hover:text-blue-600">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-blue-400">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-red-600">
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="#" class="text-gray-500 hover:text-blue-700">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+        <p class="text-gray-500 mt-2">© 2024 preparaBombero</p>
+      </div>
     </div>
   </div>
 </footer>
