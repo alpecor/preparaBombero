@@ -1,8 +1,3 @@
-<!-- // TODO -
- 1. Se quede seleccionada la pagina en la que estamos
- 2. Mostrar el titulo del header consultando la api GET /info
--->
- 
 <header class="bg-gray-800 text-white py-2">
   <div class="header-container mx-auto flex justify-center items-center">
     <div
@@ -10,7 +5,7 @@
       [routerLink]="['/listado-de-examenes']"
       style="cursor: pointer"
     >
-      <p>Actualmente contamos con 10 temas y 260 preguntas</p>
+      {{data.title}}
     </div>
   </div>
 </header>
@@ -50,7 +45,7 @@
       <!--------------- Botones e iconos si eres ADMIN ---------------->
       @if(isAdmin || isUser){
         <div class="flex items-center space-x-4">
-          <div class="icon-text mt-4" [routerLink]="['/home']" style="margin-right: 0.8rem; cursor: pointer">
+          <div class="icon-text mt-4" [routerLink]="['/home']" routerLinkActive="active-icon" style="margin-right: 0.8rem; cursor: pointer">
             <i class="fa-solid fa-house fa-lg mb-3"></i>
             <span>Home</span>
           </div>
@@ -59,21 +54,21 @@
               <i class="fa-solid fa-globe fa-lg mb-3"></i>
               <span>IPs</span>
             </div> -->
-            <div class="icon-text mt-4" [ngClass]="{'icon-text-hover': true === true}" [routerLink]="['/admin/examenes']" style="margin-right: 0.8rem; cursor: pointer">
+            <div class="icon-text mt-4" [routerLink]="['/admin/examenes']" routerLinkActive="active-icon" style="margin-right: 0.8rem; cursor: pointer">
               <i class="fa-solid fa-table-list fa-lg mb-3"></i>
               <span>Exámenes</span>
             </div>
-            <div class="icon-text mt-4" [routerLink]="['/admin/reportes']" style="margin-right: 0.8rem; cursor: pointer">
+            <div class="icon-text mt-4" [routerLink]="['/admin/reportes']" routerLinkActive="active-icon" style="margin-right: 0.8rem; cursor: pointer">
               <i class="fa-solid fa-ban fa-lg mb-3"></i>
               <span>Reportes</span>
             </div>
-            <div class="icon-text mt-4" [routerLink]="['/admin/temario']" style="margin-right: 0.8rem; cursor: pointer">
+            <div class="icon-text mt-4" [routerLink]="['/admin/temario']" routerLinkActive="active-icon" style="margin-right: 0.8rem; cursor: pointer">
               <i class="fa-solid fa-book fa-lg mb-3"></i>
               <span>Temario</span>
             </div>
           }
 
-          <div class="icon-text mt-4" style="margin-right: 0.8rem; cursor: pointer">
+          <div class="icon-text mt-4" routerLinkActive="active-icon" style="margin-right: 0.8rem; cursor: pointer">
             <i class="fa-solid fa-user fa-lg mb-3"></i>
             <span>Perfil</span>
           </div>

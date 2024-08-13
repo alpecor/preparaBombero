@@ -28,6 +28,11 @@
 }
 
 
+.active-icon {
+  color: #FFA500; /* Cambia esto al color que prefieras */
+  font-weight: bold;
+}
+
 /* Estilos para dispositivos móviles */
 @media (max-width: 767px) {
   .nav-container {

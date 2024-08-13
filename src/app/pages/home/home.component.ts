@@ -6,7 +6,6 @@ import { RequestService } from '../../services/request.service';
 import { Router, RouterLink } from '@angular/router';
 import { topicsComponent } from '../../components/topics/topics.component';
 
-
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -18,7 +17,7 @@ export class HomeComponent {
 
   constructor(private router: Router,private requestService: RequestService){}
 
-  topics: any;
+  topics: any = {};
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
   }

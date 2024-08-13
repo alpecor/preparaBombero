@@ -12,11 +12,19 @@ import { TopicsListComponent } from './pages/admin/topics-list/topics-list.compo
 import { noAuthGuard } from './guards/noAuth.guard';
 import { adminAuthGuard } from './guards/admin-auth.guard';
 import { userAuthGuard } from './guards/user-auth.guard';
+import { TermsConditionsComponent } from './components/welcome/terms-conditions/terms-conditions.component';
+import { PrivacyPolicyComponent } from './components/welcome/privacy-policy/privacy-policy.component';
 
 export const routes: Routes = [
-  //URL DE LA HOME
+  //URLs DE LA HOME
   {
     path:'', component: WelcomeComponent, canActivate:[noAuthGuard]
+  },
+  {
+    path:'terminos-y-condiciones', component: TermsConditionsComponent
+  },
+  {
+    path:'politica-de-privacidad', component: PrivacyPolicyComponent
   },
 
   //URLs DEL LOGIN
@@ -61,7 +69,7 @@ export const routes: Routes = [
   {
     path:'admin/reportes', component: ReportQuestionsListComponent, canActivate:[adminAuthGuard]
   },
-  
+
   {
     path:'admin/temario', component: TopicsListComponent, canActivate:[adminAuthGuard]
   },
