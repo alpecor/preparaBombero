@@ -11,8 +11,6 @@ import { FooterComponent } from '../../../components/footer/footer.component';
   styleUrl: './question-create.component.css'
 })
 export class QuestionCreateComponent {
-  @Input() isAdmin: boolean = true; //para cambiar la cabecera si es user o admin // TODO esto ya no hace falta
-
     //FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL
     openModal() {
       const modalCreate = document.getElementById('createQuestion');
