@@ -24,7 +24,6 @@ export class ExamenesComponent {
   getExamsInfo(){
     this.examsInfoService.getExamsInfo().subscribe( data => {
       this.data = data;
-      console.log(this.data);
     });
   }
 }

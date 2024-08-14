@@ -11,18 +11,18 @@
   <!------------------ text area -------------------->
   <div class="flex justify-center mb-8">
     <div>
-      <textarea id="comments"  class="block text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 " placeholder="Actualmente contamos con..." style="width: 650px;"></textarea>
+      <textarea id="comments" [(ngModel)]="title" class="block text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 " placeholder="Actualmente contamos con..." style="width: 650px;"></textarea>
     </div>
   </div>
 
   <!------------------ editor de texto -------------------->
   <div  class="flex justify-center mb-12" >
-    <p-editor [style]="{ height: '300px' , width:'650px' }" />
+    <p-editor [(ngModel)]="description" [style]="{ height: '300px' , width:'650px' }" />
   </div>
 
   <!------------------ botón guardar -------------------->
   <div class="flex justify-center mb-12 ">
-      <button class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5">
+      <button (click)="saveInfo()" class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5">
         Guardar
       </button>
   </div>
