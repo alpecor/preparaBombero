@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -12,7 +12,6 @@ import { RouterLink } from '@angular/router';
 export class topicsComponent {
   @Input() topics:any;
   @Input() margin:number= -1;
-
 
 
 }

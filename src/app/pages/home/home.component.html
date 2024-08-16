@@ -21,14 +21,14 @@
           <div class="mt-2 ml-4">
             @for (topic of topics[item]; track $index) {
               <div class="flex flex-col">
-                <div
-                  class="flex justify-between items-center py-2 border-b border-gray-300">
+                <div class="flex justify-between items-center py-2 border-b border-gray-300">
                   <div class="flex items-center">
                     <button (click)="topic.expanded = !topic.expanded" class="mr-2 focus:outline-none">
                       {{ topic.expanded ? "+" : "-" }}
                     </button>
                     <input
                       [checked]="topic.selected"
+
                       type="checkbox"
                       class="form-checkbox h-5 w-5 text-yellow-500"
                     />
@@ -45,103 +45,6 @@
         }
       </div>
 
-      <!-- <div>
-        <h2 class="text-xl font-bold">Legislación</h2>
-        <div class="mt-4 ml-4">
-          <div *ngFor="let tema of temasLegislacion" class="flex flex-col">
-            <div
-              class="flex justify-between items-center py-2 border-b border-gray-300"
-            >
-              <div class="flex items-center">
-                <button
-                  (click)="tema.expanded = !tema.expanded"
-                  class="mr-2 focus:outline-none"
-                >
-                  {{ tema.expanded ? "-" : "+" }}
-                </button>
-                <input
-                  type="checkbox"
-                  class="form-checkbox h-5 w-5 text-yellow-500"
-                />
-                <span class="ml-2">{{ tema.nombre }}</span>
-              </div>
-              <span>{{ tema.preguntas }}</span>
-            </div>
-            <div *ngIf="tema.expanded && tema.subtemas.length > 0" class="ml-8">
-              <div
-                *ngFor="let subtema of tema.subtemas"
-                class="flex justify-between items-center py-2 border-b border-gray-200"
-              >
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox h-5 w-5 text-yellow-500"
-                  />
-                  <span class="ml-2">{{ subtema.nombre }}</span>
-                </div>
-                <div class="flex items-center">
-                  <span>{{ subtema.preguntas }}</span>
-                  <button
-                    class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4"
-
-                  >
-                    Examinarme
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 class="text-xl font-bold">Otros</h2>
-        <div class="mt-4 ml-4">
-          <div *ngFor="let tema of temasOtros" class="flex flex-col">
-            <div
-              class="flex justify-between items-center py-2 border-b border-gray-300"
-            >
-              <div class="flex items-center">
-                <button
-                  (click)="tema.expanded = !tema.expanded"
-                  class="mr-2 focus:outline-none"
-                >
-                  {{ tema.expanded ? "-" : "+" }}
-                </button>
-                <input
-                  type="checkbox"
-                  class="form-checkbox h-5 w-5 text-yellow-500"
-                />
-                <span class="ml-2">{{ tema.nombre }}</span>
-              </div>
-              <span>{{ tema.preguntas }}</span>
-            </div>
-            <div *ngIf="tema.expanded && tema.subtemas.length > 0" class="ml-8">
-              <div
-                *ngFor="let subtema of tema.subtemas"
-                class="flex justify-between items-center py-2 border-b border-gray-200"
-              >
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox h-5 w-5 text-yellow-500"
-                  />
-                  <span class="ml-2">{{ subtema.nombre }}</span>
-                </div>
-                <div class="flex items-center">
-                  <span>{{ subtema.preguntas }}</span>
-                  <button
-                    class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-1 py-1 ml-4"
-                  >
-                    Examinarme
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
       <div class="flex justify-center">
         <div class="space-x-8 mt-8">
           <button
@@ -151,7 +54,8 @@
           </button>
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          >
+            (click)="openModalTest()"
+            >
             Repaso
           </button>
         </div>
@@ -159,8 +63,21 @@
     </div>
   </div>
 
-
   <!--------------- Añadir modal aquí ---------------->
+  <div id="multicuentas" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-8 rounded-lg">
+      <h2 class="text-xl mb-4 font-bold text-center">
+        AVISO MULTICUENTA
+      </h2>
+      <p>Recordamos que no está permitido el uso de una cuenta por más de una persona.</p>
+      <div class="flex justify-center mt-4">
+        <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+          (click)="closeModalTest()">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!--------------- Añadir footer aquí ---------------->
   <app-footer />
