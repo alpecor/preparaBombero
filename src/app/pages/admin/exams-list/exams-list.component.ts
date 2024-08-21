@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
-import { ExamsInfoService } from '../../../services/exams-info.service';
+import { RequestService } from '../../../services/request.service';
 
 @Component({
   selector: 'app-exams-list',
@@ -12,25 +12,35 @@ import { ExamsInfoService } from '../../../services/exams-info.service';
   templateUrl: './exams-list.component.html',
   styleUrl: './exams-list.component.css'
 })
-export class ExamsListComponent {
+export class ExamsListComponent implements OnInit{
   title: string = '';
   description: string = '';
 
-  constructor(private examsInfoService: ExamsInfoService) {}
+  constructor(private requestService: RequestService) {}
+
+  ngOnInit(): void {
+    // Cargar la información al iniciar el componente
+    this.loadInfo();
+  }
+
+
+   // Método para cargar la información desde el servicio
+  async loadInfo(): Promise<void> {
+    const data = await this.requestService.request('GET', `http://localhost:3000/info`, {}, {}, false);
+      this.title = data.title;
+      this.description = data.description;
+  }
+
 
   // Método para manejar el clic en "Guardar"
-  saveInfo(): void {
-    const infoData = {
-      title: this.title,
-      description: this.description
-    };
-
-    this.examsInfoService.updateExamsInfo(infoData).subscribe(response => {
-      console.log('Información actualizada:', response);
-      // Aquí puedes añadir alguna lógica adicional como mostrar una notificación de éxito
-    }, error => {
+  async saveInfo(){
+    try{
+      const data = await this.requestService.request('PUT', `http://localhost:3000/info`, {title: this.title, description: this.description}, {}, true);
+      console.log('Información actualizada:', data);
+      alert('Se ha guardado la información correctamente');
+      location.reload();
+    }catch(error){
       console.error('Error actualizando la información:', error);
-      // Manejo de errores, por ejemplo, mostrar un mensaje de error al usuario
-    });
+    };
   }
 }

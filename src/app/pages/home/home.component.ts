@@ -18,27 +18,89 @@ export class HomeComponent {
 
   constructor(private router: Router,private requestService: RequestService, private localStorageService: LocalStorageService){}
 
+  questions:string[] = []; //definir array donde guardaremos las preguntas
+
+  // Función que se llama al hacer clic en el botón para empezar el examen
+  async startExam() {
+
+    // Obtener los temas seleccionados del localStorage
+    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+    if (!topicsSelected || topicsSelected.length === 0) {
+      alert("No hay temarios seleccionados.");
+      return;
+    }
+
+    // Extraer los IDs de los temas seleccionados
+    const topicIds = topicsSelected.map((topic: any) => topic.id);
+
+    // Hacer la solicitud POST al backend
+    try{
+      this.questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`,{topicIds},{},true);
+      //Guardar las preguntas generadas en localStorage
+      this.localStorageService.setItem("examQuestions", this.questions);
+      console.log(this.questions);
+    }catch(error: any){
+      console.log(error);
+    }
+
+    // Navegar a la vista del examen
+    this.router.navigate(['/test']);
+  }
+
+
+
+
+   // Función que se llama al hacer clic en el botón para empezar el examen
+   async startReview() {
+
+    // Obtener los temas seleccionados del localStorage
+    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+    if (!topicsSelected || topicsSelected.length === 0) {
+      alert("No hay temarios seleccionados.");
+      return;
+    }
+
+    // Extraer los IDs de los temas seleccionados
+    const topicIds = topicsSelected.map((topic: any) => topic.id);
+
+    // Hacer la solicitud POST al backend
+    try{
+      this.questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`,{topicIds},{},true);
+      //Guardar las preguntas generadas en localStorage
+      this.localStorageService.setItem("examQuestions", this.questions);
+      console.log(this.questions);
+    }catch(error: any){
+      console.log(error);
+    }
+
+    // Navegar a la vista del examen
+    this.router.navigate(['/review-test']);
+  }
+
+
+
+
+  //FUNCIÓN PARA EL MODAL
+  openModalTest() {
+    const modalTest = document.getElementById('multicuentas');
+    if (modalTest) {
+      modalTest.classList.remove('hidden');
+    }
+  }
+
+  closeModalTest() {
+    const modalTest = document.getElementById('multicuentas');
+    if (modalTest) {
+      modalTest.classList.add('hidden');
+    }
+  }
+
   topics: any = {};
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
-
-
-
-//FUNCIÓN PARA EL MODAL
-openModalTest() {
-  const modalTest = document.getElementById('multicuentas');
-  if (modalTest) {
-    modalTest.classList.remove('hidden');
-  }
-}
-
-closeModalTest() {
-  const modalTest = document.getElementById('multicuentas');
-  if (modalTest) {
-    modalTest.classList.add('hidden');
-  }
-}
 
 
  async ngOnInit(): Promise<void> {
@@ -47,30 +109,73 @@ closeModalTest() {
     this.openModalTest();  // Abre el modal si no se ha mostrado antes
     localStorage.setItem('modalShown', 'true');  // Marca como mostrado
   }
-    try{
-      // Solicita los temas desde el servidor
-      this.topics = await this.requestService.request('GET', `http://localhost:3000/topic`,{},{},true);
-      // Después de obtener los temas, carga el estado de los checkbox desde localStorage
-      this.loadCheckboxStates();
+  try{
+    // Solicita los temas desde el servidor
+    this.topics = await this.requestService.request('GET', `http://localhost:3000/topic`,{},{},true);
+
+    Object.keys(this.topics).forEach(key => {
+      // Iterando sobre el array correspondiente a cada clave
+      this.topics[key] = this.topics[key].map((x: any) => {
+          let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
+          if (topicSelected.length > 0) {
+              const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
+              if (topic.length > 0) {
+                  x.selected = true;
+              } else {
+                  x.selected = false; // En caso de que no esté seleccionado en localStorage
+              }
+          }
+          return x;
+      });
+  });
+    console.log(this.topics);
     }catch(error: any){
       this.router.navigate(['/error']);
     }
   }
 
-  // Método para manejar el cambio de estado del checkbox
-  onCheckboxChange(topicId: string, isChecked: boolean): void {
-    // Almacenar el estado del checkbox en localStorage
-    this.localStorageService.setItem(topicId, isChecked);
-  }
 
-  // Método para cargar los estados de los checkbox desde localStorage
-  loadCheckboxStates(): void {
-    for (const key of this.objectKeys(this.topics)) {
-      for (const topic of this.topics[key]) {
-        const storedState = this.localStorageService.getItem(topic.id);
-        topic.selected = storedState !== null ? storedState : false;
-      }
+  selectedTopic(topicId: number, event: any, key: string) {
+    const isChecked: boolean = event.target.checked;
+    console.log(topicId);
+    let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
+    if (isChecked) {
+        // Agrega el topic actual
+        topicSelected.push({ id: topicId, isChecked });
+    } else {
+        // Filtra el topic actual de los seleccionados
+        topicSelected = topicSelected.filter((x: any) => x.id != topicId);
     }
+    // Función recursiva para seleccionar/deseleccionar un topic y sus hijos
+    const updateTopicSelection = (topics: any[], id: number, isSelected: boolean) => {
+        for (let topic of topics) {
+            if (topic.id === id) {
+                topic.selected = isSelected;
+                console.log(`Actualizando ${topic.id} a seleccionado: ${isSelected}`);
+
+                // Si el topic tiene hijos, también actualiza sus hijos recursivamente
+                if (topic.topics && topic.topics.length > 0) {
+                    for (let child of topic.topics) {
+                        updateTopicSelection([child], child.id, isSelected);
+                        if (isSelected) {
+                            topicSelected.push({ id: child.id, isChecked: isSelected });
+                        } else {
+                            topicSelected = topicSelected.filter((x: any) => x.id != child.id);
+                        }
+                    }
+                }
+            } else if (topic.topics && topic.topics.length > 0) {
+                // Recurre en los subtopics si no es el topic actual pero tiene hijos
+                updateTopicSelection(topic.topics, id, isSelected);
+            }
+        }
+    };
+
+    // Actualizar la variable topics
+    updateTopicSelection(this.topics[key], topicId, isChecked);
+
+    this.localStorageService.setItem("topicsSelected", topicSelected);
+    console.log(this.topics, key, topicId);
   }
 
 }

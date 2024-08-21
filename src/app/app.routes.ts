@@ -14,6 +14,8 @@ import { adminAuthGuard } from './guards/admin-auth.guard';
 import { userAuthGuard } from './guards/user-auth.guard';
 import { TermsConditionsComponent } from './components/welcome/terms-conditions/terms-conditions.component';
 import { PrivacyPolicyComponent } from './components/welcome/privacy-policy/privacy-policy.component';
+import { CheckExamComponent } from './pages/check-exam/check-exam.component';
+import { ReviewTestComponent } from './pages/review-test/review-test.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -52,10 +54,20 @@ export const routes: Routes = [
     path:'home', component: HomeComponent, canActivate:[userAuthGuard]
   },
 
-  //URL DE TEST
+  //URL DE EXAMEN
   {
     path:'test', component: QuestionsComponent, canActivate:[userAuthGuard]
   },
+
+  //URL DE REPASO
+  {
+    path:'review-test', component: ReviewTestComponent, canActivate:[userAuthGuard]
+  },
+  //URL DE EXAMEN CORREGIDO
+  {
+    path:'check-exam', component: CheckExamComponent, canActivate:[userAuthGuard]
+  },
+
 
 
 

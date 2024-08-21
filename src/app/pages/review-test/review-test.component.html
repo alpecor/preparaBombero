@@ -1,0 +1,102 @@
+<!--------------- Añadir header aquí ------------>
+<app-header />
+
+<!--------------- Añadir barra de progreso aquí ------------>
+<div class="flex justify-center">
+  <div class="progress-bar-container">
+    <div class="progress-bar" [style.width.%]="progress()">
+      {{ progressText() }}
+    </div>
+  </div>
+</div>
+
+<!--------------- Añadir preguntas del test aquí ------------>
+<div class="flex justify-center p-4">
+  <div class="w-full max-w-3xl">
+    <div
+      *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
+      class="p-6 mb-12 border rounded-xl bg-gray-50"
+    >
+      <h2 class="text-lg font-semibold mb-2">
+        {{ (page.page) * questionsPerPage + i + 1 }}.
+        {{ question.title }}
+      </h2>
+      <div class="relative">
+        <hr class="border-t border-gray-300 mb-4" />
+        <img
+          (click)="openModal(question.id)"
+          ngSrc="reporte2.png"
+          class="absolute top-[calc(50%-33px)] right-0"
+          width="24"
+          height="24"
+          alt="reportar pregunta"
+          style="cursor: pointer"
+        />
+      </div>
+      <ul class="list-none space-y-2">
+        <li *ngFor="let respuesta of question.respuestas">
+          <label class="flex items-center space-x-3">
+            <input
+              type="radio"
+              name="question-{{ (page.page) * questionsPerPage + i }}"
+              class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+              [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
+              [value]="respuesta"
+              (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
+            />
+            <span class="text-gray-700">{{ respuesta }}</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-------------------- Modal de reporte ----------------->
+    <div
+      id="reportModal"
+      class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-8 rounded-lg">
+        <h2 class="text-xl mb-4 font-bold">
+          Indique el motivo de reportar esta pregunta
+        </h2>
+        <textarea
+          id="reportReason"
+          class="w-full p-2 border rounded-lg resize-none"
+          rows="5"
+          placeholder="Escriba aquí el motivo..."
+        ></textarea>
+        <div class="flex justify-end mt-4">
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2 mr-2"
+            (click)="sendReport()"
+          >
+            Enviar Reporte
+          </button>
+          <button
+            class="text-gray-600 bg-gray-200 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2"
+            (click)="closeModal()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-------------------- Paginación ----------------->
+
+<div class="pagination-container relative flex justify-center mt-6 space-x-2" >
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="0"
+    [rows]="20"
+    [totalRecords]="examQuestion.length"
+    styleClass="custom-paginator"
+  />
+  <button
+    class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+    >
+    Corregir
+  </button>
+</div>

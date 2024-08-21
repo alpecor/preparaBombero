@@ -2,7 +2,7 @@
 1. Obtener el topicId de la url y hacerme una petición a POST /quiz/generate para obtener las preguntas del examen
 2. Cuando se pase de paginación, se debe almacenar las respuestas seleccionadas (esto almacenarlo tmben localStorage)
 3. Al enviar el examen, te tiene que llevar a una nueva vista que hagas y enviarle por body(no por la url) las preguntas seleccionadas, esta nueva pagina hará una petición a /POST /quiz/check para obtener la nota
-4. Hacer una petición a POST /report cuando se envíe un reporte
+4. Hacer una petición a POST /report cuando se envíe un reporte (está hecho pero da 404)
 -->
 
 <!--------------- Añadir header aquí ------------>
@@ -21,23 +21,23 @@
 <div class="flex justify-center p-4">
   <div class="w-full max-w-3xl">
     <div
-      *ngFor="let question of questions.slice(page.first, page.first + questionsPerPage); let i = index"
-      class="p-6 mb-12 border rounded-xl"
+      *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
+      class="p-6 mb-12 border rounded-xl bg-gray-50"
     >
       <h2 class="text-lg font-semibold mb-2">
         {{ (page.page) * questionsPerPage + i + 1 }}.
-        {{ question.enunciado }}
+        {{ question.title }}
       </h2>
       <div class="relative">
         <hr class="border-t border-gray-300 mb-4" />
         <img
+          (click)="openModal(question.id)"
           ngSrc="reporte2.png"
           class="absolute top-[calc(50%-33px)] right-0"
           width="24"
           height="24"
           alt="reportar pregunta"
           style="cursor: pointer"
-          (click)="openModal()"
         />
       </div>
       <ul class="list-none space-y-2">
@@ -47,6 +47,11 @@
               type="radio"
               name="question-{{ (page.page) * questionsPerPage + i }}"
               class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+              [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
+              [value]="respuesta"
+              (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
+
+             
             />
             <span class="text-gray-700">{{ respuesta }}</span>
           </label>
@@ -87,12 +92,6 @@
     </div>
 
 
-
-
-
-
-
-
     <!-------------------- Paginación ---------------->
 
   <div class="pagination-container relative flex justify-center mt-6 space-x-2" >
@@ -100,7 +99,8 @@
         (onPageChange)="onPageChange($event)"
         [first]="0"
         [rows]="20"
-        [totalRecords]="questions.length"
+        [totalRecords]="examQuestion.length"
+        styleClass="custom-paginator"
       />
 
       @if (progress() == 100) {
@@ -111,21 +111,6 @@
         </button>
       }
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       <!-------------------- Modal de fin de test ----------------->

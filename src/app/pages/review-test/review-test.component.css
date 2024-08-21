@@ -28,10 +28,10 @@
 
 /* ------ Paginación ------------- */
 .finish-button {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  padding: 0rem 1rem;
+  line-height: 4rem; /* Ajusta para controlar la altura del botón */
+  transform: translateY(0%);
 }
 
 

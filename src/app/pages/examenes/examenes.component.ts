@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { ExamsInfoService } from '../../services/exams-info.service';
+import { RequestService } from '../../services/request.service';
 
 @Component({
   selector: 'app-examenes',
@@ -13,17 +13,17 @@ import { ExamsInfoService } from '../../services/exams-info.service';
 })
 export class ExamenesComponent {
 
-  data: any = {};
+  description: string = "";
 
-  constructor(private examsInfoService: ExamsInfoService) {}
+  constructor(private requestService: RequestService) {}
 
   ngOnInit(): void {
-    this.getExamsInfo();
+    this.loadInfo();
   }
 
-  getExamsInfo(){
-    this.examsInfoService.getExamsInfo().subscribe( data => {
-      this.data = data;
-    });
+   // Método para cargar la información desde el servicio
+   async loadInfo(): Promise<void> {
+    const data = await this.requestService.request('GET', `http://localhost:3000/info`, {}, {}, false);
+      this.description = data.description;
   }
 }

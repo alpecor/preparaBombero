@@ -4,6 +4,7 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { RequestService } from '../../../services/request.service';
 import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 interface SubTopic {
   name: string;
@@ -23,7 +24,7 @@ interface Topic {
 })
 export class TopicsListComponent implements OnInit{
 
-  constructor(private router: Router,private requestService: RequestService){}
+  constructor(private router: Router,private requestService: RequestService, private http: HttpClient){}
 
   topics: any;
 
@@ -35,6 +36,65 @@ export class TopicsListComponent implements OnInit{
       // TODO descomentar lineas de arriba
     }
   }
+
+
+//FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL
+openModal() {
+  const modalReport = document.getElementById('crearTema');
+  if (modalReport) {
+    modalReport.classList.remove('hidden');
+    console.log("se abre el modal de preguntas");
+  }
+}
+
+closeModal() {
+  const modalReport = document.getElementById('crearTema');
+  if (modalReport) {
+    modalReport.classList.add('hidden');
+    console.log("se da en cancelar ahora");
+  }
+}
+
+createTopic() {
+  const modal = document.getElementById('reportModal');
+  // Obtener el motivo del reporte desde el textarea
+  const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
+  // Obtener el access_token
+  const accessToken = localStorage.getItem('access_token');
+  // Crear el cuerpo de la petición
+  const reportData = {
+    reason: reportReason,
+    quizID: 4
+  };
+  // Configurar los headers con el token
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${accessToken}`  // Incluir el token en los headers
+  });
+  // Enviar la petición POST usando HttpClient
+  this.http.post('http://localhost:4200/report', reportData, { headers }).subscribe({
+      next: (response) => {
+        console.log('Reporte enviado:', response);
+        // Cerrar el modal después de enviar el reporte
+        if (modal) {
+          modal.classList.add('hidden');
+        }
+      },
+      error: (error) => {
+        console.error('Error al enviar el reporte:', error);
+      }
+    });
+}
+
+
+
+
+
+
+
+
+
+
 
 
   especifico: Topic[] = [

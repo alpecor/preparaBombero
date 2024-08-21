@@ -11,6 +11,7 @@
 
 <!-- Para el footer -->
 <div class="flex flex-col h-screen">
+
   <!--------------- Añadir header aquí ---------------->
   <app-header />
 
@@ -18,33 +19,29 @@
   <div class="container mx-auto mt-8 max-w-3xl">
     <!--------------- Recorrer temario especifco ---------------->
     <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Específico</h1>
+      <h1 class="text-xl font-bold mb-2">Específicos</h1>
       <div class="question-block mb-6 relative" *ngFor="let topic of especifico">
         <div
-          class="max-w-xl mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 4rem"
+          class="mb-2 p-2 bg-gray-200 rounded-md border border-gray-300 "
+          style="margin-right: 6rem"
         >
           <p>{{ topic.title }}</p>
         </div>
-        <div class="icon-text absolute right-24 top-2">
-          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
+        <div class="icon-container absolute right-7 top-2">
+          <i class="fa-solid fa-trash-can fa-xl icon-trash" style="cursor: pointer"></i>
+          <i class="fa-solid fa-plus fa-xl icon-plus" style="cursor: pointer; margin-left: 8px;"></i>
         </div>
-        <div class="icon-text absolute right-24 top-2">
-          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
-        </div>
-        <ul class="ml-10">
+        <ul class="ml-8">
           <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center max-w-2xl">
-              <div
-                class="flex-grow p-2 bg-white rounded-md border border-gray-300 max-w-xl"
-              >
+            <div class="flex items-center">
+              <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
                 {{ subtopic.name }}
               </div>
-              <div class="icon-text absolute right-24 top-14">
-                <i
-                  class="fa-solid fa-trash-can fa-xl"
-                  style="cursor: pointer"
-                ></i>
+              <div class="ml-4">
+                <i class="fa-solid fa-plus fa-xl" style="cursor: pointer"></i>
+              </div>
+              <div class="ml-2">
+                <i class="fa-solid fa-minus fa-xl" style="cursor: pointer"></i>
               </div>
             </div>
           </li>
@@ -52,35 +49,39 @@
       </div>
     </div>
 
-    <!--------------- Recorrer temario legislación ---------------->
-    <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Legislación</h1>
-      <div class="question-block mb-6 relative" *ngFor="let topic of legislacion">
-        <div
-          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 4rem"
-        >
-          <p>{{ topic.title }}</p>
-        </div>
-        <div class="icon-text absolute right-9 top-2">
-          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
-        </div>
-        <div class="icon-text absolute right-0 top-2">
-          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
-        </div>
-        <ul class="ml-8">
-          <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center">
-              <div
-                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
-              >
-                {{ subtopic.name }}
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
+
+<!--------------- Recorrer temario legislación ---------------->
+<div class="mb-16">
+  <h1 class="text-xl font-bold mb-2">Legislación</h1>
+  <div class="question-block mb-6 relative" *ngFor="let topic of legislacion">
+    <div
+      class="mb-2 p-2 bg-gray-200 rounded-md border border-gray-300 "
+      style="margin-right: 6rem"
+    >
+      <p>{{ topic.title }}</p>
     </div>
+    <div class="icon-container absolute right-7 top-2">
+      <i class="fa-solid fa-trash-can fa-xl icon-trash" style="cursor: pointer"></i>
+      <i class="fa-solid fa-plus fa-xl icon-plus" style="cursor: pointer; margin-left: 8px;"></i>
+    </div>
+    <ul class="ml-8">
+      <li *ngFor="let subtopic of topic.topics" class="mb-2">
+        <div class="flex items-center">
+          <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
+            {{ subtopic.name }}
+          </div>
+          <div class="ml-4">
+            <i class="fa-solid fa-plus fa-xl" style="cursor: pointer"></i>
+          </div>
+          <div class="ml-2">
+            <i class="fa-solid fa-minus fa-xl" style="cursor: pointer"></i>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
 
     <!--------------- Recorrer temario otros ---------------->
     <div class="mb-16">
@@ -88,23 +89,25 @@
       <div class="question-block mb-6 relative" *ngFor="let topic of otros">
         <div
           class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 4rem"
+          style="margin-right: 6rem"
         >
           <p>{{ topic.title }}</p>
         </div>
-        <div class="icon-text absolute right-9 top-2">
-          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
-        </div>
-        <div class="icon-text absolute right-0 top-2">
-          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
+        <div class="icon-container absolute right-7 top-2">
+          <i class="fa-solid fa-trash-can fa-xl icon-trash" style="cursor: pointer"></i>
+          <i class="fa-solid fa-plus fa-xl icon-plus" style="cursor: pointer; margin-left: 8px;"></i>
         </div>
         <ul class="ml-8">
           <li *ngFor="let subtopic of topic.topics" class="mb-2">
             <div class="flex items-center">
-              <div
-                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
-              >
+              <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
                 {{ subtopic.name }}
+              </div>
+              <div class="ml-4">
+                <i class="fa-solid fa-plus fa-xl" style="cursor: pointer"></i>
+              </div>
+              <div class="ml-2">
+                <i class="fa-solid fa-minus fa-xl" style="cursor: pointer"></i>
               </div>
             </div>
           </li>
@@ -113,137 +116,49 @@
     </div>
   </div>
 
+  <!--------------- Botón flotante ---------------->
+  <button class="fixed bottom-10 right-12 text-white bg-primaryColor hover:bg-yellow-600 rounded-full w-12 h-12 shadow-lg flex items-center justify-center"
+    (click)="openModal()"
+    >
+    <i class="fa-solid fa-plus fa-2xl"></i>
+  </button>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <!--------------- Recorrer los arryas del temario aquí ---------------->
-  <div class="container mx-auto mt-8 max-w-3xl">
-    <!--------------- Recorrer temario especifco ---------------->
-    <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Específico</h1>
-      <div class="question-block mb-6 relative" *ngFor="let topic of especifico">
-        <div
-          class="max-w-xl mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 4rem"
-        >
-          <p>{{ topic.title }}</p>
-        </div>
-        <div class="icon-text absolute right-24 top-2">
-          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
-        </div>
-        <div class="icon-text absolute right-24 top-2">
-          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
-        </div>
-        <ul class="ml-10">
-          <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center max-w-2xl">
-              <div
-                class="flex-grow p-2 bg-white rounded-md border border-gray-300 max-w-xl"
-              >
-                {{ subtopic.name }}
-              </div>
-              <div class="icon-text absolute right-24 top-14">
-                <i
-                  class="fa-solid fa-trash-can fa-xl"
-                  style="cursor: pointer"
-                ></i>
-              </div>
-            </div>
-          </li>
-        </ul>
+  <!--------------- Añadir modal aquí ---------------->
+  <div id="crearTema" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-8 w-96 rounded-lg">
+      <h2 class="text-xl mb-4 font-bold text-center">
+        Añadir tema
+      </h2>
+      <!--------------- Formulario de creación de tema ---------------->
+      <div class="mb-4">
+        <label for="temaName" class="block text-gray-700 font-bold mb-2">Tema</label>
+        <input type="text" id="temaName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tema 10,...">
       </div>
-    </div>
 
-    <!--------------- Recorrer temario legislación ---------------->
-    <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Legislación</h1>
-      <div class="question-block mb-6 relative" *ngFor="let topic of legislacion">
-        <div
-          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 4rem"
-        >
-          <p>{{ topic.title }}</p>
-        </div>
-        <div class="icon-text absolute right-9 top-2">
-          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
-        </div>
-        <div class="icon-text absolute right-0 top-2">
-          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
-        </div>
-        <ul class="ml-8">
-          <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center">
-              <div
-                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
-              >
-                {{ subtopic.name }}
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+      <div class="mb-6">
+        <label for="selectBloque" class="block text-gray-700 font-bold mb-2">Selecciona Bloque</label>
+        <select id="selectBloque" class="w-full p-2 border border-gray-300 rounded-md">
+            <option value="" disabled selected>Selecciona Bloque</option>
+            <option value="especifico">Específico</option>
+            <option value="legislacion">Legislación</option>
+            <option value="otros">Otros</option>
+        </select>
+     </div>
 
-    <!--------------- Recorrer temario otros ---------------->
-    <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Otros</h1>
-      <div class="question-block mb-6 relative" *ngFor="let topic of otros">
-        <div
-          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 4rem"
-        >
-          <p>{{ topic.title }}</p>
-        </div>
-        <div class="icon-text absolute right-9 top-2">
-          <i class="fa-solid fa-trash-can fa-xl" style="cursor: pointer"></i>
-        </div>
-        <div class="icon-text absolute right-0 top-2">
-          <i class="fa-solid fa-eye fa-xl" style="cursor: pointer"></i>
-        </div>
-        <ul class="ml-8">
-          <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center">
-              <div
-                class="flex-grow p-2 bg-white rounded-md border border-gray-300"
-              >
-                {{ subtopic.name }}
-              </div>
-            </div>
-          </li>
-        </ul>
+
+
+      <div class="flex justify-center mt-4">
+        <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+          (click)="closeModal()">
+            Cancelar
+        </button>
+        <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+          (click)="createTopic()">
+            Crear
+        </button>
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!--------------- Añadir footer aquí ---------------->
   <app-footer />

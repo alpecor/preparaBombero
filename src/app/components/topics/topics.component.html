@@ -4,6 +4,7 @@
       <div class="mb-1 flex items-center">
           <input
             [checked]="item.selected"
+            (click)="selectedTopic(item.id, $event)"
             type="checkbox"
             class="form-checkbox h-5 w-5 text-yellow-500"
           />

@@ -28,7 +28,7 @@
                     </button>
                     <input
                       [checked]="topic.selected"
-
+                      (click)="selectedTopic(topic.id, $event, item)"
                       type="checkbox"
                       class="form-checkbox h-5 w-5 text-yellow-500"
                     />
@@ -49,13 +49,12 @@
         <div class="space-x-8 mt-8">
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          >
+            (click)="startExam()">
             Examen
           </button>
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="openModalTest()"
-            >
+            (click)="startReview()">
             Repaso
           </button>
         </div>

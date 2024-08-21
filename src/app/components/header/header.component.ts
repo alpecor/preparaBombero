@@ -3,7 +3,7 @@ import { Component, OnInit} from '@angular/core';
 import { RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { ExamsInfoService } from '../../services/exams-info.service';
+import { RequestService } from '../../services/request.service';
 
 
 @Component({
@@ -15,26 +15,23 @@ import { ExamsInfoService } from '../../services/exams-info.service';
 })
 export class HeaderComponent implements OnInit {
 
-  data: any = {};
-
-  constructor(private router: Router, private authService: AuthService, private examsInfoService: ExamsInfoService) {}
-
-  ngOnInit(): void {
-    this.getExamsInfo();
-  }
-
-  getExamsInfo(){
-    this.examsInfoService.getExamsInfo().subscribe( data => {
-      this.data = data;
-      console.log(this.data);
-    });
-  }
-
-
+  constructor(private router: Router, private authService: AuthService, private requestService: RequestService) {}
   title: string = "";
   isAdmin: boolean = this.authService.isAdmin();
   isUser: boolean = this.authService.isUser();
   isNotAuth: boolean = this.authService.isNotAuth();
+
+
+  ngOnInit(): void {
+    this.loadInfo();
+  }
+
+   // Método para cargar la información desde el servicio
+   async loadInfo(): Promise<void> {
+    const data = await this.requestService.request('GET', `http://localhost:3000/info`, {}, {}, false);
+    this.title = data.title;
+  }
+
 
   logout(){
     localStorage.removeItem('access_token');

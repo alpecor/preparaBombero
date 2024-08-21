@@ -48,6 +48,8 @@
       <h2 class="text-xl mb-4 font-bold">
         La pregunta ha sido reportada por el siguiente motivo:
       </h2>
+      <!-- Mostrar el motivo del reporte -->
+      <p class="text-center text-gray-700">{{ selectedReason }}</p>
       <div class="flex justify-center mt-8">
         <button
           class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
@@ -70,31 +72,47 @@
         class="mb-4 p-2 bg-gray-100 rounded-md"
         style="margin-right: 4rem"
       >
-        <p>{{ question.question }}</p>
+        <p>{{ question.quiz.title }}</p>
       </div>
       <div class="icon-text absolute right-9 top-11">
         <i
-          (click)="openRemoveModal()"
+          (click)="openRemoveModal(i)"
           class="fa-solid fa-trash-can fa-xl"
           style="cursor: pointer"
         ></i>
       </div>
       <div class="icon-text absolute right-0 top-11">
         <i
-          (click)="openSeeModal()"
+          (click)="openSeeModal(question.reason)"
           class="fa-solid fa-eye fa-xl"
           style="cursor: pointer"
         ></i>
       </div>
       <ul class="ml-8">
-        <li *ngFor="let option of question.options" class="mb-2">
           <div class="flex items-center">
-            <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
+            <div class="flex-none w-6 font-medium">A</div>
             <div class="flex-grow p-2 bg-white rounded-md">
-              {{ option.text }}
+              {{question.quiz.option1}}
             </div>
           </div>
-        </li>
+          <div class="flex items-center">
+            <div class="flex-none w-6 font-medium">B</div>
+            <div class="flex-grow p-2 bg-white rounded-md">
+              {{question.quiz.option2}}
+            </div>
+          </div>
+          <div class="flex items-center">
+            <div class="flex-none w-6 font-medium">C</div>
+            <div class="flex-grow p-2 bg-white rounded-md">
+              {{question.quiz.option3}}
+            </div>
+          </div>
+          <div class="flex items-center">
+            <div class="flex-none w-6 font-medium">D</div>
+            <div class="flex-grow p-2 bg-white rounded-md">
+              {{question.quiz.option4}}
+            </div>
+          </div>
       </ul>
     </div>
   </div>
