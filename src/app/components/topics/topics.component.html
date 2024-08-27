@@ -11,8 +11,8 @@
           <span class="ml-2">{{ item.title }}</span>
       </div>
       <div class="flex items-center">
-          <span>{{ item.quizCount }}</span>
-          <i class="fa-solid fa-pencil ml-2" [routerLink]="['/test']" style="cursor: pointer"></i>
+          <span class="mr-2">{{ item.quizCount }}</span>
+          <i title="Hacer examen" class="fa-solid fa-arrow-right fa-lg" [routerLink]="['/test']" style="cursor: pointer"></i>
       </div>
     </div>
   </div>

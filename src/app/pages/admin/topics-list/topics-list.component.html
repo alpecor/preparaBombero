@@ -12,118 +12,55 @@
 <!-- Para el footer -->
 <div class="flex flex-col h-screen">
 
-  <!--------------- Añadir header aquí ---------------->
+<!-- ****************************** AÑADIR HEADER AQUÍ **********************************-->
   <app-header />
 
-  <!--------------- Recorrer los arryas del temario aquí ---------------->
+<!-- ****************************** RECORRER TEMARIO AQUÍ **********************************-->
+
   <div class="container mx-auto mt-8 max-w-3xl">
-    <!--------------- Recorrer temario especifco ---------------->
-    <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Específicos</h1>
-      <div class="question-block mb-6 relative" *ngFor="let topic of especifico">
-        <div
-          class="mb-2 p-2 bg-gray-200 rounded-md border border-gray-300 "
-          style="margin-right: 6rem"
-        >
-          <p>{{ topic.title }}</p>
-        </div>
-        <div class="icon-container absolute right-7 top-2">
-          <i class="fa-solid fa-trash-can fa-xl icon-trash" style="cursor: pointer"></i>
-          <i class="fa-solid fa-plus fa-xl icon-plus" style="cursor: pointer; margin-left: 8px;"></i>
-        </div>
-        <ul class="ml-8">
-          <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center">
-              <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
-                {{ subtopic.name }}
-              </div>
-              <div class="ml-4">
-                <i class="fa-solid fa-plus fa-xl" style="cursor: pointer"></i>
-              </div>
-              <div class="ml-2">
-                <i class="fa-solid fa-minus fa-xl" style="cursor: pointer"></i>
-              </div>
-            </div>
-          </li>
-        </ul>
+    @for(item of objectKeys(topics); track $index){
+      <!--------------- Recorrer temario especifco ---------------->
+      <div class="mb-16">
+        <h1 class="text-xl font-bold mb-2">{{item}}</h1>
+        @for (topic of topics[item]; track $index) {
+          <div class="question-block mb-6 relative w-full ">
+            <ul class="ml-2">
+              <li class="mb-2">
+                <div class="flex items-center">
+                  <input (input)="editTitle($event, topic)" class="flex-grow p-2 bg-gray-200 rounded-md border border-gray-300" value="{{ topic.title }}">
+                  <div class="ml-4">
+                    <i (click)="openModalSubtopic(topic.id)" class="fa-solid fa-plus fa-lg" style="cursor: pointer"></i>
+                  </div>
+                  <div class="ml-2">
+                    <i (click)="openModalDeleteTopic(topic.id)" class="fa-solid fa-trash-can fa-lg" style="cursor: pointer"></i>
+                  </div>
+                  <div class="ml-2">
+                    <i class="fa-solid fa-arrow-right fa-lg" [routerLink]="['/admin/temario/'+ topic.id]" style="cursor: pointer"></i>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <ul class="ml-2" style="margin-top: 1.4rem">
+              <app-admin-topics [topics]="topic.topics" [margin]="2" />
+            </ul>
+          </div>
+        }
       </div>
-    </div>
-
-
-<!--------------- Recorrer temario legislación ---------------->
-<div class="mb-16">
-  <h1 class="text-xl font-bold mb-2">Legislación</h1>
-  <div class="question-block mb-6 relative" *ngFor="let topic of legislacion">
-    <div
-      class="mb-2 p-2 bg-gray-200 rounded-md border border-gray-300 "
-      style="margin-right: 6rem"
-    >
-      <p>{{ topic.title }}</p>
-    </div>
-    <div class="icon-container absolute right-7 top-2">
-      <i class="fa-solid fa-trash-can fa-xl icon-trash" style="cursor: pointer"></i>
-      <i class="fa-solid fa-plus fa-xl icon-plus" style="cursor: pointer; margin-left: 8px;"></i>
-    </div>
-    <ul class="ml-8">
-      <li *ngFor="let subtopic of topic.topics" class="mb-2">
-        <div class="flex items-center">
-          <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
-            {{ subtopic.name }}
-          </div>
-          <div class="ml-4">
-            <i class="fa-solid fa-plus fa-xl" style="cursor: pointer"></i>
-          </div>
-          <div class="ml-2">
-            <i class="fa-solid fa-minus fa-xl" style="cursor: pointer"></i>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div>
-
-
-    <!--------------- Recorrer temario otros ---------------->
-    <div class="mb-16">
-      <h1 class="text-xl font-bold mb-2">Otros</h1>
-      <div class="question-block mb-6 relative" *ngFor="let topic of otros">
-        <div
-          class="mb-2 p-2 bg-gray-100 rounded-md border border-gray-300"
-          style="margin-right: 6rem"
-        >
-          <p>{{ topic.title }}</p>
-        </div>
-        <div class="icon-container absolute right-7 top-2">
-          <i class="fa-solid fa-trash-can fa-xl icon-trash" style="cursor: pointer"></i>
-          <i class="fa-solid fa-plus fa-xl icon-plus" style="cursor: pointer; margin-left: 8px;"></i>
-        </div>
-        <ul class="ml-8">
-          <li *ngFor="let subtopic of topic.topics" class="mb-2">
-            <div class="flex items-center">
-              <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
-                {{ subtopic.name }}
-              </div>
-              <div class="ml-4">
-                <i class="fa-solid fa-plus fa-xl" style="cursor: pointer"></i>
-              </div>
-              <div class="ml-2">
-                <i class="fa-solid fa-minus fa-xl" style="cursor: pointer"></i>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    }
   </div>
 
-  <!--------------- Botón flotante ---------------->
+
+<!-- ****************************** BOTÓN FLOTANTE + **********************************-->
+
   <button class="fixed bottom-10 right-12 text-white bg-primaryColor hover:bg-yellow-600 rounded-full w-12 h-12 shadow-lg flex items-center justify-center"
-    (click)="openModal()"
+    (click)="openModalTopic()"
     >
     <i class="fa-solid fa-plus fa-2xl"></i>
   </button>
 
-  <!--------------- Añadir modal aquí ---------------->
+
+
+  <!--------------- Añadir modal aquí creación tema---------------->
   <div id="crearTema" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-8 w-96 rounded-lg">
       <h2 class="text-xl mb-4 font-bold text-center">
@@ -149,7 +86,7 @@
 
       <div class="flex justify-center mt-4">
         <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-          (click)="closeModal()">
+          (click)="closeModalTopic()">
             Cancelar
         </button>
         <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
@@ -160,6 +97,62 @@
     </div>
   </div>
 
-  <!--------------- Añadir footer aquí ---------------->
+
+<!-- ****************************** MODAL CREACIÓN SUBTEMA **********************************-->
+
+<div id="crearSubtopic" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-8 w-96 rounded-lg">
+      <h2 class="text-xl mb-4 font-bold text-center">
+        Añadir subtema
+      </h2>
+      <!--------------- Formulario de creación de  subtema ---------------->
+      <div class="mb-4">
+        <label for="temaName" class="block text-gray-700 font-bold mb-2">Subtema</label>
+        <input type="text" id="subtopicTitle" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tema 10,...">
+      </div>
+
+      <div class="flex justify-center mt-4">
+        <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+          (click)="closeModalSubtopic()">
+            Cancelar
+        </button>
+        <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+          (click)="createSubtopic()">
+            Crear
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ****************************** MODAL ELIMINACIÓN TEMA **********************************-->
+
+  <div id="deleteTopic"
+    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-8 rounded-lg">
+        <h2 class="text-xl mb-4 font-bold text-center">
+          ¿Estás seguro que quieres eliminar este tema?, <br>
+          se ELIMINARÁN TODOS los subtemas.
+        </h2>
+        <div class="flex justify-center mt-4">
+          <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+            (click)="closeModalDeleteTopic()">
+              No, cancelar
+          </button>
+          <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+            (click)="deleteTopic()">
+              Sí, eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+<!-- ****************************** AÑADIR FOOTER **********************************-->
+
   <app-footer />
+
+
+
+
 </div>

@@ -24,7 +24,8 @@ export class ExamsListComponent implements OnInit{
   }
 
 
-   // Método para cargar la información desde el servicio
+//************************* FUNCIÓN PARA CARGAR LA INFO ****************************//
+
   async loadInfo(): Promise<void> {
     const data = await this.requestService.request('GET', `http://localhost:3000/info`, {}, {}, false);
       this.title = data.title;
@@ -32,7 +33,8 @@ export class ExamsListComponent implements OnInit{
   }
 
 
-  // Método para manejar el clic en "Guardar"
+//************************* FUNCIÓN PARA MANEJAR EL CLICK EN GUARDAR ****************************//
+
   async saveInfo(){
     try{
       const data = await this.requestService.request('PUT', `http://localhost:3000/info`, {title: this.title, description: this.description}, {}, true);
@@ -43,4 +45,9 @@ export class ExamsListComponent implements OnInit{
       console.error('Error actualizando la información:', error);
     };
   }
+
+
+
+
+  
 }

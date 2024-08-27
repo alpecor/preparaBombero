@@ -63,7 +63,7 @@ export class QuestionsComponent implements OnInit {
     console.log(this.userResponses); // Para verificar las respuestas seleccionadas
   }
 
- 
+
 
   //************************* FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL DE REPORTE ****************************//
 
@@ -88,12 +88,11 @@ export class QuestionsComponent implements OnInit {
   }
 
   async sendReport() {
-    const modal = document.getElementById('reportModal');
     // Obtener el motivo del reporte desde el textarea
     const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
     // Verifica que el campo no esté vacío
     if (!reportReason || reportReason.trim().length === 0) {
-      console.log("El campo del motivo no puede estar vacío");
+      alert("El campo del motivo no puede estar vacío");
       return;
     }
     // realizar la petición del reporte
@@ -102,10 +101,7 @@ export class QuestionsComponent implements OnInit {
       //Guardar las preguntas generadas en localStorage
       console.log(this.reportedQuestion);
       console.log(this.idReportedQuestion);
-      if (modal) {
-        modal.classList.add('hidden');
-      }
-      this.idReportedQuestion = null; // Limpia el ID seleccionado tras el envío
+      this.closeModal();
       alert("se ha enviado el reporte de la pregunta.");
     }catch(error: any){
       console.log(error);

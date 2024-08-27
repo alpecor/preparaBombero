@@ -1,0 +1,3 @@
+.modal-overlay {
+  z-index: 50; /* Asegúrate de que esté por encima de otros elementos */
+}

@@ -81,22 +81,18 @@
         </div>
       </div>
     </div>
+
+
+    <!-------------------- Paginación ----------------->
+
+    <div class="pagination-container relative flex justify-center mt-6 space-x-2" >
+      <button
+        class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+        >
+        Corregir
+      </button>
+    </div>
+
   </div>
-</div>
 
-<!-------------------- Paginación ----------------->
-
-<div class="pagination-container relative flex justify-center mt-6 space-x-2" >
-  <p-paginator
-    (onPageChange)="onPageChange($event)"
-    [first]="0"
-    [rows]="20"
-    [totalRecords]="examQuestion.length"
-    styleClass="custom-paginator"
-  />
-  <button
-    class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-    >
-    Corregir
-  </button>
 </div>

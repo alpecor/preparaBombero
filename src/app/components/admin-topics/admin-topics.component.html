@@ -1,0 +1,73 @@
+
+@for (item of topics; track $index) {
+  <li class="mt-2" [ngStyle]="{'margin-left': margin + 'rem' }">
+    <div class="flex items-center">
+      <input (input)="editTitleSubtopic($event, item)" class="flex-grow p-2 bg-white rounded-md border border-gray-300" value="{{ item.title }}">
+      <div class="ml-4">
+        <i (click)="openModalCreateSubtopic(item.id)" class="fa-solid fa-plus fa-lg" style="cursor: pointer"></i>
+      </div>
+      <div class="ml-2">
+        <i (click)="openModalDeleteSubtopic(item.id)" class="fa-solid fa-trash-can fa-lg" style="cursor: pointer"></i>
+      </div>
+      <div class="ml-2">
+        <i class="fa-solid fa-arrow-right fa-lg" [routerLink]="['/admin/temario/'+ item.id]" style="cursor: pointer"></i>
+      </div>
+    </div>
+  </li>
+
+  @if (topics.length > 0) {
+    <app-admin-topics [margin]="margin + 2" [topics]="item.topics"/>
+  }
+}
+
+
+
+
+<!-- ****************************** MODAL CREACIÓN SUBTEMA **********************************-->
+
+<div id="crearSubtopicSon" class="modal modal-overlay hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-8 w-96 rounded-lg">
+    <h2 class="text-xl mb-4 font-bold text-center">
+      Añadir Subtema
+    </h2>
+    <!--------------- Formulario de creación de tema ---------------->
+    <div class="mb-4">
+      <label for="temaName" class="block text-gray-700 font-bold mb-2">Subtema</label>
+      <input type="text" id="subtopicName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Título subtema...">
+    </div>
+
+    <div class="flex justify-center mt-4">
+      <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+      (click)="closeModalCreateSubtopic()">
+          Cancelar
+      </button>
+      <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+      (click)="createSubtopic()">
+          Crear
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ****************************** MODAL ELIMINACIÓN TEMA **********************************-->
+
+<div id="deleteSubtopic"
+class="modal modal-overlay hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-8 rounded-lg">
+    <h2 class="text-xl mb-4 font-bold text-center">
+      ¿Estás seguro que quieres eliminar este subtema?, <br>
+      se ELIMINARÁN TODOS los subtemas hijos.
+    </h2>
+    <div class="flex justify-center mt-4">
+      <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+        (click)="closeModalDeleteSubtopic()">
+          No, cancelar
+      </button>
+      <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+        (click)="deleteSubtopic()">
+          Sí, eliminar
+      </button>
+    </div>
+  </div>
+</div>
+

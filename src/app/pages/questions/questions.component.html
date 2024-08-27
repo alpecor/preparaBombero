@@ -36,7 +36,7 @@
           class="absolute top-[calc(50%-33px)] right-0"
           width="24"
           height="24"
-          alt="reportar pregunta"
+          title="reportar pregunta"
           style="cursor: pointer"
         />
       </div>
@@ -50,8 +50,6 @@
               [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
               [value]="respuesta"
               (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
-
-             
             />
             <span class="text-gray-700">{{ respuesta }}</span>
           </label>

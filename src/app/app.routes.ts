@@ -86,7 +86,7 @@ export const routes: Routes = [
     path:'admin/temario', component: TopicsListComponent, canActivate:[adminAuthGuard]
   },
   {
-    path:'admin/temario/10', component: QuestionCreateComponent, canActivate:[adminAuthGuard] // TODO cambiar el 10
+    path:'admin/temario/:topicId', component: QuestionCreateComponent, canActivate:[adminAuthGuard] // TODO cambiar el 10
   },
 
 

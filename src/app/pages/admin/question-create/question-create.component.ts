@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-question-create',
@@ -10,22 +11,36 @@ import { FooterComponent } from '../../../components/footer/footer.component';
   templateUrl: './question-create.component.html',
   styleUrl: './question-create.component.css'
 })
-export class QuestionCreateComponent {
-    //FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL
-    openModal() {
-      const modalCreate = document.getElementById('createQuestion');
-      if (modalCreate) {
-        modalCreate.classList.remove('hidden');
-      }
-    }
+export class QuestionCreateComponent implements OnInit{
 
-    closeModal() {
-      const modalCreate = document.getElementById('createQuestion');
-      if (modalCreate) {
-        modalCreate.classList.add('hidden');
-        console.log("se da en cancelar");
-      }
+  topicId:number = -1; //para almacenar el id que viene por URL
+
+  constructor(private route: ActivatedRoute) {}
+
+
+  ngOnInit(): void {
+    this.topicId = Number (this.route.snapshot.paramMap.get('topicId'));
+  }
+
+
+//************************* PETICIÓN PARA APERTURA Y CIERRE DEL MODAL ****************************//
+
+  openModal() {
+    const modalCreate = document.getElementById('createQuestion');
+    if (modalCreate) {
+      modalCreate.classList.remove('hidden');
     }
+  }
+
+  closeModal() {
+    const modalCreate = document.getElementById('createQuestion');
+    if (modalCreate) {
+      modalCreate.classList.add('hidden');
+      console.log("se da en cancelar");
+    }
+  }
+
+
 
   questions = [
     {

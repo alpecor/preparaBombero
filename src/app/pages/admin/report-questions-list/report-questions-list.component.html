@@ -14,8 +14,7 @@
   </h1>
 
   <!--------------- Añadir modal eliminación de pregunta aquí (removeModal) ---------------->
-  <div
-    id="removeQuestion"
+  <div id="removeQuestion"
     class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
   >
     <div class="bg-white p-8 rounded-lg">
@@ -67,7 +66,7 @@
       class="question-block mb-12 relative"
       *ngFor="let question of questions; let i = index"
     >
-      <h2 class="text-lg font-medium mb-2">Pregunta {{ i + 1 }}</h2>
+      <h2 class="text-lg font-medium mb-2">Pregunta {{ i + 1 }} - {{question.quiz.topicTitle}} </h2>
       <div
         class="mb-4 p-2 bg-gray-100 rounded-md"
         style="margin-right: 4rem"

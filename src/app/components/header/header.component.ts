@@ -36,6 +36,9 @@ export class HeaderComponent implements OnInit {
   logout(){
     localStorage.removeItem('access_token');
     localStorage.removeItem('modalShown'); //para el aviso multicuenta
+    localStorage.removeItem('userAnswer'); //para el aviso multicuenta
+    localStorage.removeItem('correctedExamQuestions'); //para el aviso multicuenta
+
     this.router.navigate(['']);
 
   }
