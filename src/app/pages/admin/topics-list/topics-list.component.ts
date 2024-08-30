@@ -40,51 +40,32 @@ export class TopicsListComponent implements OnInit{
 
 //************************* FUNCIONES APERTURA, CIERRE Y CREACIÓN DE TOPIC ****************************//
 
-  openModalTopic() {
+  openModalCreateTopic() {
     const modalReport = document.getElementById('crearTema');
     if (modalReport) {
       modalReport.classList.remove('hidden');
-      console.log("se abre el modal de preguntas");
     }
   }
 
-  closeModalTopic() {
+  closeModalCreateTopic() {
     const modalReport = document.getElementById('crearTema');
     if (modalReport) {
       modalReport.classList.add('hidden');
-      console.log("se da en cancelar ahora");
     }
   }
 
-  createTopic() {
-    const modal = document.getElementById('reportModal');
-    // Obtener el motivo del reporte desde el textarea
-    const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
-    // Obtener el access_token
-    const accessToken = localStorage.getItem('access_token');
-    // Crear el cuerpo de la petición
-    const reportData = {
-      reason: reportReason,
-      quizID: 4
-    };
-    // Configurar los headers con el token
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${accessToken}`  // Incluir el token en los headers
-    });
-    // Enviar la petición POST usando HttpClient
-    this.http.post('http://localhost:4200/report', reportData, { headers }).subscribe({
-        next: (response) => {
-          console.log('Reporte enviado:', response);
-          // Cerrar el modal después de enviar el reporte
-          if (modal) {
-            modal.classList.add('hidden');
-          }
-        },
-        error: (error) => {
-          console.error('Error al enviar el reporte:', error);
-        }
-      });
+  async createTopic() {
+    const title = (document.getElementById('title') as HTMLTextAreaElement).value;
+    const categoryTitle = (document.getElementById('categoryTitle') as HTMLTextAreaElement).value;
+    const payload = {title: title, categoryTitle: categoryTitle, type: "PRIMARY"};
+    try{
+      await this.requestService.request('POST', 'http://localhost:3000/topic', payload, {}, true);
+      this.ngOnInit();
+      alert("Se ha creado el tema");
+      this.closeModalCreateTopic();
+    }catch(error){
+      console.log(error);
+    }
   }
 
 
@@ -149,7 +130,7 @@ export class TopicsListComponent implements OnInit{
       alert("El campo del título no puede estar vacío");
       return;
     }
-    const payload = {title: subtopicTitle, order: 0, parentId: this.topicIdToAdd, type: "SECONDARY" }
+    const payload = {title: subtopicTitle, parentId: this.topicIdToAdd, type: "SECONDARY" }
     // realizar la petición de creación del subtema
     try{
       await this.requestService.request('POST', 'http://localhost:3000/topic', payload, {}, true);
@@ -169,7 +150,7 @@ export class TopicsListComponent implements OnInit{
   async editTitle(event: Event, topic:any){
     const inputElement = event.target as HTMLInputElement;
     const title = inputElement.value;
-    const payload = {categoryTitle: topic.categoryTitle, order: 0, title: title, type: "PRIMARY"};
+    const payload = {categoryTitle: topic.categoryTitle, title: title, type: "PRIMARY"};
     try{
       await this.requestService.request('PUT', 'http://localhost:3000/topic/' + topic.id, payload, {}, true);
       //cerrar el modal cuando se cree el subtema

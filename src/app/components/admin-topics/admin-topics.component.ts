@@ -48,7 +48,7 @@ export class adminTopicsComponent {
       alert("El campo del título no puede estar vacío");
       return;
     }
-    const payload = {title: subtopicTitle, order: 0, parentId: this.localStorageService.getItem("topicId"), type: "SECONDARY" }
+    const payload = {title: subtopicTitle, parentId: this.localStorageService.getItem("topicId"), type: "SECONDARY" }
     // realizar la petición de creación del subtema
     try{
       await this.requestService.request('POST', 'http://localhost:3000/topic', payload, {}, true);
@@ -105,7 +105,7 @@ export class adminTopicsComponent {
     console.log(topic);
     const inputElement = event.target as HTMLInputElement;
     const title = inputElement.value;
-    const payload = {parentId: topic.parentId, order: 0, title: title, type: "SECONDARY"};
+    const payload = {parentId: topic.parentId, title: title, type: "SECONDARY"};
     try{
       await this.requestService.request('PUT', 'http://localhost:3000/topic/' + topic.id, payload, {}, true);
     }catch(error: any){

@@ -53,14 +53,13 @@
 <!-- ****************************** BOTÓN FLOTANTE + **********************************-->
 
   <button class="fixed bottom-10 right-12 text-white bg-primaryColor hover:bg-yellow-600 rounded-full w-12 h-12 shadow-lg flex items-center justify-center"
-    (click)="openModalTopic()"
+    (click)="openModalCreateTopic()"
     >
     <i class="fa-solid fa-plus fa-2xl"></i>
   </button>
 
 
-
-  <!--------------- Añadir modal aquí creación tema---------------->
+<!-- ****************************** AÑADIR MODAL CREACIÓN TEMA AQUÍ(+)**********************************-->
   <div id="crearTema" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-8 w-96 rounded-lg">
       <h2 class="text-xl mb-4 font-bold text-center">
@@ -69,24 +68,23 @@
       <!--------------- Formulario de creación de tema ---------------->
       <div class="mb-4">
         <label for="temaName" class="block text-gray-700 font-bold mb-2">Tema</label>
-        <input type="text" id="temaName" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tema 10,...">
+        <input type="text" id="title" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tema 10,...">
       </div>
 
       <div class="mb-6">
         <label for="selectBloque" class="block text-gray-700 font-bold mb-2">Selecciona Bloque</label>
-        <select id="selectBloque" class="w-full p-2 border border-gray-300 rounded-md">
+        <select id="categoryTitle" class="w-full p-2 border border-gray-300 rounded-md">
             <option value="" disabled selected>Selecciona Bloque</option>
-            <option value="especifico">Específico</option>
-            <option value="legislacion">Legislación</option>
-            <option value="otros">Otros</option>
+            <option value="Específico">Específico</option>
+            <option value="Legislación">Legislación</option>
+            <option value="Otros">Otros</option>
         </select>
-     </div>
+      </div>
 
-
-
+      <!--------------- Botones modal ---------------->
       <div class="flex justify-center mt-4">
         <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-          (click)="closeModalTopic()">
+          (click)="closeModalCreateTopic()">
             Cancelar
         </button>
         <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
