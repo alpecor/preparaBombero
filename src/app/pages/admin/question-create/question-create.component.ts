@@ -44,7 +44,7 @@ export class QuestionCreateComponent implements OnInit{
   }
 
 
-//************************* FUNCIÓNES PARA APERTURA Y CIERRE DEL MODAL ****************************//
+//************* FUNCIÓNES PARA APERTURA Y CIERRE DEL MODAL DE CREAR PREGUNTA ***************//
 
   openModal() {
     const modalCreate = document.getElementById('createQuestion');
@@ -61,7 +61,7 @@ export class QuestionCreateComponent implements OnInit{
   }
 
 
-  //******************** FUNCIÓNES PARA CREACIÓN Y ELIMINACIÓN DE PREGUNTAS **********************//
+  //************************** FUNCIÓN PARA CREACIÓN DE PREGUNTAS ***************************//
 
   async createQuestion() {
     const title = (document.getElementById('questionTitle') as HTMLTextAreaElement).value;
@@ -82,17 +82,6 @@ export class QuestionCreateComponent implements OnInit{
     }
   }
 
-  async deleteQuestion(questionId:number) {
-    try{
-      await this.requestService.request('DELETE', 'http://localhost:3000/quiz', {}, {}, true);
-      alert("Se ha eliminado la pregunta");
-      this.ngOnInit();
-      this.closeModal();
-    }catch(error){
-      console.log(error);
-    }
-  }
-
 
 //************************* FUNCIONES PARA APERTURA, CIERRE y ELIMINACIÓN DE PREGUNTA ****************************//
 
@@ -101,7 +90,6 @@ export class QuestionCreateComponent implements OnInit{
     const modalRemove = document.getElementById('removeQuestionModal');
     if (modalRemove) {
       modalRemove.classList.remove('hidden');
-      console.log("se abre eliminación de pregunta");
     }
   }
 
@@ -110,18 +98,17 @@ export class QuestionCreateComponent implements OnInit{
     if (modalRemove) {
       modalRemove.classList.add('hidden');
       this.idQuestionToRemove = null; // Resetea el índice al cerrar el modal
-      console.log("se da en cancelar eliminación de pregunta");
     }
   }
 
   async RemoveQuestion() {
     try{
       if (this.idQuestionToRemove !== null) {
-        const data = await this.requestService.request('DELETE', `http://localhost:3000/quiz/${this.idQuestionToRemove}`, {}, {}, true);
-        console.log(data);
+        await this.requestService.request('DELETE', `http://localhost:3000/quiz/${this.idQuestionToRemove}`, {}, {}, true);
         this.ngOnInit();
         this.idQuestionToRemove = null;// Resetea el índice después de eliminar
         this.closeRemoveQuestionModal(); // Cierra el modal después de eliminar
+        alert("Se ha eliminado la pregunta");
       }
     }catch (error){
       console.log(error);
