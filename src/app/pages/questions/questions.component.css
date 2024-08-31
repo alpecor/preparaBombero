@@ -34,6 +34,19 @@
   transform: translateY(-50%);
 }
 
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: #DE9A17; /* Cambia esto al color que desees */
+  color: white; /* Color del texto para la página actual */
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page {
+  border: 1px solid gray;
+  border-radius: 12px;
+  margin: 0 0.3rem;
+}
+
+
+
 
 
 /* ------ MODAL ------------- */

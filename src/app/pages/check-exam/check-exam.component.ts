@@ -29,7 +29,8 @@ export class CheckExamComponent {
       const userAnswer = this.userAnswers.find((answer: any) => answer.quizId === question.id);
       return {
         ...question,
-        userAnswer: userAnswer ? userAnswer.optionSelected : null // Añade la respuesta del usuario a la pregunta corregida
+        userAnswer: userAnswer ? userAnswer.optionSelected : null , // Añade la respuesta del usuario a la pregunta corregida
+        showJustification: false // Nueva propiedad para controlar la visibilidad del motivo
       };
     });
 
@@ -49,5 +50,10 @@ export class CheckExamComponent {
    // Función para determinar si es la opción seleccionada por el usuario y si está bien
    isUserSelectedAndCorrect(question: any, option: string): boolean {
     return question.userAnswer === option && question.status === 'success';
+  }
+
+  // Función para mostras justifiación de la pregunta
+  toggleJustification(question: any): void {
+    question.showJustification = !question.showJustification;
   }
 }
