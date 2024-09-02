@@ -1,9 +1,31 @@
-  <!--------------- Añadir header aquí ---------------->
+ <!-- ****************************** AÑADIR HEADER AQUÍ **********************************--> <!--------------- Añadir header aquí ---------------->
   <app-header />
 
-  <!--------------- Añadir nota de examen aquí ---------------->
-  <div class="mx-auto p-4">
-    <div class="p-4 text-center">
+<!-- ****************************** AÑADIR RESULTADO DEL EXAMEN Y NOTA AQUÍ **********************************-->
+  <div class="mx-auto p-4 flex justify-center space-x-8">
+    <!-- Primer bloque -->
+    <div class="p-4 text-center border rounded-xl bg-gray-100">
+      <h2 class="text-lg font-semibold mb-4">El RESULTADO de tu examen es el siguiente:</h2>
+      <ul>
+        <span>Preguntas <strong>totales</strong>:</span>
+        <span class="ml-1 font-bold">{{ userAnswers.length }}</span>
+      </ul>
+      <ul>
+        <span>Preguntas <strong>acertadas</strong>:</span>
+        <span class="ml-1 font-bold">{{ examSummary?.correctAnswers }}</span>
+      </ul>
+      <ul>
+        <span>Preguntas <strong>falladas</strong>:</span>
+        <span class="ml-1 font-bold">{{ examSummary?.incorrectAnswers }}</span>
+      </ul>
+      <ul>
+        <span>Preguntas <strong>no respondidas</strong>:</span>
+        <span class="ml-1 font-bold">{{ examSummary?.unansweredQuestions }}</span>
+      </ul>
+    </div>
+
+    <!-- Segundo bloque -->
+    <div class="p-4 text-center border rounded-xl bg-gray-100">
       <h2 class="text-lg font-semibold mb-4">Tu NOTA sería la siguiente en los siguientes casos:</h2>
       <li>
         <span>Si no restan preguntas mal contestadas, tu nota sería:</span>
@@ -14,7 +36,7 @@
         <span class="ml-4 font-bold">X</span>
       </li>
       <li>
-        <span class=>Si cada 3 mal, resta 1 bien, tu nota sería:</span>
+        <span>Si cada 3 mal, resta 1 bien, tu nota sería:</span>
         <span class="ml-4 font-bold">X</span>
       </li>
       <li>
@@ -22,60 +44,54 @@
         <span class="ml-4 font-bold">X</span>
       </li>
     </div>
+  </div>
 
+<!-- ****************************** AÑADIR CORRECCIÓN AQUÍ **********************************-->
+  <div class="flex justify-center p-4">
+    <div class="w-full max-w-3xl">
+      <div
+        *ngFor="let question of correctedExamQuestions; let i = index"
+        class="p-6 mb-12 border rounded-xl bg-gray-50"
+      >
+        <h2 class="text-lg font-semibold mb-2">
+          {{ i + 1 }}. {{ question.title }}
+        </h2>
+        <div class="relative">
+          <hr class="border-t border-gray-300 mb-4" />
+          <i title="Ver motivo" class="fa-solid fa-circle-info fa-lg absolute top-[calc(50%-27px)] right-0"
+            style="color: #DE9A17; cursor: pointer;"
+            (click)="toggleJustification(question)"
+          >
+          </i>
+        </div>
+        <ul class="list-none space-y-2">
+          <li *ngFor="let respuesta of [question.option1, question.option2, question.option3, question.option4]"
+              [ngClass]="{
+                'text-lime-500 ': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
+                'text-red-500 ': isUserSelectedAndIncorrect(question, respuesta)
+              }">
 
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                [checked]="respuesta === question.userAnswer"
+                disabled
+              />
+              <span class="font-bold">{{ respuesta }}</span>
+            </label>
+          </li>
+        </ul>
 
-    <i class="fa-solid fa-circle-info" style="color: #ffffff;"></i>
-<!--------------- Añadir correción aquí ---------------->
-    <div class="flex justify-center p-4">
-      <div class="w-full max-w-3xl">
-        <div
-          *ngFor="let question of correctedExamQuestions; let i = index"
-          class="p-6 mb-12 border rounded-xl bg-gray-50"
-        >
-          <h2 class="text-lg font-semibold mb-2">
-            {{ i + 1 }}. {{ question.title }}
-          </h2>
-          <div class="relative">
-            <hr class="border-t border-gray-300 mb-4" />
-            <i title="Ver motivo" class="fa-solid fa-circle-info fa-lg absolute top-[calc(50%-27px)] right-0"
-              style="color: #DE9A17; cursor: pointer;"
-              (click)="toggleJustification(question)"
-            >
-            </i>
-          </div>
-          <ul class="list-none space-y-2">
-            <li *ngFor="let respuesta of [question.option1, question.option2, question.option3, question.option4]"
-                [ngClass]="{
-                  'text-green-500': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
-                  'text-red-500': isUserSelectedAndIncorrect(question, respuesta)
-                }">
-
-              <label class="flex items-center space-x-3">
-                <input
-                  type="radio"
-                  class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                  [checked]="respuesta === question.userAnswer"
-                  disabled
-                />
-                <span>{{ respuesta }}</span>
-              </label>
-            </li>
-          </ul>
-
-          <!-- Mostrar el motivo condicionalmente -->
-          <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded text-center">
-            <h1 class="font-bold">Motivo de respuesta correcta:</h1>
-            <p>{{ question.justification }}</p> <!-- Ajusta el nombre de la propiedad del motivo según sea necesario -->
-          </div>
+        <!-- Mostrar el motivo condicionalmente -->
+        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded text-center">
+          <h1 class="font-bold">Motivo de respuesta correcta:</h1>
+          <p>{{ question.justification }}</p> <!-- Ajusta el nombre de la propiedad del motivo según sea necesario -->
         </div>
       </div>
     </div>
   </div>
 
 
-
-
-
-  <!--------------- Añadir footer aquí ---------------->
+<!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
   <app-footer />

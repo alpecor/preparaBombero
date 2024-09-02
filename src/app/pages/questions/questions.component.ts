@@ -37,7 +37,7 @@ export class QuestionsComponent implements OnInit {
     this.userResponses = this.examQuestion.map((question: any) => {
       return {
         quizId: question.id,
-        optionSelected: "" // Inicialmente vacío
+        optionSelected: null // Inicialmente vacío
       };
     });
 
@@ -162,6 +162,14 @@ export class QuestionsComponent implements OnInit {
       // Guardar las preguntas corregidas y las respuestas del usuario en el localStorage
       this.localStorageService.setItem('correctedExamQuestions', response.quizzes);
       this.localStorageService.setItem('userAnswer', this.userResponses);
+
+      // Guardar el resumen del resultado en el localStorage
+      const summary = {
+        correctAnswers: response.success,
+        incorrectAnswers: response.fail,
+        unansweredQuestions: response.not_answered
+      };
+      this.localStorageService.setItem('examSummary', summary);
 
       // Redirigir al componente de chequeo de examen
       this.router.navigate(['/check-exam']);

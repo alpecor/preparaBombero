@@ -18,11 +18,15 @@ export class CheckExamComponent {
 
   correctedExamQuestions: any[] = []; //aquí se almacenarán las preguntas corregidas
   userAnswers: any[] = []; //aquí se almacenarán las respuestas seleccionadas por el usuario
+  examSummary: { correctAnswers: number; incorrectAnswers: number; unansweredQuestions: number } | null = null; // Resumen del examen
 
   ngOnInit(): void {
     // Obtener las preguntas corregidas y las respuestas del usuario desde el localStorage
     this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') || [];
     this.userAnswers = this.localStorageService.getItem('userAnswer') || [];
+
+    // Obtener resultado del examen desde el localStorage
+    this.examSummary = this.localStorageService.getItem('examSummary') || { correctAnswers: 0, incorrectAnswers: 0, unansweredQuestions: 0 };
 
     // Combinar las respuestas del usuario con las preguntas corregidas
     this.correctedExamQuestions = this.correctedExamQuestions.map((question: any) => {
@@ -33,8 +37,6 @@ export class CheckExamComponent {
         showJustification: false // Nueva propiedad para controlar la visibilidad del motivo
       };
     });
-
-    console.log("datos en check: ", this.correctedExamQuestions); // Verificar los datos cargados
   }
 
   // Función para determinar si una opción es la correcta

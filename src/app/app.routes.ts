@@ -16,6 +16,7 @@ import { TermsConditionsComponent } from './components/welcome/terms-conditions/
 import { PrivacyPolicyComponent } from './components/welcome/privacy-policy/privacy-policy.component';
 import { CheckExamComponent } from './pages/check-exam/check-exam.component';
 import { ReviewTestComponent } from './pages/review-test/review-test.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -63,9 +64,15 @@ export const routes: Routes = [
   {
     path:'review-test', component: ReviewTestComponent, canActivate:[userAuthGuard]
   },
+
   //URL DE EXAMEN CORREGIDO
   {
     path:'check-exam', component: CheckExamComponent, canActivate:[userAuthGuard]
+  },
+
+  //URL DE PERFIL
+  {
+    path:'profile', component: ProfileComponent, canActivate:[userAuthGuard]
   },
 
 
