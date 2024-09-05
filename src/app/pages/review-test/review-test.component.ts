@@ -47,8 +47,6 @@ export class ReviewTestComponent {
         respuestas: [question.option1, question.option2, question.option3, question.option4]
       };
     });
-    console.log(this.examQuestion); // Verificar los datos de las preguntas
-    console.log(this.userResponses); // Verificar el array de respuestas inicializado
   }
 
   //************************* FUNCIONES PARA RECOGER LAS OPCIONES SEÑALADAS EN EL EXAMEN ****************************//
@@ -56,7 +54,6 @@ export class ReviewTestComponent {
   onSelectAnswer(questionIndex: number, answer: string) {
     // Actualizar la opción seleccionada en userResponses
     this.userResponses[questionIndex].optionSelected = answer;
-    console.log(this.userResponses); // Para verificar las respuestas seleccionadas
   }
 
   //************************* FUNCIONES PARA APERTURA, CIERRE y ENVÍO DEL MODAL DE REPORTE ****************************//
@@ -68,7 +65,6 @@ export class ReviewTestComponent {
     if (modalReport) {
       modalReport.classList.remove('hidden');
       reportReason.value = ''; // Limpiar el campo del motivo del reporte
-      console.log(questionId);
     }
   }
 
@@ -77,7 +73,6 @@ export class ReviewTestComponent {
     const modalReport = document.getElementById('reportModal');
     if (modalReport) {
       modalReport.classList.add('hidden');
-      console.log("se da en cancelar ahora");
     }
   }
 
@@ -85,13 +80,11 @@ export class ReviewTestComponent {
     const modal = document.getElementById('reportModal');
     const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
     if (!reportReason || reportReason.trim().length === 0) {
-      console.log("El campo del motivo no puede estar vacío");
+      alert("El campo del motivo no puede estar vacío");
       return;
     }
     try {
-      this.reportedQuestion = await this.requestService.request('POST', `http://localhost:3000/report`, { reason: reportReason, quizId: this.idReportedQuestion }, {}, true);
-      console.log(this.reportedQuestion);
-      console.log(this.idReportedQuestion);
+      this.reportedQuestion = await this.requestService.request('POST', `/report`, { reason: reportReason, quizId: this.idReportedQuestion }, {}, true);
       if (modal) {
         modal.classList.add('hidden');
       }
@@ -103,11 +96,6 @@ export class ReviewTestComponent {
   }
 
   //************************* FUNCIONES PARA CONTROLAR LA PAGINACIÓN Y PREGUNTAS POR PÁGINA ****************************//
-
-  onPageChange($event: any) {
-    this.page = $event;
-    console.log($event)
-  }
 
   progress() {
     const endQuestion = Math.min((this.page.page + 1) * this.questionsPerPage, this.examQuestion.length);
@@ -126,8 +114,7 @@ export class ReviewTestComponent {
   async sendTest() {
     try {
       const payload = { quizzes: this.userResponses };
-      const response = await this.requestService.request('POST', 'http://localhost:3000/quiz/check', payload, {}, true);
-      console.log('Resultados del examen:', response);
+      const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
 
       this.localStorageService.setItem('correctedExamQuestions', response.quizzes);
       this.localStorageService.setItem('userAnswer', this.userResponses);
@@ -136,7 +123,7 @@ export class ReviewTestComponent {
       this.localStorageService.removeItem('examQuestions')
 
     } catch (error) {
-      console.log('Error al enviar el examen: ', error);
+      console.log(error);
     }
   }
 }

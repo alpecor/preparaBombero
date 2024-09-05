@@ -1,7 +1,7 @@
 <div class="min-h-screen flex items-center justify-center">
   <div class="bg-formColor rounded-2xl flex flex-col md:flex-row">
     <div class="md:w-1/2 md:block hidden hidden-md">
-      <img ngSrc="formulario.png" alt="Bombero en incendio" width="750" height="815" class="rounded-3xl bg-formColor " priority="">
+      <img ngSrc="formulario.png" alt="Bombero en incendio" width="750" height="815" class="rounded-3xl bg-formColor" priority="">
     </div>
     <div class="w-full md:w-1/2 p-3.5 flex flex-col justify-center items-center">
       <div class="flex items-center justify-center mb-6">
@@ -9,7 +9,7 @@
       </div>
 
       @if(status){
-        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
           @for(item of status; track $index){
             {{item}}<br>
           }

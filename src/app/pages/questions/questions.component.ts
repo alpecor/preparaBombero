@@ -48,8 +48,6 @@ export class QuestionsComponent implements OnInit {
         respuestas: [question.option1, question.option2, question.option3, question.option4]
       };
     });
-    console.log(this.examQuestion); // Verificar los datos de las preguntas
-    console.log(this.userResponses); // Verificar el array de respuestas inicializado
   }
 
 
@@ -60,7 +58,6 @@ export class QuestionsComponent implements OnInit {
   onSelectAnswer(questionIndex: number, answer: string) {
     // Actualizar la opción seleccionada en userResponses
     this.userResponses[questionIndex].optionSelected = answer;
-    console.log(this.userResponses); // Para verificar las respuestas seleccionadas
   }
 
 
@@ -74,7 +71,6 @@ export class QuestionsComponent implements OnInit {
     if (modalReport) {
       modalReport.classList.remove('hidden');
       reportReason.value = ''; // Limpiar el campo del motivo del reporte
-      console.log(questionId);
     }
   }
 
@@ -83,7 +79,6 @@ export class QuestionsComponent implements OnInit {
     const modalReport = document.getElementById('reportModal');
     if (modalReport) {
       modalReport.classList.add('hidden');
-      console.log("se da en cancelar ahora");
     }
   }
 
@@ -97,10 +92,7 @@ export class QuestionsComponent implements OnInit {
     }
     // realizar la petición del reporte
     try{
-      this.reportedQuestion = await this.requestService.request('POST', `http://localhost:3000/report`,{reason: reportReason, quizId:this.idReportedQuestion},{},true);
-      //Guardar las preguntas generadas en localStorage
-      console.log(this.reportedQuestion);
-      console.log(this.idReportedQuestion);
+      this.reportedQuestion = await this.requestService.request('POST', `/report`,{reason: reportReason, quizId:this.idReportedQuestion},{},true);
       this.closeModal();
       alert("se ha enviado el reporte de la pregunta.");
     }catch(error: any){
@@ -115,7 +107,6 @@ export class QuestionsComponent implements OnInit {
 
   onPageChange($event: PaginatorState) {
     this.page = $event;
-    console.log($event)
   }
 
   progress() {
@@ -146,7 +137,6 @@ export class QuestionsComponent implements OnInit {
     const modalTest = document.getElementById('finishTest');
     if (modalTest) {
       modalTest.classList.add('hidden');
-      console.log("se da en cancelar envio del test");
     }
   }
 
@@ -156,8 +146,7 @@ export class QuestionsComponent implements OnInit {
       const payload = {quizzes: this.userResponses};
 
       // Hacer la petición POST al backend para corregir el examen
-      const response = await this.requestService.request('POST', 'http://localhost:3000/quiz/check', payload, {}, true);
-      console.log('Resultados del examen:', response);
+      const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
 
       // Guardar las preguntas corregidas y las respuestas del usuario en el localStorage
       this.localStorageService.setItem('correctedExamQuestions', response.quizzes);
@@ -178,7 +167,7 @@ export class QuestionsComponent implements OnInit {
       this.localStorageService.removeItem('examQuestions')
 
     }catch(error){
-      console.log('Error al enviar el examen: ',error);
+      console.log(error);
     }
     const modalTest = document.getElementById('finishTest');
     if (modalTest) {

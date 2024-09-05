@@ -30,7 +30,7 @@ export class TopicsListComponent implements OnInit{
  async ngOnInit(): Promise<void> {
   try{
     // se realiza peticíon para obtener los temas
-    this.topics = await this.requestService.request('GET', `http://localhost:3000/topic`,{},{},true);
+    this.topics = await this.requestService.request('GET', `/topic`,{},{},true);
     }catch(error: any){
       this.router.navigate(['/error']);
     }
@@ -59,7 +59,7 @@ export class TopicsListComponent implements OnInit{
     const categoryTitle = (document.getElementById('categoryTitle') as HTMLTextAreaElement).value;
     const payload = {title: title, categoryTitle: categoryTitle, type: "PRIMARY"};
     try{
-      await this.requestService.request('POST', 'http://localhost:3000/topic', payload, {}, true);
+      await this.requestService.request('POST', '/topic', payload, {}, true);
       this.ngOnInit();
       alert("Se ha creado el tema");
       this.closeModalCreateTopic();
@@ -90,7 +90,7 @@ export class TopicsListComponent implements OnInit{
   async deleteTopic(){
     try{
       // realizar la petición de eliminaciópn del tema
-      await this.requestService.request('DELETE', 'http://localhost:3000/topic/' + this.topicIdToAdd , {}, {}, true);
+      await this.requestService.request('DELETE', '/topic/' + this.topicIdToAdd , {}, {}, true);
       //cerrar el modal cuando se cree el tema
       this.closeModalDeleteTopic();
       //llamar a ngOnInit para volver a cargar los temas automáticamente
@@ -109,7 +109,6 @@ export class TopicsListComponent implements OnInit{
     const modalReport = document.getElementById('crearSubtopic');
     if (modalReport) {
       modalReport.classList.remove('hidden');
-      console.log("se abre el modal de preguntas");
     }
   }
 
@@ -118,7 +117,6 @@ export class TopicsListComponent implements OnInit{
     if (modalReport) {
       modalReport.classList.add('hidden');
       this.topicIdToAdd = null;
-      console.log("se da en cancelar ahora");
     }
   }
 
@@ -133,7 +131,7 @@ export class TopicsListComponent implements OnInit{
     const payload = {title: subtopicTitle, parentId: this.topicIdToAdd, type: "SECONDARY" }
     // realizar la petición de creación del subtema
     try{
-      await this.requestService.request('POST', 'http://localhost:3000/topic', payload, {}, true);
+      await this.requestService.request('POST', '/topic', payload, {}, true);
       //cerrar el modal cuando se cree el subtema
       this.closeModalSubtopic();
       //llamar a ngOnInit para volver a cargar los temas automáticamente
@@ -152,7 +150,7 @@ export class TopicsListComponent implements OnInit{
     const title = inputElement.value;
     const payload = {categoryTitle: topic.categoryTitle, title: title, type: "PRIMARY"};
     try{
-      await this.requestService.request('PUT', 'http://localhost:3000/topic/' + topic.id, payload, {}, true);
+      await this.requestService.request('PUT', '/topic/' + topic.id, payload, {}, true);
       //cerrar el modal cuando se cree el subtema
       //llamar a ngOnInit para volver a cargar los temas automáticamente
       this.ngOnInit();

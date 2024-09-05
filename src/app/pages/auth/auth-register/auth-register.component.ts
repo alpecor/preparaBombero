@@ -24,8 +24,7 @@ export class AuthRegisterComponent {
 
   async register(){
     try{
-      const response = await this.requestService.request('POST', `http://localhost:3000/auth/register`, {name: this.name, surname: this.surname, email: this.email, password:this.password, repeatPassword:this.repeatPassword}, {}, false);
-      console.log(response);
+      const response = await this.requestService.request('POST', `/auth/register`, {name: this.name, surname: this.surname, email: this.email, password:this.password, repeatPassword:this.repeatPassword}, {}, false);
       this.status = undefined
       this.router.navigate(['/login']);
     }catch(error: any){

@@ -36,7 +36,6 @@ export class adminTopicsComponent {
       (document.getElementById('subtopicName') as HTMLTextAreaElement).value = "";
       modalReport.classList.add('hidden');
       this.localStorageService.removeItem("topicId");
-      console.log("se da en cancelar el modal del subtema");
     }
   }
 
@@ -51,7 +50,7 @@ export class adminTopicsComponent {
     const payload = {title: subtopicTitle, parentId: this.localStorageService.getItem("topicId"), type: "SECONDARY" }
     // realizar la petición de creación del subtema
     try{
-      await this.requestService.request('POST', 'http://localhost:3000/topic', payload, {}, true);
+      await this.requestService.request('POST', '/topic', payload, {}, true);
       //cerrar el modal cuando se cree el subtema
       this.closeModalCreateSubtopic();
       alert("se ha creado el Subtema");
@@ -70,7 +69,6 @@ export class adminTopicsComponent {
     const deleteSubtopic = document.getElementById('deleteSubtopic');
     if (deleteSubtopic) {
       deleteSubtopic.classList.remove('hidden');
-      console.log("se abre el modal de eliminación subtopic");
     }
   }
 
@@ -79,14 +77,13 @@ export class adminTopicsComponent {
     if (deleteSubtopic) {
       deleteSubtopic.classList.add('hidden');
       this.localStorageService.removeItem("topicId");
-      console.log("se cierra el modal de eliminación subtopic");
     }
   }
 
   async deleteSubtopic(){
     try{
       // realizar la petición de eliminaciópn del tema
-      await this.requestService.request('DELETE', 'http://localhost:3000/topic/' + this.localStorageService.getItem("topicId"), {}, {}, true);
+      await this.requestService.request('DELETE', '/topic/' + this.localStorageService.getItem("topicId"), {}, {}, true);
       //cerrar el modal cuando se cree el tema
       this.closeModalDeleteSubtopic();
       //llamar a ngOnInit para volver a cargar los temas automáticamente
@@ -102,12 +99,11 @@ export class adminTopicsComponent {
 //************************* FUNCIONES PARA EDITAR LOS TÍTULOS DE LOS SUBTEMAS ****************************//
 
   async editTitleSubtopic(event: Event, topic:any){
-    console.log(topic);
     const inputElement = event.target as HTMLInputElement;
     const title = inputElement.value;
     const payload = {parentId: topic.parentId, title: title, type: "SECONDARY"};
     try{
-      await this.requestService.request('PUT', 'http://localhost:3000/topic/' + topic.id, payload, {}, true);
+      await this.requestService.request('PUT', '/topic/' + topic.id, payload, {}, true);
     }catch(error: any){
       console.log(error);
     }

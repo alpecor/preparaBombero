@@ -10,7 +10,7 @@
         <img ngSrc="logo.png" alt="Prepara Bombero" width="125" height="116" [routerLink]="['']" style="cursor: pointer;">
       </div>
       @if(status){
-        <div class="error-container p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        <div class="error-container p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
           @for(item of status; track $index){
             {{item}}<br>
           }

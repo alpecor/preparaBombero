@@ -10,7 +10,6 @@ export const userAuthGuard: CanActivateFn = (route, state) => {
   if(authService.isUser() || authService.isAdmin()){
     return true;
   }
-  console.log("se ejecuta linea 111111")
   router.navigate(['/']);
   return false;
 };

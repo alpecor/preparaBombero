@@ -36,16 +36,15 @@ export class HomeComponent {
 
     // Hacer la solicitud POST al backend
     try{
-      this.questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`,{topicIds},{},true);
+      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{},true);
       //Guardar las preguntas generadas en localStorage
       this.localStorageService.setItem("examQuestions", this.questions);
-      console.log(this.questions);
+      this.router.navigate(['/test']);
     }catch(error: any){
       console.log(error);
     }
 
     // Navegar a la vista del examen
-    this.router.navigate(['/test']);
   }
 
 
@@ -67,16 +66,15 @@ export class HomeComponent {
 
     // Hacer la solicitud POST al backend
     try{
-      this.questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`,{topicIds},{},true);
+      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{},true);
       //Guardar las preguntas generadas en localStorage
       this.localStorageService.setItem("examQuestions", this.questions);
-      console.log(this.questions);
+      this.router.navigate(['/review-test']);
     }catch(error: any){
       console.log(error);
     }
 
     // Navegar a la vista del examen
-    this.router.navigate(['/review-test']);
   }
 
 
@@ -111,7 +109,7 @@ export class HomeComponent {
   }
   try{
     // Solicita los temas desde el servidor
-    this.topics = await this.requestService.request('GET', `http://localhost:3000/topic`,{},{},true);
+    this.topics = await this.requestService.request('GET', `/topic`,{},{},true);
 
     Object.keys(this.topics).forEach(key => {
       // Iterando sobre el array correspondiente a cada clave
@@ -128,7 +126,6 @@ export class HomeComponent {
           return x;
       });
   });
-    console.log(this.topics);
     }catch(error: any){
       this.router.navigate(['/error']);
     }
@@ -137,7 +134,6 @@ export class HomeComponent {
 
   selectedTopic(topicId: number, event: any, key: string) {
     const isChecked: boolean = event.target.checked;
-    console.log(topicId);
     let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
     if (isChecked) {
         // Agrega el topic actual
@@ -151,7 +147,6 @@ export class HomeComponent {
         for (let topic of topics) {
             if (topic.id === id) {
                 topic.selected = isSelected;
-                console.log(`Actualizando ${topic.id} a seleccionado: ${isSelected}`);
 
                 // Si el topic tiene hijos, también actualiza sus hijos recursivamente
                 if (topic.topics && topic.topics.length > 0) {
@@ -175,7 +170,6 @@ export class HomeComponent {
     updateTopicSelection(this.topics[key], topicId, isChecked);
 
     this.localStorageService.setItem("topicsSelected", topicSelected);
-    console.log(this.topics, key, topicId);
   }
 
 }

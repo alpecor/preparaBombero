@@ -31,11 +31,11 @@ export class ReportQuestionsListComponent implements OnInit {
 
   async loadReportedQuestions() {
     // Primero cargamos las preguntas reportadas
-    const data = await this.requestService.request('GET', `http://localhost:3000/report`, {}, {}, true);
+    const data = await this.requestService.request('GET', `/report`, {}, {}, true);
     // Iteramos sobre cada pregunta reportada para añadir el título del tema (topic.title)
     for (let question of data) {
       // Hacemos una petición para obtener el título del tema según el topicId de la pregunta
-      const topicData = await this.requestService.request('GET', `http://localhost:3000/topic/${question.quiz.topicId}`, {}, {}, true);
+      const topicData = await this.requestService.request('GET', `/topic/${question.quiz.topicId}`, {}, {}, true);
       // Añadimos el título del tema a la pregunta
       question.quiz.topicTitle = topicData.title;
     }
@@ -51,7 +51,6 @@ export class ReportQuestionsListComponent implements OnInit {
     const modalRemove = document.getElementById('removeQuestion');
     if (modalRemove) {
       modalRemove.classList.remove('hidden');
-      console.log("se abre eliminación de pregunta");
     }
   }
 
@@ -60,7 +59,6 @@ export class ReportQuestionsListComponent implements OnInit {
     if (modalRemove) {
       modalRemove.classList.add('hidden');
       this.questionToRemoveIndex = null; // Resetea el índice al cerrar el modal
-      console.log("se da en cancelar eliminación de pregunta");
     }
   }
 
@@ -68,7 +66,7 @@ export class ReportQuestionsListComponent implements OnInit {
     try{
       if (this.questionToRemoveIndex !== null) {
         const questionId = this.questions[this.questionToRemoveIndex].id;
-        await this.requestService.request('DELETE', `http://localhost:3000/report/${questionId}`, {}, {}, true);
+        await this.requestService.request('DELETE', `/report/${questionId}`, {}, {}, true);
         // Elimina la pregunta del array si la eliminación en la base de datos es exitosa
         this.questions.splice(this.questionToRemoveIndex!, 1); // Elimina la pregunta del array  // Aquí puedes usar el operador ! para indicar que no será null
         this.questionToRemoveIndex = null;// Resetea el índice después de eliminar
@@ -87,7 +85,6 @@ export class ReportQuestionsListComponent implements OnInit {
     const modalSee = document.getElementById('seeQuestion');
     if (modalSee) {
       modalSee.classList.remove('hidden');
-      console.log("se abre visualización de pregunta");
     }
   }
 
@@ -95,7 +92,6 @@ export class ReportQuestionsListComponent implements OnInit {
     const modalSee = document.getElementById('seeQuestion');
     if (modalSee) {
       modalSee.classList.add('hidden');
-      console.log("se ve el motivo del reporte de la pregunta");
     }
   }
 

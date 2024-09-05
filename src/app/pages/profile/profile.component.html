@@ -1,64 +1,70 @@
 <div class="flex flex-col h-screen">
-<!-- ****************************** AÑADIR HEADER AQUÍ **********************************-->
+  <!-- ****************************** AÑADIR HEADER AQUÍ **********************************-->
   <app-header />
 
-<!-- ****************************** CONTENIDO PRINCIPAL AQUÍ **********************************-->
-  <div class="flex flex-1">
+  <!-- ****************************** CONTENIDO PRINCIPAL AQUÍ **********************************-->
+  <div class="flex gap-x-30 mx-16">
 
-    <!-- Sección Izquierda (Formulario) -->
-    <div class="flex-1 p-6">
-      <div class="mb-4">
-        <input type="text" placeholder="Nombre" class="border border-gray-300 p-2 w-full mb-4">
-        <input type="text" placeholder="Apellido" class="border border-gray-300 p-2 w-full mb-4">
-        <input type="email" placeholder="Email" class="border border-gray-300 p-2 w-full">
+    <div class="w-1/3 bg-white rounded-lg px-20">
+
+      <!-- Imagen centrada -->
+      <div class="flex justify-center mb-8">
+        <img ngSrc="formulario.png" alt="Bombero en incendio" width="717" height="886" class="rounded-full" priority="">
       </div>
-      <div class="mt-24 text-center">
-        <p class="font-bold">Subscrición:</p>
-        @if (user.subscribed && user.cancellation_pending == false) {
-          <label class="inline-flex items-center cursor-pointer">
-            <input (click)="unsubscribed()" type="checkbox" value="" checked class="sr-only peer">
-            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-400"></div>
-            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Cancelar subscripción</span>
-          </label>
-        }@else if (user.subscribed) {
-          tu subscripción será CANCELADA en el próximo ciclo de pago
-        }@else {
-          <label class="inline-flex items-center cursor-pointer">
-            <input (click)="subscribed()"  type="checkbox" value="" class="sr-only peer">
-            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-400"></div>
-            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Subscríbete</span>
-          </label>
-        }
-      </div>
+
+      <!-- Formulario -->
+      <form class="w-full">
+        <div class="mb-6">
+          <input type="text" [value]="user.name" placeholder="Nombre" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
+        </div>
+        <div class="mb-6">
+          <input type="text" [value]="user.surname" placeholder="Apellido" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
+        </div>
+        <div class="mb-6">
+          <input type="email" [value]="user.email" placeholder="Email" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
+        </div>
+
+        <!-- Toggle de suscripción -->
+        <div class="flex items-center space-x-2">
+          @if (user.subscribed && user.cancellation_pending == false) {
+            <label class="inline-flex items-center cursor-pointer">
+              <input (click)="unsubscribed()" type="checkbox" checked class="sr-only peer">
+              <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-400"></div>
+              <span class="ml-3 text-sm font-medium text-gray-900">Cancelar suscripción</span>
+            </label>
+          } @else if (user.subscribed) {
+            <span class="ml-3 text-sm font-medium text-gray-900">Tu subscripción será CANCELADA en el próximo ciclo de pago.</span>
+          } @else {
+            <label class="inline-flex items-center cursor-pointer">
+              <input (click)="subscribed()" type="checkbox" class="sr-only peer">
+              <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-400"></div>
+              <span class="ml-3 text-sm font-medium text-gray-900">Subscríbete</span>
+            </label>
+          }
+        </div>
+      </form>
     </div>
 
-    <!-- Sección Derecha (Estadísticas) -->
-    <div class="flex-1 p-6">
-      <p class="font-bold">Estadísticas (últimos 6 tests):</p>
-      <div class="grid grid-cols-2 gap-4 mt-4">
-        <!-- Gráficos Circulares -->
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart1"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart2"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart3"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart4"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart5"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart6"></canvas>
-        </div>
+    <!-- Estadísticas -->
+    <div class="w-2/3 pl-10">
+      <h2 class="text-xl font-semibold mb-4">Estadísticas (últimos 6 tests):</h2>
+      <div class="grid grid-cols-2 gap-4">
+        @for (chartOption of chartOptions; track $index) {
+          <div id="chart">
+            <apx-chart
+              [series]="chartOption.series"
+              [chart]="chartOption.chart"
+              [labels]="chartOption.labels"
+              [responsive]="chartOption.responsive"
+            ></apx-chart>
+          </div>
+        } @empty {
+          <span class="text-gray-900">No hay estadisticas para mostrar, realiza al menos un test.</span>
+        }
       </div>
     </div>
   </div>
 
-<!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
+  <!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
   <app-footer />
 </div>
