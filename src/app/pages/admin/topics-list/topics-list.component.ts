@@ -49,6 +49,7 @@ export class TopicsListComponent implements OnInit{
 
   closeModalCreateTopic() {
     const modalReport = document.getElementById('crearTema');
+    (document.getElementById('title') as HTMLTextAreaElement).value = "";
     if (modalReport) {
       modalReport.classList.add('hidden');
     }
@@ -66,6 +67,7 @@ export class TopicsListComponent implements OnInit{
     }catch(error){
       console.log(error);
     }
+    (document.getElementById('title') as HTMLTextAreaElement).value = "";
   }
 
 
@@ -114,6 +116,7 @@ export class TopicsListComponent implements OnInit{
 
   closeModalSubtopic() {
     const modalReport = document.getElementById('crearSubtopic');
+    (document.getElementById('subtopicTitle') as HTMLTextAreaElement).value = "";
     if (modalReport) {
       modalReport.classList.add('hidden');
       this.topicIdToAdd = null;
@@ -140,6 +143,7 @@ export class TopicsListComponent implements OnInit{
     }catch(error: any){
       console.log(error);
     }
+    (document.getElementById('subtopicTitle') as HTMLTextAreaElement).value = "";
   }
 
 
