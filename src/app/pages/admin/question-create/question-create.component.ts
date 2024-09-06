@@ -26,11 +26,10 @@ export class QuestionCreateComponent implements OnInit{
     //capturamos el id que se pasa por URL
     this.topicId = Number (this.route.snapshot.paramMap.get('topicId'));
     //obtener título del tema
-    const topicDetails = await this.requestService.request('GET', `http://localhost:3000/topic/${this.topicId}`, {}, {}, true);
+    const topicDetails = await this.requestService.request('GET', `/topic/${this.topicId}`, {}, {}, true);
     this.topicTitle = topicDetails.title;
     // Hace la petición a la base de datos para obtener las preguntas del id capturado
-    this.questions = await this.requestService.request('GET',`http://localhost:3000/quiz?topicId=${this.topicId}`, {}, {}, true);
-    console.log(this.questions);
+    this.questions = await this.requestService.request('GET',`/quiz?topicId=${this.topicId}`, {}, {}, true);
     // Transformar las opciones en un array
     this.questions = this.questions.map(question => ({
       ...question,
@@ -73,7 +72,7 @@ export class QuestionCreateComponent implements OnInit{
     const justification = (document.getElementById('justification') as HTMLTextAreaElement).value;
     const payload = {title: title, option1: option1, option2: option2, option3: option3, option4: option4, result: result, topicId: this.topicId, justification: justification};
     try{
-      await this.requestService.request('POST', 'http://localhost:3000/quiz', payload, {}, true);
+      await this.requestService.request('POST', '/quiz', payload, {}, true);
       alert("Se ha creado la pregunta");
       this.ngOnInit();
       this.closeModal();
@@ -104,7 +103,7 @@ export class QuestionCreateComponent implements OnInit{
   async RemoveQuestion() {
     try{
       if (this.idQuestionToRemove !== null) {
-        await this.requestService.request('DELETE', `http://localhost:3000/quiz/${this.idQuestionToRemove}`, {}, {}, true);
+        await this.requestService.request('DELETE', `/quiz/${this.idQuestionToRemove}`, {}, {}, true);
         this.ngOnInit();
         this.idQuestionToRemove = null;// Resetea el índice después de eliminar
         this.closeRemoveQuestionModal(); // Cierra el modal después de eliminar

@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
    // Método para cargar la información desde el servicio
    async loadInfo(): Promise<void> {
-    const data = await this.requestService.request('GET', `http://localhost:3000/info`, {}, {}, false);
+    const data = await this.requestService.request('GET', `/info`, {}, {}, false);
     this.title = data.title;
   }
 

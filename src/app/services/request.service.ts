@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { environment } from './../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ export class RequestService {
     }
 
     try {
-      const response = await this.doRequest(uri, method, data, headers);
+      const response = await this.doRequest(`${environment.apiUrl}${uri}`, method, data, headers);
       return response;
     } catch (error) {
       throw error;

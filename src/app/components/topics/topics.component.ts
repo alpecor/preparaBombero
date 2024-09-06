@@ -18,7 +18,6 @@ export class topicsComponent implements OnInit {
   constructor(private localStorageService:LocalStorageService){}
   ngOnInit(): void {
     if(this.topics.length > 0){
-      console.log(this.topics);
       this.topics = this.topics.map((x:any) =>{
         let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
           if (topicSelected.length > 0) {
@@ -36,7 +35,6 @@ export class topicsComponent implements OnInit {
 
   selectedTopic(topicId: number, event: any) {
     const isChecked: boolean = event.target.checked;
-    console.log(topicId);
     let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
     if (isChecked) {
         // Agrega el topic actual
@@ -50,7 +48,6 @@ export class topicsComponent implements OnInit {
         for (let topic of topics) {
             if (topic.id === id) {
                 topic.selected = isSelected;
-                console.log(`Actualizando ${topic.id} a seleccionado: ${isSelected}`);
 
                 // Si el topic tiene hijos, también actualiza sus hijos recursivamente
                 if (topic.topics && topic.topics.length > 0) {
@@ -74,15 +71,7 @@ export class topicsComponent implements OnInit {
     updateTopicSelection(this.topics, topicId, isChecked);
 
     this.localStorageService.setItem("topicsSelected", topicSelected);
-    console.log(this.topics, topicId);
   }
 
-
-
-    // let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
-    // // Actualizar la variable topic
-    // const index = this.topics[key].findIndex((x:any)=> x.id == topicId);
-    // this.topics[key][index].selected = isChecked;
-    // console.log(this.topics, key, index);
 }
 

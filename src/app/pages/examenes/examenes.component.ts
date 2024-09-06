@@ -23,7 +23,7 @@ export class ExamenesComponent {
 
    // Método para cargar la información desde el servicio
    async loadInfo(): Promise<void> {
-    const data = await this.requestService.request('GET', `http://localhost:3000/info`, {}, {}, false);
+    const data = await this.requestService.request('GET', `/info`, {}, {}, false);
       this.description = data.description;
   }
 }

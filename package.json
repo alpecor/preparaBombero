@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration local",
     "test": "ng test"
   },
   "private": true,
@@ -22,6 +22,7 @@
     "cookieconsent": "^3.1.1",
     "flowbite": "^2.3.0",
     "jwt-decode": "^4.0.0",
+    "ng-apexcharts": "^1.11.0",
     "ngx-cookieconsent": "^6.0.0",
     "ngx-quill": "^26.0.4",
     "ngx-toastr": "^19.0.0",

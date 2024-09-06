@@ -22,7 +22,7 @@ export default class AuthLoginComponent {
 
   async login(){
     try{
-      const response = await this.requestService.request('POST', `http://localhost:3000/auth/login`, {email: this.email, password:this.password}, {}, false);
+      const response = await this.requestService.request('POST', `/auth/login`, {email: this.email, password:this.password}, {}, false);
       localStorage.setItem("access_token", response.access_token);
       this.status = undefined;
       this.router.navigate(['/home']);
