@@ -5,50 +5,15 @@
   <!-- ****************************** CONTENIDO PRINCIPAL AQUÍ **********************************-->
   <div class="flex gap-x-30 mx-16">
 
-<<<<<<< Updated upstream
     <div class="w-1/3 bg-white rounded-lg px-20">
 
       <!-- Imagen centrada -->
       <div class="flex justify-center mb-8">
         <img ngSrc="formulario.png" alt="Bombero en incendio" width="717" height="886" class="rounded-full" priority="">
-=======
-    <!-- Sección Izquierda (Formulario) -->
-    <div class="flex-1 p-6">
-      <div class="mb-24 flex flex-col items-center">
-        <h1 class="font-bold mb-4">Datos del usuario: </h1>
-        <input type="text" placeholder="Nombre" class="border border-gray-300 p-2  mb-4 max-w-3xl rounded-xl ">
-        <input type="text" placeholder="Apellido" class="border border-gray-300 p-2 max-w-3xl mb-4 rounded-xl">
-        <input type="email" placeholder="Email" class="border border-gray-300 p-2 max-w-3xl rounded-xl">
-      </div>
-      <div class="text-center">
-        <p class="font-bold mb-2">Subscripción:</p>
-        @if (user.subscribed && user.cancellation_pending == false) {
-          <label class="inline-flex items-center cursor-pointer">
-            <input (click)="unsubscribed()" type="checkbox" value="" checked class="sr-only peer">
-            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-400"></div>
-            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Cancelar subscripción</span>
-          </label>
-        }@else if (user.subscribed) {
-          <div class="flex flex-col items-center justify-center">
-            <label class="inline-flex items-center cursor-pointer mb-2">
-              <input (click)="unsubscribed()" type="checkbox" value="" checked disabled class="sr-only peer">
-              <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-400"></div>
-              <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Subscripción activada</span>
-            </label>
-            <span>tu subscripción será CANCELADA en el próximo ciclo de pago</span>
-          </div>
-        }@else {
-          <label class="inline-flex items-center cursor-pointer">
-            <input (click)="subscribed()"  type="checkbox" value="" class="sr-only peer">
-            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 dark:peer-focus:ring-orange-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-orange-400"></div>
-            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Subscríbete</span>
-          </label>
-        }
->>>>>>> Stashed changes
       </div>
 
       <!-- Formulario -->
-      <form class="w-full">
+      <form class="w-full px-10">
         <div class="mb-6">
           <input type="text" [value]="user.name" placeholder="Nombre" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
         </div>
@@ -80,7 +45,6 @@
       </form>
     </div>
 
-<<<<<<< Updated upstream
     <!-- Estadísticas -->
     <div class="w-2/3 pl-10">
       <h2 class="text-xl font-semibold mb-4">Estadísticas (últimos 6 tests):</h2>
@@ -97,31 +61,6 @@
         } @empty {
           <span class="text-gray-900">No hay estadisticas para mostrar, realiza al menos un test.</span>
         }
-=======
-    <!-- Sección Derecha (Estadísticas) -->
-    <div class="flex-1 p-6">
-      <p class="font-bold">Estadísticas (últimos 6 tests):</p>
-      <div class="grid grid-cols-2 gap-4 mt-4">
-        <!-- Gráficos Circulares -->
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart1" width="150" height="150"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart2" width="150" height="150"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart3" width="150" height="150"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart4" width="150" height="150"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart5" width="150" height="150"></canvas>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <canvas id="chart6" width="150" height="150"></canvas>
-        </div>
->>>>>>> Stashed changes
       </div>
     </div>
   </div>
@@ -129,44 +68,3 @@
   <!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
   <app-footer />
 </div>
-
-
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Datos de ejemplo para las gráficas
-    const data = {
-      labels: ['Acertadas', 'Falladas', 'No Respondidas'],
-      datasets: [
-        {
-          data: [10, 5, 2], // Cambia estos datos según tu necesidad
-          backgroundColor: ['#4CAF50', '#F44336', '#FFC107'], // Colores para cada segmento
-          hoverBackgroundColor: ['#66BB6A', '#E57373', '#FFCA28']
-        }
-      ]
-    };
-
-    // Opciones para los gráficos
-    const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    };
-
-    // Crear gráficos en cada canvas
-    const charts = [];
-    for (let i = 1; i <= 6; i++) {
-      const ctx = document.getElementById(`chart${i}`).getContext('2d');
-      charts.push(new Chart(ctx, {
-        type: 'doughnut', // Tipo de gráfica circular (donut)
-        data: data,
-        options: options
-      }));
-    }
-  });
-  </script>

@@ -58,7 +58,7 @@ export class ReviewTestComponent {
 
   // ****** Cambiar el texto del botón de "Corregir" a "Siguiente pregunta", si ya se ha
   // ****** dado en corregir *************
-  
+
   getButtonText() {
     return this.isCorrected ? 'Siguiente pregunta' : 'Corregir';
   }
@@ -106,7 +106,7 @@ export class ReviewTestComponent {
     };
 
     try {
-      const response = await this.requestService.request('POST', 'http://localhost:3000/quiz/check', payload, {}, true);
+      const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
       const quizResponse = response.quizzes[0];
 
       // Guardar la respuesta correcta en la pregunta correspondiente
@@ -140,10 +140,6 @@ export class ReviewTestComponent {
   onSelectAnswer(questionIndex: number, answer: string) {
     // Actualizar la opción seleccionada en userResponses
     this.userResponses[questionIndex].optionSelected = answer;
-<<<<<<< Updated upstream
-=======
-    console.log("respuesta señalada: ", this.userResponses); // Para verificar las respuestas seleccionadas
->>>>>>> Stashed changes
   }
 
   //************************* FUNCIONES PARA APERTURA, CIERRE y ENVÍO DEL MODAL DE REPORTE ****************************//
@@ -199,25 +195,5 @@ export class ReviewTestComponent {
     return `${startQuestion} de ${this.examQuestion.length}`;
   }
 
-  //************************* FUNCIÓNES PARA EL ENVÍO DEL TEST ****************************//
 
-<<<<<<< Updated upstream
-  async sendTest() {
-    try {
-      const payload = { quizzes: this.userResponses };
-      const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
-
-      this.localStorageService.setItem('correctedExamQuestions', response.quizzes);
-      this.localStorageService.setItem('userAnswer', this.userResponses);
-
-      this.router.navigate(['/check-exam']);
-      this.localStorageService.removeItem('examQuestions')
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-=======
-
->>>>>>> Stashed changes
 }

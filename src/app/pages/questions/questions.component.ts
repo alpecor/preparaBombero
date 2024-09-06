@@ -33,7 +33,7 @@ export class QuestionsComponent implements OnInit {
   //************************* ngOnInit ****************************//
 
   async ngOnInit(){
-    const user = await this.requestService.request('GET', `http://localhost:3000/user`,{},{},true);
+    const user = await this.requestService.request('GET', `/user`,{},{},true);
     if(!user.subscribed){
       location.href="/home";
       return;
@@ -118,10 +118,7 @@ export class QuestionsComponent implements OnInit {
 
   onPageChange($event: PaginatorState) {
     this.page = $event;
-<<<<<<< Updated upstream
-=======
     window.scrollTo({ top: 0, behavior: 'smooth' });
->>>>>>> Stashed changes
   }
 
   progress() {

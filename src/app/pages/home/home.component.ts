@@ -24,7 +24,7 @@ export class HomeComponent {
   async startExam() {
 
     try{
-      const user = await this.requestService.request('GET', `http://localhost:3000/user`,{},{},true);
+      const user = await this.requestService.request('GET', `/user`,{},{},true);
       if(!user.subscribed){
         alert("Esto es una función PREMIUM, debes subscribirte");
         return;
@@ -45,15 +45,11 @@ export class HomeComponent {
 
     // Hacer la solicitud POST al backend
     try{
-<<<<<<< Updated upstream
       this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{},true);
-=======
-      this.questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`,{topicIds},{},true);
       if (this.questions.length === 0) {
         alert("No hay suficientes preguntas para generarte un examen.");
         return;
       }
->>>>>>> Stashed changes
       //Guardar las preguntas generadas en localStorage
       this.localStorageService.setItem("examQuestions", this.questions);
       this.router.navigate(['/test']);
@@ -69,7 +65,7 @@ export class HomeComponent {
 
    // Función que se llama al hacer clic en el botón para empezar el repaso
    async startReview() {
-    const user = await this.requestService.request('GET', `http://localhost:3000/user`,{},{},true);
+    const user = await this.requestService.request('GET', `/user`,{},{},true);
     if(!user.subscribed){
       alert("Esto es una función PREMIUM, debes subscribirte");
       return;
@@ -87,15 +83,11 @@ export class HomeComponent {
 
     // Hacer la solicitud POST al backend
     try{
-<<<<<<< Updated upstream
       this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{},true);
-=======
-      this.questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`,{topicIds},{},true);
       if (this.questions.length === 0) {
         alert("No hay suficientes preguntas para generarte un repaso.");
         return;
       }
->>>>>>> Stashed changes
       //Guardar las preguntas generadas en localStorage
       this.localStorageService.setItem("examQuestions", this.questions);
       this.router.navigate(['/review-test']);

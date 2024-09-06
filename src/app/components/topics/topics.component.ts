@@ -73,29 +73,33 @@ export class topicsComponent implements OnInit {
     this.localStorageService.setItem("topicsSelected", topicSelected);
   }
 
-<<<<<<< Updated upstream
-=======
 
 
-// función para manejar el clic en la flecha
-async startExamForSpecificTopic(topicId: number) {
-  try {
-    // Realizar petición para generar preguntas solo del tema seleccionado
-    const questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`, { topicIds: [topicId] }, {}, true);
+  // función para manejar el clic en la flecha
+  async startExamForSpecificTopic(topicId: number) {
+    try {
+      // Realizar petición para generar preguntas solo del tema seleccionado
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
 
-    // Limitar las preguntas a un máximo de 100
-    const limitedQuestions = questions.slice(0, 100);
+      if (questions.length === 0) {
+        alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
+        return;
+      }
+      // Limitar las preguntas a un máximo de 100
+      const limitedQuestions = questions.slice(0, 100);
 
-    // Guardar las preguntas limitadas en localStorage
-    this.localStorageService.setItem("examQuestions", limitedQuestions);
+      // Guardar las preguntas limitadas en localStorage
+      this.localStorageService.setItem("examQuestions", limitedQuestions);
 
-    console.log(limitedQuestions); // Verificar las preguntas obtenidas
-    // Navegar a la vista del examen
-    this.router.navigate(['/test']);
-  } catch (error: any) {
-    console.log(error);
+      // Navegar a la vista del examen
+      this.router.navigate(['/test']);
+    } catch (error: any) {
+      console.log(error);
+    }
+
+
+
+
   }
-}
->>>>>>> Stashed changes
 }
 
