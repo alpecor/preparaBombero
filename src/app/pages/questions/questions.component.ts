@@ -26,13 +26,24 @@ export class QuestionsComponent implements OnInit {
   userResponses: { quizId: number, optionSelected: string }[] = []; // Array para almacenar las respuestas del usuario
 
   page: any = {page: 0, first:0}
-  questionsPerPage:number = 20;
+  questionsPerPage:any = 20;
 
 
 
   //************************* ngOnInit ****************************//
 
-  ngOnInit(): void {
+  async ngOnInit(){
+    const user = await this.requestService.request('GET', `http://localhost:3000/user`,{},{},true);
+    if(!user.subscribed){
+      location.href="/home";
+      return;
+    }
+
+    if (this.examQuestion.length === 0) {
+      location.href="/home";
+      return;
+    }
+
     // Inicializar userResponses con el id de cada pregunta y optionSelected como vacío
     this.userResponses = this.examQuestion.map((question: any) => {
       return {
@@ -107,6 +118,10 @@ export class QuestionsComponent implements OnInit {
 
   onPageChange($event: PaginatorState) {
     this.page = $event;
+<<<<<<< Updated upstream
+=======
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+>>>>>>> Stashed changes
   }
 
   progress() {
@@ -143,7 +158,7 @@ export class QuestionsComponent implements OnInit {
   async sendTest() {
     try{
       // Encapsula el array userResponses dentro de un objeto con la clave 'quizzes'
-      const payload = {quizzes: this.userResponses};
+      const payload = {quizzes: this.userResponses, type: "EXAM"};
 
       // Hacer la petición POST al backend para corregir el examen
       const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);

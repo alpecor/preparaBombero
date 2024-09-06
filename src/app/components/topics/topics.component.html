@@ -12,11 +12,14 @@
       </div>
       <div class="flex items-center">
           <span class="mr-2">{{ item.quizCount }}</span>
-          <i title="Hacer examen" class="fa-solid fa-arrow-right fa-lg" [routerLink]="['/test']" style="cursor: pointer"></i>
+          <i (click)="startExamForSpecificTopic(item.id)"
+            title="Hacer examen"
+            class="fa-solid fa-arrow-right fa-lg"
+            style="cursor: pointer">
+          </i>
       </div>
     </div>
   </div>
-
   @if (topics.length > 0) {
     <app-topics [margin]="margin + 2" [topics]="item.topics"/>
   }

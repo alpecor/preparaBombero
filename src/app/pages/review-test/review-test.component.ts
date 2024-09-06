@@ -29,19 +29,24 @@ export class ReviewTestComponent {
   page: any = { page: 0, first: 0 }
   questionsPerPage: number = 1; // Cambiado a 1 para mostrar una pregunta por página
 
+  isCorrected: boolean = false; // Controla si la pregunta ha sido corregida
+  quizResult: string = ""; // Controla si la pregunta ha sido corregida
+
+
   //************************* ngOnInit ****************************//
 
   ngOnInit(): void {
-    // Inicializar userResponses con el id de cada pregunta y optionSelected como vacío
+    //aqui se cargan un arrya con todas las preguntas a responder y como respuesta null,
+    //a la espera de que el user marque una respuesta
     this.userResponses = this.examQuestion.map((question: any) => {
       return {
         quizId: question.id,
-        optionSelected: "" // Inicialmente vacío
+        optionSelected: null // Inicialmente vacío
       };
     });
 
-    // Para recorrer las opciones de respuestas
-    this.examQuestion = this.examQuestion.map((question: any) => {
+    //para recorrer las opciones de respuestas
+    this.examQuestion = this.examQuestion.map((question:any) => {
       return {
         ...question,
         respuestas: [question.option1, question.option2, question.option3, question.option4]
@@ -49,11 +54,96 @@ export class ReviewTestComponent {
     });
   }
 
+
+
+  // ****** Cambiar el texto del botón de "Corregir" a "Siguiente pregunta", si ya se ha
+  // ****** dado en corregir *************
+  
+  getButtonText() {
+    return this.isCorrected ? 'Siguiente pregunta' : 'Corregir';
+  }
+
+  // Manejo del botón para corregir o pasar a la siguiente pregunta
+  handleButtonClick() {
+    if (!this.isCorrected) {
+      // Corregir la pregunta actual
+      const currentQuestionIndex = this.page.page * this.questionsPerPage;
+      const currentQuestion = this.examQuestion[currentQuestionIndex];
+      const selectedOption = this.userResponses[currentQuestionIndex].optionSelected;
+
+      if (selectedOption !== null) {
+        // Llamar a la función para corregir la pregunta
+        this.correctSingleQuestion(currentQuestion.id, selectedOption);
+      } else {
+        alert("Por favor, selecciona una respuesta antes de corregir.");
+      }
+    } else {
+      // Avanzar a la siguiente pregunta
+      this.isCorrected = false; // Resetear el estado de corrección
+
+     // Actualizar el índice de la primera pregunta de la página
+      this.page.page += 1;
+      this.page.first = this.page.page * this.questionsPerPage;
+
+      // Verificar si llegamos al final
+      if (this.page.page >= Math.ceil(this.examQuestion.length / this.questionsPerPage)) {
+        alert("Has completado todas las preguntas.");
+        this.router.navigate(['/home']); // Redirigir a la home
+      }
+    }
+  }
+
+
+  async correctSingleQuestion(questionId: number, selectedOption: string) {
+    const payload = {
+      quizzes: [
+        {
+          quizId: questionId,
+          optionSelected: selectedOption
+        }
+      ],
+      type: "REVIEW"
+    };
+
+    try {
+      const response = await this.requestService.request('POST', 'http://localhost:3000/quiz/check', payload, {}, true);
+      const quizResponse = response.quizzes[0];
+
+      // Guardar la respuesta correcta en la pregunta correspondiente
+      this.examQuestion = this.examQuestion.map((question: any) => {
+        if (question.id === questionId) {
+          return {
+            ...question,
+            correctAnswer: quizResponse.result, // Guardar la respuesta correcta
+            showJustification: false // Nueva propiedad para controlar la visibilidad del motivo
+          };
+        }
+        return question;
+      });
+
+      this.isCorrected = true; // Marcar como corregida
+    } catch (error) {
+      console.error('Error al corregir la pregunta:', error);
+    }
+  }
+
+//************************* FUNCION PARA MOSTRAR MOTIVO *********************//
+  // Función para mostras justifiación de la pregunta
+  toggleJustification(question: any): void {
+    question.showJustification = !question.showJustification;
+  }
+
+
+
   //************************* FUNCIONES PARA RECOGER LAS OPCIONES SEÑALADAS EN EL EXAMEN ****************************//
 
   onSelectAnswer(questionIndex: number, answer: string) {
     // Actualizar la opción seleccionada en userResponses
     this.userResponses[questionIndex].optionSelected = answer;
+<<<<<<< Updated upstream
+=======
+    console.log("respuesta señalada: ", this.userResponses); // Para verificar las respuestas seleccionadas
+>>>>>>> Stashed changes
   }
 
   //************************* FUNCIONES PARA APERTURA, CIERRE y ENVÍO DEL MODAL DE REPORTE ****************************//
@@ -106,11 +196,12 @@ export class ReviewTestComponent {
   progressText() {
     const startQuestion = this.page.page * this.questionsPerPage + 1;
     const endQuestion = Math.min((this.page.page + 1) * this.questionsPerPage, this.examQuestion.length);
-    return `${startQuestion}-${endQuestion} de ${this.examQuestion.length}`;
+    return `${startQuestion} de ${this.examQuestion.length}`;
   }
 
   //************************* FUNCIÓNES PARA EL ENVÍO DEL TEST ****************************//
 
+<<<<<<< Updated upstream
   async sendTest() {
     try {
       const payload = { quizzes: this.userResponses };
@@ -126,4 +217,7 @@ export class ReviewTestComponent {
       console.log(error);
     }
   }
+=======
+
+>>>>>>> Stashed changes
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { WelcomeTestimonialsComponent } from '../../components/welcome/welcome-testimonials/welcome-testimonials.component';
@@ -14,5 +14,4 @@ import { NgOptimizedImage } from '@angular/common';
   styleUrl: './welcome.component.css'
 })
 export class WelcomeComponent {
-
 }

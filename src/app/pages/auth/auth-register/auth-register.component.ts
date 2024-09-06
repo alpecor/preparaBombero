@@ -28,7 +28,7 @@ export class AuthRegisterComponent {
       this.status = undefined
       this.router.navigate(['/login']);
     }catch(error: any){
-      this.status = Array.isArray(error.error.errors) ? error.error.errors : [error.error.errors];
+      this.status = (error.error.errors) ? Array.isArray(error.error.errors) ? error.error.errors : [error.error.errors] : [error.error.message];
     }
   }
 }

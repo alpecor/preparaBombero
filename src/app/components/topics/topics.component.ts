@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 
@@ -15,7 +15,7 @@ export class topicsComponent implements OnInit {
   @Input() topics:any;
   @Input() margin:number= -1;
 
-  constructor(private localStorageService:LocalStorageService){}
+  constructor(private router: Router, private localStorageService:LocalStorageService, private requestService: RequestService){}
   ngOnInit(): void {
     if(this.topics.length > 0){
       this.topics = this.topics.map((x:any) =>{
@@ -73,5 +73,29 @@ export class topicsComponent implements OnInit {
     this.localStorageService.setItem("topicsSelected", topicSelected);
   }
 
+<<<<<<< Updated upstream
+=======
+
+
+// función para manejar el clic en la flecha
+async startExamForSpecificTopic(topicId: number) {
+  try {
+    // Realizar petición para generar preguntas solo del tema seleccionado
+    const questions = await this.requestService.request('POST', `http://localhost:3000/quiz/generate`, { topicIds: [topicId] }, {}, true);
+
+    // Limitar las preguntas a un máximo de 100
+    const limitedQuestions = questions.slice(0, 100);
+
+    // Guardar las preguntas limitadas en localStorage
+    this.localStorageService.setItem("examQuestions", limitedQuestions);
+
+    console.log(limitedQuestions); // Verificar las preguntas obtenidas
+    // Navegar a la vista del examen
+    this.router.navigate(['/test']);
+  } catch (error: any) {
+    console.log(error);
+  }
+}
+>>>>>>> Stashed changes
 }
 
