@@ -47,22 +47,24 @@
       </div>
       <ul class="list-none space-y-2">
         <li *ngFor="let respuesta of question.respuestas">
-          <label class="flex items-center space-x-3">
-            <input
-              type="radio"
-              class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-              [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
-              [value]="respuesta"
-              (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
-              [disabled]="isCorrected"
-            />
-            <span [ngClass]="{
-              'text-green-500 font-bold': isCorrected && respuesta === question.correctAnswer,
-              'text-red-500 font-bold': isCorrected && userResponses[(page.page) * questionsPerPage + i].optionSelected === respuesta && respuesta !== question.correctAnswer
-            }">
-              {{ respuesta }}
-            </span>
-          </label>
+          @if (respuesta !="") {
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
+                [value]="respuesta"
+                (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
+                [disabled]="isCorrected"
+              />
+              <span [ngClass]="{
+                'text-green-500 font-bold': isCorrected && respuesta === question.correctAnswer,
+                'text-red-500 font-bold': isCorrected && userResponses[(page.page) * questionsPerPage + i].optionSelected === respuesta && respuesta !== question.correctAnswer
+              }">
+                {{ respuesta }}
+              </span>
+            </label>
+          }
         </li>
         <!-- Mostrar el motivo condicionalmente -->
         <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded text-center">

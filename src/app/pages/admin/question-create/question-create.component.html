@@ -35,12 +35,14 @@
       </div>
       <ul class="ml-8">
         <li *ngFor="let option of question.options" class="mb-2">
-          <div class="flex items-center">
-            <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
-            <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
-              {{ option.text }}
+          @if (option.text !="") {
+            <div class="flex items-center">
+              <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
+              <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
+                {{ option.text }}
+              </div>
             </div>
-          </div>
+          }
         </li>
       </ul>
     </div>

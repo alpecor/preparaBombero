@@ -71,15 +71,17 @@
                 'text-red-500 ': isUserSelectedAndIncorrect(question, respuesta)
               }">
 
-            <label class="flex items-center space-x-3">
-              <input
-                type="radio"
-                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [checked]="respuesta === question.userAnswer"
-                disabled
-              />
-              <span class="font-bold">{{ respuesta }}</span>
-            </label>
+            @if (respuesta !="") {
+              <label class="flex items-center space-x-3">
+                <input
+                  type="radio"
+                  class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                  [checked]="respuesta === question.userAnswer"
+                  disabled
+                />
+                <span class="font-bold">{{ respuesta }}</span>
+              </label>
+            }
           </li>
         </ul>
 
