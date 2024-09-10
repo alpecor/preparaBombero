@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
         },
         "type": "opt-out",
         "content": {
-          "message": "This website uses cookies to ensure you get the best experience on our website.",
+          "message": "Este sitio web utiliza cookies para que usted tenga la mejor experiencia en nuestro sitio web.",
           "allow": "Aceptar cookies",
           "deny": "Rechazar cookies",
           "link": "Saber más",
