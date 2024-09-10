@@ -15,3 +15,7 @@
     --primary-hover-color: #faebce;
     --form-color: #F6F6F6;
 }
+
+body {
+  user-select: none;
+}
