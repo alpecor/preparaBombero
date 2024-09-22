@@ -53,8 +53,8 @@
         *ngFor="let question of correctedExamQuestions; let i = index"
         class="p-6 mb-12 border rounded-xl bg-gray-50"
       >
-        <h2 class="text-lg font-semibold mb-2">
-          {{ i + 1 }}. {{ question.title }}
+        <h2 class="text-lg font-semibold mb-2"
+        [innerHTML]="i + 1 + '.' + question.title ">
         </h2>
         <div class="relative">
           <hr class="border-t border-gray-300 mb-4" />
@@ -88,7 +88,7 @@
         <!-- Mostrar el motivo condicionalmente -->
         <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded text-center">
           <h1 class="font-bold">Motivo de respuesta correcta:</h1>
-          <p>{{ question.justification }}</p> <!-- Ajusta el nombre de la propiedad del motivo según sea necesario -->
+          <p [innerHTML]="question.justification"></p> <!-- Ajusta el nombre de la propiedad del motivo según sea necesario -->
         </div>
       </div>
     </div>

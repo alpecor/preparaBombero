@@ -1,4 +1,4 @@
 export const environment = {
-    apiUrl: 'https://preparabombero.com/api/',
+    apiUrl: 'https://api.preparabombero.com',
     production: true
 };

@@ -24,9 +24,9 @@
       *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
       class="p-6 mb-12 border rounded-xl bg-gray-50"
     >
-      <h2 class="text-lg font-semibold mb-2">
-        {{ (page.page) * questionsPerPage + i + 1 }}.
-        {{ question.title }}
+      <h2 class="text-lg font-semibold mb-2"
+      [innerHTML]="page.page * questionsPerPage + i + 1 + '.' + question.title">
+
       </h2>
       <div class="relative">
         <hr class="border-t border-gray-300 mb-4" />

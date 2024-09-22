@@ -28,7 +28,7 @@
       >
         <h2 class="text-lg font-medium mb-2">Pregunta {{ i + 1 }}</h2>
         <div class="mb-4 p-2 mr-12 bg-gray-100 rounded-md border border-gray-300">
-          <p>{{ question.title }}</p>
+          <p [innerHTML]="question.title"></p>
         </div>
         <div class="absolute right-3 top-11">
           <i (click)="openRemoveQuestionModal(question.id)" class="fa-solid fa-trash-can fa-xl" style="color: #1a1339; cursor: pointer;"></i>
@@ -73,7 +73,7 @@
       <!-- Parte Izquierda: Enunciado y opciones -->
       <div class="w-1/2 pr-4">
         <label class="block font-bold">Enunciado</label>
-        <p-editor id="questionTitle" [style]="{ height: '150px', width: '100%' }"></p-editor>
+        <p-editor [(ngModel)]="questionTitle" [style]="{ height: '150px', width: '100%' }"></p-editor>
 
         <div class="mt-4">
           <label class="block font-bold">Opciones</label>
@@ -109,10 +109,10 @@
       <!-- Parte Derecha: respuesta correcta y motivo -->
       <div class="w-1/2 pl-4">
         <label class="block font-bold">Respuesta correcta</label>
-        <textarea id="result" rows="2" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+        <textarea id="result" rows="9" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
 
         <label class="mt-4 block font-bold">Motivo</label>
-        <p-editor id="justification" [style]="{ height: '150px', width: '100%' }"></p-editor>
+        <p-editor  [(ngModel)]="justification" [style]="{ height: '150px', width: '100%' }"></p-editor>
       </div>
     </div>
 

@@ -5,11 +5,12 @@ import { FooterComponent } from '../../../components/footer/footer.component';
 import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../../services/request.service';
 import { EditorModule } from 'primeng/editor';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-question-create',
   standalone: true,
-  imports: [EditorModule, CommonModule, HeaderComponent, FooterComponent],
+  imports: [EditorModule, CommonModule, HeaderComponent, FooterComponent, FormsModule],
   templateUrl: './question-create.component.html',
   styleUrl: './question-create.component.css'
 })
@@ -19,6 +20,8 @@ export class QuestionCreateComponent implements OnInit{
   questions: any[] = [];
   topicTitle: string = ''; // para almacenar el título del tema
   idQuestionToRemove: number | null = null;
+  questionTitle: string = "";
+  justification: string = "";
 
   constructor(private route: ActivatedRoute, private requestService: RequestService) {}
 
@@ -59,26 +62,26 @@ export class QuestionCreateComponent implements OnInit{
       modalCreate.classList.add('hidden');
     }
     //limpiar los campos de crear preguntas
-    (document.getElementById('questionTitle') as HTMLTextAreaElement).value = "";
+    this.questionTitle = "";
     (document.getElementById('optionA') as HTMLTextAreaElement).value = "";
     (document.getElementById('optionB') as HTMLTextAreaElement).value = "";
     (document.getElementById('optionC') as HTMLTextAreaElement).value = "";
     (document.getElementById('optionD') as HTMLTextAreaElement).value = "";
     (document.getElementById('result') as HTMLTextAreaElement).value = "";
-    (document.getElementById('justification') as HTMLTextAreaElement).value = "";
+    this.justification = "";
   }
 
 
   //************************** FUNCIÓN PARA CREACIÓN DE PREGUNTAS ***************************//
 
   async createQuestion() {
-    const title = (document.getElementById('questionTitle') as HTMLTextAreaElement).value;
+    const title = this.questionTitle;
     const option1 = (document.getElementById('optionA') as HTMLTextAreaElement).value;
     const option2 = (document.getElementById('optionB') as HTMLTextAreaElement).value;
     const option3 = (document.getElementById('optionC') as HTMLTextAreaElement).value;
     const option4 = (document.getElementById('optionD') as HTMLTextAreaElement).value;
     const result = (document.getElementById('result') as HTMLTextAreaElement).value;
-    const justification = (document.getElementById('justification') as HTMLTextAreaElement).value;
+    const justification = this.justification;
     const payload = {title: title, option1: option1, option2: option2, option3: option3, option4: option4, result: result, topicId: this.topicId, justification: justification};
     try{
       await this.requestService.request('POST', '/quiz', payload, {}, true);
