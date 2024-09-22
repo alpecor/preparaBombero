@@ -56,8 +56,29 @@ export class HomeComponent {
     }catch(error: any){
       console.log(error);
     }
+  }
 
-    // Navegar a la vista del examen
+   // función para manejar el clic en la flecha
+  async startExamForSpecificTopic(topicId: number) {
+    try {
+      // Realizar petición para generar preguntas solo del tema seleccionado
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
+
+      if (questions.length === 0) {
+        alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
+        return;
+      }
+      // Limitar las preguntas a un máximo de 100
+      const limitedQuestions = questions.slice(0, 100);
+
+      // Guardar las preguntas limitadas en localStorage
+      this.localStorageService.setItem("examQuestions", limitedQuestions);
+
+      // Navegar a la vista del examen
+      this.router.navigate(['/test']);
+    } catch (error: any) {
+      console.log(error);
+    }
   }
 
 

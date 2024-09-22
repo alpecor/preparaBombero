@@ -34,7 +34,14 @@
                     />
                     <span class="ml-2">{{ topic.title }}</span>
                   </div>
-                  <span>{{ topic.quizCount }}</span>
+                  <div class="flex items-center">
+                    <span class="mr-2">{{ topic.quizCount }}</span>
+                    <i (click)="startExamForSpecificTopic(topic.id)"
+                      title="Hacer examen"
+                      class="fa-solid fa-arrow-right fa-lg"
+                      style="cursor: pointer">
+                    </i>
+                  </div>
                 </div>
                 <div [hidden]="topic.expanded">
                   <app-topics [topics]="topic.topics" [margin]="3" />

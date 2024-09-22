@@ -4,11 +4,12 @@ import { HeaderComponent } from '../../../components/header/header.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
 import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../../services/request.service';
+import { EditorModule } from 'primeng/editor';
 
 @Component({
   selector: 'app-question-create',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent],
+  imports: [EditorModule, CommonModule, HeaderComponent, FooterComponent],
   templateUrl: './question-create.component.html',
   styleUrl: './question-create.component.css'
 })
@@ -57,6 +58,14 @@ export class QuestionCreateComponent implements OnInit{
     if (modalCreate) {
       modalCreate.classList.add('hidden');
     }
+    //limpiar los campos de crear preguntas
+    (document.getElementById('questionTitle') as HTMLTextAreaElement).value = "";
+    (document.getElementById('optionA') as HTMLTextAreaElement).value = "";
+    (document.getElementById('optionB') as HTMLTextAreaElement).value = "";
+    (document.getElementById('optionC') as HTMLTextAreaElement).value = "";
+    (document.getElementById('optionD') as HTMLTextAreaElement).value = "";
+    (document.getElementById('result') as HTMLTextAreaElement).value = "";
+    (document.getElementById('justification') as HTMLTextAreaElement).value = "";
   }
 
 

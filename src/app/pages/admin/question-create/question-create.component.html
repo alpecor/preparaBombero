@@ -17,95 +17,106 @@
 
 <!-- ****************************** AÑADIR PREGUNTAS AQUÍ **********************************-->
 
-  <!------------ Título del tema ------------->
+<!------------ Título del tema ------------->
 
-<h1 class="text-2xl font-bold mb-6 text-center">Preguntas del tema: <br>{{ topicTitle }}</h1>
+  <h1 class="text-2xl font-bold mb-6 text-center">Preguntas del tema: <br>{{ topicTitle }}</h1>
 
-  <div class="container mx-auto mt-8 max-w-2xl">
-    <div
-      class="question-block mb-12 relative"
-      *ngFor="let question of questions; let i = index"
-    >
-      <h2 class="text-lg font-medium mb-2">Pregunta {{ i + 1 }}</h2>
-      <div class="mb-4 p-2 mr-12 bg-gray-100 rounded-md border border-gray-300">
-        <p>{{ question.title }}</p>
-      </div>
-      <div class="absolute right-3 top-11">
-        <i (click)="openRemoveQuestionModal(question.id)" class="fa-solid fa-trash-can fa-xl" style="color: #1a1339; cursor: pointer;"></i>
-      </div>
-      <ul class="ml-8">
-        <li *ngFor="let option of question.options" class="mb-2">
-          @if (option.text !="") {
-            <div class="flex items-center">
-              <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
-              <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
-                {{ option.text }}
+    <div class="container mx-auto mt-8 max-w-2xl">
+      <div
+        class="question-block mb-12 relative"
+        *ngFor="let question of questions; let i = index"
+      >
+        <h2 class="text-lg font-medium mb-2">Pregunta {{ i + 1 }}</h2>
+        <div class="mb-4 p-2 mr-12 bg-gray-100 rounded-md border border-gray-300">
+          <p>{{ question.title }}</p>
+        </div>
+        <div class="absolute right-3 top-11">
+          <i (click)="openRemoveQuestionModal(question.id)" class="fa-solid fa-trash-can fa-xl" style="color: #1a1339; cursor: pointer;"></i>
+        </div>
+        <ul class="ml-8">
+          <li *ngFor="let option of question.options" class="mb-2">
+            @if (option.text !="") {
+              <div class="flex items-center">
+                <div class="flex-none w-6 font-medium">{{ option.letter }}</div>
+                <div class="flex-grow p-2 bg-white rounded-md border border-gray-300">
+                  {{ option.text }}
+                </div>
               </div>
-            </div>
-          }
-        </li>
-      </ul>
+            }
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
 
 
-<!-- ****************************** AÑADIR BOTÓN + DE AÑADIR PREGUNTAS AQUÍ **********************************-->
+  <!-- ****************************** AÑADIR BOTÓN + DE AÑADIR PREGUNTAS AQUÍ **********************************-->
 
-  <button class="fixed bottom-10 right-12 text-white bg-primaryColor hover:bg-yellow-600 rounded-full w-12 h-12 shadow-lg flex items-center justify-center"
-    (click)="openModal()">
-    <i class="fa-solid fa-plus fa-2xl"></i>
-  </button>
+    <button class="fixed bottom-10 right-12 text-white bg-primaryColor hover:bg-yellow-600 rounded-full w-12 h-12 shadow-lg flex items-center justify-center"
+      (click)="openModal()">
+      <i class="fa-solid fa-plus fa-2xl"></i>
+    </button>
 
 
-<!-- ****************************** MODAL CREAR PREGUNTA AQUÍ **********************************-->
+  <!-- ****************************** MODAL CREAR PREGUNTA AQUÍ **********************************-->
+
 <div id="createQuestion"
-  class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
 >
-  <div class="bg-white p-8 rounded-lg max-w-lg w-full">
+  <div class="bg-white p-8 rounded-lg max-w-4xl w-full flex flex-col">
+
+    <!-- Título centrado -->
     <h2 class="text-xl mb-4 font-bold text-center">Crear pregunta</h2>
 
-    <label class="block text-sm font-medium text-gray-700">Enunciado</label>
+    <!-- Contenedor de columnas -->
+    <div class="flex flex-row">
 
-    <textarea id="questionTitle" rows="2" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+      <!-- Parte Izquierda: Enunciado y opciones -->
+      <div class="w-1/2 pr-4">
+        <label class="block font-bold">Enunciado</label>
+        <p-editor id="questionTitle" [style]="{ height: '150px', width: '100%' }"></p-editor>
 
-    <div class="mt-4">
-      <label class="block text-sm font-medium text-gray-700">Opciones</label>
-      <div class="mt-1">
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">A</span>
-          <input id="optionA"
-            class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
+        <div class="mt-4">
+          <label class="block font-bold">Opciones</label>
+          <div class="mt-1">
+            <div class="flex items-center mb-2">
+              <span class="w-6 text-sm font-medium text-gray-700">A</span>
+              <input id="optionA"
+                class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div class="flex items-center mb-2">
+              <span class="w-6 text-sm font-medium text-gray-700">B</span>
+              <input id="optionB"
+                class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div class="flex items-center mb-2">
+              <span class="w-6 text-sm font-medium text-gray-700">C</span>
+              <input id="optionC"
+                class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div class="flex items-center mb-2">
+              <span class="w-6 text-sm font-medium text-gray-700">D</span>
+              <input id="optionD"
+                class="mt-1 mb-4 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
         </div>
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">B</span>
-          <input id="optionB"
-            class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">C</span>
-          <input id="optionC"
-            class="mt-1 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div class="flex items-center mb-2">
-          <span class="w-6 text-sm font-medium text-gray-700">D</span>
-          <input id="optionD"
-            class="mt-1 mb-4 p-2 flex-grow block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+      </div>
+
+      <!-- Parte Derecha: respuesta correcta y motivo -->
+      <div class="w-1/2 pl-4">
+        <label class="block font-bold">Respuesta correcta</label>
+        <textarea id="result" rows="2" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+
+        <label class="mt-4 block font-bold">Motivo</label>
+        <p-editor id="justification" [style]="{ height: '150px', width: '100%' }"></p-editor>
       </div>
     </div>
 
-    <label class="block text-sm font-medium text-gray-700">Respuesta correcta</label>
-
-    <textarea id="result" rows="2" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
-
-    <label class="block text-sm font-medium text-gray-700">Motivo</label>
-
-    <textarea id="justification" rows="2" class="block p-2.5 w-full text-sm rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
-
+    <!-- Botones del modal (ahora están dentro del modal) -->
     <div class="flex justify-center mt-6">
       <button
         class="text-gray-900 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2 mr-8"
@@ -124,36 +135,37 @@
 </div>
 
 
-<!-- ****************************** AÑADIR MODAL ELIMINACIÓN PREGUNTA AQUÍ **********************************-->
-  <div id="removeQuestionModal"
-    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-  >
-    <div class="bg-white p-8 rounded-lg">
-      <h2 class="text-xl mb-4 font-bold">
-        ¿Estás seguro que quieres eliminar la pregunta?
-      </h2>
-      <div class="flex justify-center mt-8">
-        <button
-          class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-          (click)="closeRemoveQuestionModal()"
-        >
-          No, cancelar
-        </button>
-        <button
-          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-          (click)="RemoveQuestion()"
-        >
-          Sí, eliminar
-        </button>
+
+
+  <!-- ****************************** AÑADIR MODAL ELIMINACIÓN PREGUNTA AQUÍ **********************************-->
+    <div id="removeQuestionModal"
+      class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-8 rounded-lg">
+        <h2 class="text-xl mb-4 font-bold">
+          ¿Estás seguro que quieres eliminar la pregunta?
+        </h2>
+        <div class="flex justify-center mt-8">
+          <button
+            class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+            (click)="closeRemoveQuestionModal()"
+          >
+            No, cancelar
+          </button>
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+            (click)="RemoveQuestion()"
+          >
+            Sí, eliminar
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
 
 <!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
 
   <app-footer />
-
 
 
 </div>
