@@ -67,7 +67,7 @@ export class HomeComponent {
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
 
-      if(user.name == "demo" && topicId != 659){
+      if(user.name === "demo" && topicId !== 659){
         alert("El usuario demo solo puede realizar examenes del Tema 1: Constitución Española, del bloque legislación.");
         return;
       }
