@@ -25,15 +25,28 @@ export class HomeComponent {
 
     try{
       const user = await this.requestService.request('GET', `/user`,{},{},true);
+
+      // Validación de subscripción
       if(!user.subscribed){
         alert("Esto es una función PREMIUM, debes subscribirte");
         return;
+      }
+
+      // Validación para el usuario "demo"
+      const topicsSelected = this.localStorageService.getItem("topicsSelected");
+      if (user.name === 'demo') {
+        if (!topicsSelected || topicsSelected.length !== 1 || topicsSelected[0].id !== 662) {
+          alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+          return;
+        }
       }
     }catch(error){
       console.log(error);
     }
     // Obtener los temas seleccionados del localStorage
     const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+
 
     if (!topicsSelected || topicsSelected.length === 0) {
       alert("No hay temario seleccionado para realizar el examen.");
@@ -67,8 +80,8 @@ export class HomeComponent {
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
 
-      if(user.name === "demo" && topicId !== 659){
-        alert("El usuario demo solo puede realizar examenes del Tema 1: Constitución Española, del bloque legislación.");
+      if(user.name === "demo" && topicId !== 662){
+        alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
         return;
       }
 
@@ -83,7 +96,9 @@ export class HomeComponent {
       this.localStorageService.setItem("examQuestions", limitedQuestions);
 
       // Navegar a la vista del examen
+
       this.router.navigate(['/test']);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error: any) {
       console.log(error);
     }
@@ -95,12 +110,21 @@ export class HomeComponent {
    // Función que se llama al hacer clic en el botón para empezar el repaso
    async startReview() {
     const user = await this.requestService.request('GET', `/user`,{},{},true);
+
     if(!user.subscribed){
       alert("Esto es una función PREMIUM, debes subscribirte");
       return;
     }
+
     // Obtener los temas seleccionados del localStorage
     const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+    if (user.name === 'demo') {
+      if (!topicsSelected || topicsSelected.length !== 1 || topicsSelected[0].id !== 662) {
+        alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+        return;
+      }
+    }
 
     if (!topicsSelected || topicsSelected.length === 0) {
       alert("No hay temario seleccionado para realizar el repaso.");

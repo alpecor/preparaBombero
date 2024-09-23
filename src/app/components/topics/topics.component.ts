@@ -78,8 +78,16 @@ export class topicsComponent implements OnInit {
   // función para manejar el clic en la flecha
   async startExamForSpecificTopic(topicId: number) {
     try {
+       // Realizar petición para saber si el usuario es demo
+       const user = await this.requestService.request('GET', `/user`, {}, {}, true);
+
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
+
+      if(user.name === "demo" && topicId !== 662){
+        alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+        return;
+      }
 
       if (questions.length === 0) {
         alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
