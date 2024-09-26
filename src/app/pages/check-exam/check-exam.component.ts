@@ -29,7 +29,6 @@ export class CheckExamComponent {
   };
 
   ngOnInit(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Obtener las preguntas corregidas y las respuestas del usuario desde el localStorage
     this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') || [];
     this.userAnswers = this.localStorageService.getItem('userAnswer') || [];
