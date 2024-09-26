@@ -118,6 +118,7 @@ export class QuestionsComponent implements OnInit {
 
   onPageChange($event: PaginatorState) {
     this.page = $event;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   progress() {
