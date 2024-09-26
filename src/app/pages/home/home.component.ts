@@ -66,6 +66,7 @@ export class HomeComponent {
       //Guardar las preguntas generadas en localStorage
       this.localStorageService.setItem("examQuestions", this.questions);
       this.router.navigate(['/test']);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }catch(error: any){
       console.log(error);
     }
