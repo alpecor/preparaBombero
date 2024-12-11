@@ -18,7 +18,7 @@
       class="p-6 mb-12 border rounded-xl bg-gray-50"
     >
       <h2 class="text-lg font-semibold mb-2"
-        [innerHTML]="page.page * questionsPerPage + i + 1 + '.' + question.title"
+        [innerHTML]="page.page * questionsPerPage + i + 1 + ' . ' + question.title"
       >
 
       </h2>
@@ -59,8 +59,8 @@
                 [disabled]="isCorrected"
               />
               <span [ngClass]="{
-                'text-green-500 font-bold': isCorrected && respuesta === question.correctAnswer,
-                'text-red-500 font-bold': isCorrected && userResponses[(page.page) * questionsPerPage + i].optionSelected === respuesta && respuesta !== question.correctAnswer
+                'text-green-500': isCorrected && respuesta === question.correctAnswer,
+                'text-red-500': isCorrected && userResponses[(page.page) * questionsPerPage + i].optionSelected === respuesta && respuesta !== question.correctAnswer
               }">
                 {{ respuesta }}
               </span>
@@ -68,9 +68,9 @@
           }
         </li>
         <!-- Mostrar el motivo condicionalmente -->
-        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded text-center">
-          <h1 class="font-bold">Motivo de respuesta correcta:</h1>
-          <p [innerHTML]="question.justification"></p> <!-- Ajusta el nombre de la propiedad del motivo según sea necesario -->
+        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded">
+          <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
+          <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
         </div>
       </ul>
     </div>

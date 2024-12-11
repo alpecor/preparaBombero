@@ -54,7 +54,7 @@
         class="p-6 mb-12 border rounded-xl bg-gray-50"
       >
         <h2 class="text-lg font-semibold mb-2"
-        [innerHTML]="i + 1 + '.' + question.title ">
+        [innerHTML]="i + 1 + ' . ' + question.title ">
         </h2>
         <div class="relative">
           <hr class="border-t border-gray-300 mb-4" />
@@ -67,7 +67,7 @@
         <ul class="list-none space-y-2">
           <li *ngFor="let respuesta of [question.option1, question.option2, question.option3, question.option4]"
               [ngClass]="{
-                'text-lime-500 ': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
+                'text-green-500 ': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
                 'text-red-500 ': isUserSelectedAndIncorrect(question, respuesta)
               }">
 
@@ -79,16 +79,16 @@
                   [checked]="respuesta === question.userAnswer"
                   disabled
                 />
-                <span class="font-bold">{{ respuesta }}</span>
+                <span>{{ respuesta }}</span>
               </label>
             }
           </li>
         </ul>
 
         <!-- Mostrar el motivo condicionalmente -->
-        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded text-center">
-          <h1 class="font-bold">Motivo de respuesta correcta:</h1>
-          <p [innerHTML]="question.justification"></p> <!-- Ajusta el nombre de la propiedad del motivo según sea necesario -->
+        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded">
+          <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
+          <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
         </div>
       </div>
     </div>

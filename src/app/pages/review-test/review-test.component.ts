@@ -6,12 +6,13 @@ import { RequestService } from '../../services/request.service';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
 
 
 @Component({
   selector: 'app-review-test',
   standalone: true,
-  imports: [PaginatorModule, HeaderComponent, FooterComponent, CommonModule, NgOptimizedImage],
+  imports: [PaginatorModule, HeaderComponent, FooterComponent, CommonModule, NgOptimizedImage, TextSanitizerComponent],
   templateUrl: './review-test.component.html',
   styleUrl: './review-test.component.css'
 })
@@ -34,6 +35,9 @@ export class ReviewTestComponent {
 
 
   //************************* ngOnInit ****************************//
+  ngOnDestroy() {
+    this.localStorageService.removeItem('examQuestions');
+  }
 
   ngOnInit(): void {
     //aqui se cargan un arrya con todas las preguntas a responder y como respuesta null,
@@ -53,7 +57,6 @@ export class ReviewTestComponent {
       };
     });
   }
-
 
 
   // ****** Cambiar el texto del botón de "Corregir" a "Siguiente pregunta", si ya se ha

@@ -19,7 +19,7 @@ export class topicsComponent implements OnInit {
   ngOnInit(): void {
     if(this.topics.length > 0){
       this.topics = this.topics.map((x:any) =>{
-        let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
+        let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
           if (topicSelected.length > 0) {
               const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
               if (topic.length > 0) {
@@ -35,7 +35,7 @@ export class topicsComponent implements OnInit {
 
   selectedTopic(topicId: number, event: any) {
     const isChecked: boolean = event.target.checked;
-    let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
+    let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     if (isChecked) {
         // Agrega el topic actual
         topicSelected.push({ id: topicId, isChecked });
@@ -79,13 +79,14 @@ export class topicsComponent implements OnInit {
   async startExamForSpecificTopic(topicId: number) {
     try {
        // Realizar petición para saber si el usuario es demo
-       const user = await this.requestService.request('GET', `/user`, {}, {}, true);
+       const user = await this.requestService.request('GET', `/user`,{},{}, true);
+       const subscribed = user.subscribed == true;
 
       // Realizar petición para generar preguntas solo del tema seleccionado
-      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
 
-      if(user.name === "demo" && topicId !== 662){
-        alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+      if(!subscribed && topicId !== 662){
+        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
         return;
       }
 

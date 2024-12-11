@@ -31,15 +31,12 @@ export class QuestionsComponent implements OnInit {
 
 
   //************************* ngOnInit ****************************//
+  ngOnDestroy() {
+    this.localStorageService.removeItem('examQuestions');
+  }
 
   async ngOnInit(){
-    const user = await this.requestService.request('GET', `/user`,{},{},true);
-    if(!user.subscribed){
-      location.href="/home";
-      return;
-    }
-
-    if (this.examQuestion.length === 0) {
+    if (!this.examQuestion || this.examQuestion.length === 0) {
       location.href="/home";
       return;
     }
@@ -103,7 +100,7 @@ export class QuestionsComponent implements OnInit {
     }
     // realizar la petición del reporte
     try{
-      this.reportedQuestion = await this.requestService.request('POST', `/report`,{reason: reportReason, quizId:this.idReportedQuestion},{},true);
+      this.reportedQuestion = await this.requestService.request('POST', `/report`,{reason: reportReason, quizId:this.idReportedQuestion},{}, true);
       this.closeModal();
       alert("se ha enviado el reporte de la pregunta.");
     }catch(error: any){

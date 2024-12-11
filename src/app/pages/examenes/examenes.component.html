@@ -5,7 +5,7 @@
 
   <!--------------- Añadir examanes aquí ---------------->
   <div class="mx-auto py-10 text-center">
-    <div [innerHTML]="description"></div>
+    <app-text-sanitizer [text]="description"></app-text-sanitizer>
   </div>
 
   <!--------------- Añadir footer aquí ---------------->

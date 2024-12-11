@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -14,31 +14,24 @@ import { LocalStorageService } from '../../services/local-storage.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
-
-  constructor(private router: Router,private requestService: RequestService, private localStorageService: LocalStorageService){}
+export class HomeComponent implements OnInit {
 
   questions:string[] = []; //definir array donde guardaremos las preguntas
 
+  constructor(private router: Router,private requestService: RequestService, private localStorageService: LocalStorageService){
+  }
+
   // Función que se llama al hacer clic en el botón para empezar el examen
   async startExam() {
-
     try{
-      const user = await this.requestService.request('GET', `/user`,{},{},true);
+      const user = await this.requestService.request('GET', `/user`,{},{}, true);
+      const subscribed = user.subscribed == true;
 
       // Validación de subscripción
-      if(!user.subscribed){
-        alert("Esto es una función PREMIUM, debes subscribirte");
-        return;
-      }
-
-      // Validación para el usuario "demo"
       const topicsSelected = this.localStorageService.getItem("topicsSelected");
-      if (user.name === 'demo') {
-        if (!topicsSelected || topicsSelected.length !== 1 || topicsSelected[0].id !== 662) {
-          alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-          return;
-        }
+      if(!subscribed && topicsSelected?.filter((x: any) => x.id == 662).length <= 0){
+        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+        return;
       }
     }catch(error){
       console.log(error);
@@ -58,7 +51,7 @@ export class HomeComponent {
 
     // Hacer la solicitud POST al backend
     try{
-      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{},true);
+      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{});
       if (this.questions.length === 0) {
         alert("No hay suficientes preguntas para generarte un examen.");
         return;
@@ -75,13 +68,14 @@ export class HomeComponent {
   async startExamForSpecificTopic(topicId: number) {
     try {
       // Realizar petición para saber si el usuario es demo
-      const user = await this.requestService.request('GET', `/user`, {}, {}, true);
+      const user = await this.requestService.request('GET', `/user`, {}, {});
+      const subscribed = user.subscribed == true;
 
       // Realizar petición para generar preguntas solo del tema seleccionado
-      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {}, true);
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
 
-      if(user.name === "demo" && topicId !== 662){
-        alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+      if(!subscribed && topicId !== 662){
+        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
         return;
       }
 
@@ -108,23 +102,16 @@ export class HomeComponent {
 
    // Función que se llama al hacer clic en el botón para empezar el repaso
    async startReview() {
-    const user = await this.requestService.request('GET', `/user`,{},{},true);
+    const user = await this.requestService.request('GET', `/user`,{},{}, true);
+    const subscribed = user.subscribed == true;
 
-    if(!user.subscribed){
-      alert("Esto es una función PREMIUM, debes subscribirte");
+    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+    if(!subscribed && topicsSelected?.filter((x: any) => x.id == 662).length <= 0){
+      alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
       return;
     }
 
     // Obtener los temas seleccionados del localStorage
-    const topicsSelected = this.localStorageService.getItem("topicsSelected");
-
-    if (user.name === 'demo') {
-      if (!topicsSelected || topicsSelected.length !== 1 || topicsSelected[0].id !== 662) {
-        alert("El usuario demo solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-        return;
-      }
-    }
-
     if (!topicsSelected || topicsSelected.length === 0) {
       alert("No hay temario seleccionado para realizar el repaso.");
       return;
@@ -135,7 +122,7 @@ export class HomeComponent {
 
     // Hacer la solicitud POST al backend
     try{
-      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{},true);
+      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{});
       if (this.questions.length === 0) {
         alert("No hay suficientes preguntas para generarte un repaso.");
         return;
@@ -173,7 +160,6 @@ export class HomeComponent {
     return Object.keys(obj);
   }
 
-
  async ngOnInit(): Promise<void> {
   const modalShown = localStorage.getItem('modalShown');
   if (!modalShown) {
@@ -182,12 +168,12 @@ export class HomeComponent {
   }
   try{
     // Solicita los temas desde el servidor
-    this.topics = await this.requestService.request('GET', `/topic`,{},{},true);
+    this.topics = await this.requestService.request('GET', `/topic`,{},{}, true);
 
     Object.keys(this.topics).forEach(key => {
       // Iterando sobre el array correspondiente a cada clave
       this.topics[key] = this.topics[key].map((x: any) => {
-          let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
+          let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
           if (topicSelected.length > 0) {
               const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
               if (topic.length > 0) {
@@ -207,7 +193,7 @@ export class HomeComponent {
 
   selectedTopic(topicId: number, event: any, key: string) {
     const isChecked: boolean = event.target.checked;
-    let topicSelected = this.localStorageService.getItem("topicsSelected") || [];
+    let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     if (isChecked) {
         // Agrega el topic actual
         topicSelected.push({ id: topicId, isChecked });
@@ -244,7 +230,4 @@ export class HomeComponent {
 
     this.localStorageService.setItem("topicsSelected", topicSelected);
   }
-
 }
-
-

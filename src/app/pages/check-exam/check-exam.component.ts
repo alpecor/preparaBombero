@@ -4,11 +4,12 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { CommonModule } from '@angular/common';
 import {NgOptimizedImage} from '@angular/common';
+import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
 
 @Component({
   selector: 'app-check-exam',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, NgOptimizedImage],
+  imports: [HeaderComponent, FooterComponent, CommonModule, NgOptimizedImage, TextSanitizerComponent],
   templateUrl: './check-exam.component.html',
   styleUrl: './check-exam.component.css'
 })
@@ -30,11 +31,11 @@ export class CheckExamComponent {
 
   ngOnInit(): void {
     // Obtener las preguntas corregidas y las respuestas del usuario desde el localStorage
-    this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') || [];
-    this.userAnswers = this.localStorageService.getItem('userAnswer') || [];
+    this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') ?? [];
+    this.userAnswers = this.localStorageService.getItem('userAnswer') ?? [];
 
     // Obtener resultado del examen desde el localStorage
-    this.examSummary = this.localStorageService.getItem('examSummary') || { correctAnswers: 0, incorrectAnswers: 0, unansweredQuestions: 0 };
+    this.examSummary = this.localStorageService.getItem('examSummary') ?? { correctAnswers: 0, incorrectAnswers: 0, unansweredQuestions: 0 };
 
     // Combinar las respuestas del usuario con las preguntas corregidas
     this.correctedExamQuestions = this.correctedExamQuestions.map((question: any) => {
@@ -73,7 +74,7 @@ export class CheckExamComponent {
   // Función para calcular las notas del examen
   calculateScores(): void {
     const totalQuestions = this.correctedExamQuestions.length;
-    const { correctAnswers, incorrectAnswers } = this.examSummary || { correctAnswers: 0, incorrectAnswers: 0 };
+    const { correctAnswers, incorrectAnswers } = this.examSummary ?? { correctAnswers: 0, incorrectAnswers: 0 };
 
     if (totalQuestions > 0) {
       // Calcular la nota sin penalización
