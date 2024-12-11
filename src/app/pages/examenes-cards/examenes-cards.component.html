@@ -1,0 +1,72 @@
+<app-header></app-header>
+
+<div class="container mx-auto px-20 py-2">
+  <!-- Título dinámico -->
+  <h1 class="text-2xl font-bold text-center mb-6">
+    {{
+      community && !city
+        ? "Ciudades de " + community
+        : community && city
+          ? "Lista de exámenes de " + city
+          : "Listado De Exámenes Por Comunidades"
+    }}
+  </h1>
+
+  <!-- Vista de Comunidades -->
+  <div
+    *ngIf="!community && !city"
+    class="grid grid-cols-2 md:grid-cols-4 gap-6 place-items-center"
+  >
+    <button
+      *ngFor="let community of communities; let i = index"
+      class="w-2/3 bg-[rgba(255,149,0,0.5)] hover:bg-primaryColor hover:text-white text-black font-bold rounded-lg text-sm py-12 text-center border-2 border-primaryColor"
+      [routerLink]="[community]"
+    >
+      {{ community }}
+    </button>
+  </div>
+
+  <!-- Vista de Ciudades -->
+  <div *ngIf="community && !city" class="text-center">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 place-items-center">
+      <div
+        *ngFor="let city of selectedCities"
+        class="w-2/3 bg-[rgba(255,149,0,0.5)] hover:bg-primaryColor hover:text-white text-black font-bold rounded-lg text-sm py-12 text-center border-2 border-primaryColor"
+        [routerLink]="[city]"
+        style="cursor: pointer"
+      >
+        {{ city }}
+      </div>
+    </div>
+    <button
+      class="mt-8 text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      style="cursor: pointer"
+      routerLink=".."
+    >
+      Volver a comunidades
+    </button>
+  </div>
+
+  <!-- Vista de Exámenes -->
+  <div *ngIf="community && city" class="text-center">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 place-items-center">
+      <div
+        *ngFor="let exam of selectedExams"
+        class="w-2/3 bg-[rgba(255,149,0,0.5)] hover:bg-primaryColor hover:text-white text-black font-bold rounded-lg text-sm py-12 text-center border-2 border-primaryColor"
+        style="cursor: pointer"
+        (click)="startExamForSpecificTopic(topic.id)"
+      >
+        {{ exam.city }} {{ exam.year }} {{ exam.type }} {{ exam.subtype }}
+      </div>
+    </div>
+    <button
+      class="mt-8 text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      style="cursor: pointer"
+      routerLink=".."
+    >
+      Volver a {{ city }}
+    </button>
+  </div>
+</div>
+
+<app-footer />

@@ -38,7 +38,12 @@
                     <span class="mr-2">{{ topic.quizCount }}</span>
                     <i (click)="startExamForSpecificTopic(topic.id)"
                       title="Hacer examen"
-                      class="fa-solid fa-arrow-right fa-lg"
+                      class="mr-2 fa-solid fa-pen-to-square fa-lg"
+                      style="cursor: pointer">
+                    </i>
+                    <i (click)="startExamForSpecificTopic(topic.id)"
+                      title="Hacer repaso"
+                      class="fa-solid fa-paste fa-lg"
                       style="cursor: pointer">
                     </i>
                   </div>

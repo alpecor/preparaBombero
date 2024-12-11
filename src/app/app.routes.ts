@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import AuthLoginComponent from './pages/auth/auth-login/auth-login.component';
 import { ExamenesComponent } from './pages/examenes/examenes.component';
+import { ExamenesCardsComponent } from './pages/examenes-cards/examenes-cards.component';
 import { HomeComponent } from './pages/home/home.component';
 import { QuestionsComponent } from './pages/questions/questions.component';
 import { ExamsListComponent } from './pages/admin/exams-list/exams-list.component';
@@ -17,6 +17,8 @@ import { PrivacyPolicyComponent } from './components/welcome/privacy-policy/priv
 import { CheckExamComponent } from './pages/check-exam/check-exam.component';
 import { ReviewTestComponent } from './pages/review-test/review-test.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { HighlightsComponent } from './pages/highlights/highlights.component';
+import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -40,14 +42,18 @@ export const routes: Routes = [
   // },
 
 
-
-
-
-
-
   //URL DE EXAMENES
   {
     path:'listado-de-examenes', component: ExamenesComponent
+  },
+  {
+    path:'examenes', component: ExamenesCardsComponent
+  },
+  {
+    path:'examenes/:community', component: ExamenesCardsComponent
+  },
+  {
+    path:'examenes/:community/:city', component: ExamenesCardsComponent
   },
 
   //URL DE Home
@@ -55,6 +61,10 @@ export const routes: Routes = [
     path:'home', component: HomeComponent, canActivate:[userAuthGuard]
   },
 
+   //URL DE PREGUNTAS DESTACADAS
+  //  {
+  //   path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
+  // },
   //URL DE EXAMEN
   {
     path:'test', component: QuestionsComponent, canActivate:[userAuthGuard]

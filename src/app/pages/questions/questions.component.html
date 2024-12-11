@@ -21,13 +21,21 @@
 <div class="flex justify-center p-4">
   <div class="w-full max-w-3xl">
     <div
-      *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
+      *ngFor="
+        let question of examQuestion.slice(
+          page.first,
+          page.first + questionsPerPage
+        );
+        let i = index
+      "
       class="p-6 mb-12 border rounded-xl bg-gray-50"
     >
-      <h2 class="text-lg font-semibold mb-2"
-      [innerHTML]="page.page * questionsPerPage + i + 1 + '.' + question.title">
-
-      </h2>
+      <h2
+        class="text-lg font-semibold mb-2"
+        [innerHTML]="
+          page.page * questionsPerPage + i + 1 + '.' + question.title
+        "
+      ></h2>
       <div class="relative">
         <hr class="border-t border-gray-300 mb-4" />
         <img
@@ -43,17 +51,21 @@
       <ul class="list-none space-y-2">
         <li *ngFor="let respuesta of question.respuestas">
           @if (respuesta !="") {
-            <label class="flex items-center space-x-3">
-              <input
-                type="radio"
-                name="question-{{ (page.page) * questionsPerPage + i }}"
-                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
-                [value]="respuesta"
-                (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
-              />
-              <span class="text-gray-700">{{ respuesta }}</span>
-            </label>
+          <label class="space-x-3">
+            <input
+              type="radio"
+              name="question-{{ page.page * questionsPerPage + i }}"
+              class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+              [(ngModel)]="
+                userResponses[page.page * questionsPerPage + i].optionSelected
+              "
+              [value]="respuesta"
+              (change)="
+                onSelectAnswer(page.page * questionsPerPage + i, respuesta)
+              "
+            />
+            <span class="text-gray-700">{{ respuesta }}</span>
+          </label>
           }
         </li>
       </ul>
@@ -91,10 +103,11 @@
       </div>
     </div>
 
-
     <!-------------------- Paginación ---------------->
 
-  <div class="pagination-container relative flex justify-center mt-6 space-x-2" >
+    <div
+      class="pagination-container relative flex justify-center mt-6 space-x-2"
+    >
       <p-paginator
         (onPageChange)="onPageChange($event)"
         [first]="0"
@@ -103,39 +116,39 @@
       />
 
       @if (progress() == 100) {
-        <button
-          class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          (click)="openModalTest()">
-          Terminar
-        </button>
-      }
-  </div>
-
-
-      <!-------------------- Modal de fin de test ----------------->
-      <div
-        id="finishTest"
-        class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+      <button
+        class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+        (click)="openModalTest()"
       >
-        <div class="bg-white p-8 rounded-lg">
-          <h2 class="text-xl mb-4 font-bold">
-            ¿Estás seguro que quieres enviar el examen?
-          </h2>
-          <div class="flex justify-center">
-            <button
-              class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-              (click)="closeModalTest()"
-            >
-              Cancelar
-            </button>
-            <button
-              class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-              (click)="sendTest()"
-            >
-              Enviar
-            </button>
-          </div>
+        Terminar
+      </button>
+      }
+    </div>
+
+    <!-------------------- Modal de fin de test ----------------->
+    <div
+      id="finishTest"
+      class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-8 rounded-lg">
+        <h2 class="text-xl mb-4 font-bold">
+          ¿Estás seguro que quieres enviar el examen?
+        </h2>
+        <div class="flex justify-center">
+          <button
+            class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
+            (click)="closeModalTest()"
+          >
+            Cancelar
+          </button>
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
+            (click)="sendTest()"
+          >
+            Enviar
+          </button>
         </div>
       </div>
     </div>
   </div>
+</div>
