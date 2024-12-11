@@ -32,18 +32,18 @@
                       type="checkbox"
                       class="form-checkbox h-5 w-5 text-yellow-500"
                     />
-                    <span class="ml-2">{{ topic.title }}</span>
+                    <span class="ml-2 mr-14">{{ topic.title }}</span>
                   </div>
                   <div class="flex items-center">
-                    <span class="mr-2">{{ topic.quizCount }}</span>
+                    <span class="mr-4">{{ topic.quizCount }}</span>
                     <i (click)="startExamForSpecificTopic(topic.id)"
                       title="Hacer examen"
                       class="mr-2 fa-solid fa-pen-to-square fa-lg"
                       style="cursor: pointer">
                     </i>
-                    <i (click)="startExamForSpecificTopic(topic.id)"
+                    <i (click)="startReviewForSpecificTopic(topic.id)"
                       title="Hacer repaso"
-                      class="fa-solid fa-paste fa-lg"
+                      class="fa-solid fa-file-pen fa-lg"
                       style="cursor: pointer">
                     </i>
                   </div>

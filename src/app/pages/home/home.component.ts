@@ -133,8 +133,31 @@ export class HomeComponent implements OnInit {
     }catch(error: any){
       console.log(error);
     }
+  }
 
-    // Navegar a la vista del examen
+   // Función que se llama al hacer clic en el botón para empezar el repaso
+   async startReviewForSpecificTopic(topicId:number) {
+    const user = await this.requestService.request('GET', `/user`,{},{}, true);
+    const subscribed = user.subscribed == true;
+
+    if(!subscribed && topicId !== 662){
+      alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+      return;
+    }
+
+    // Hacer la solicitud POST al backend
+    try{
+      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds: [topicId]},{});
+      if (this.questions.length === 0) {
+        alert("No hay suficientes preguntas para generarte un repaso.");
+        return;
+      }
+      //Guardar las preguntas generadas en localStorage
+      this.localStorageService.setItem("examQuestions", this.questions);
+      this.router.navigate(['/review-test']);
+    }catch(error: any){
+      console.log(error);
+    }
   }
 
 
