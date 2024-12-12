@@ -1,26 +1,34 @@
 @for (item of topics; track $index) {
-  <div [ngStyle]="{'margin-left': margin + 'rem' }" class="mt-1">
-    <div class="flex justify-between items-center py-2 border-b border-gray-200">
-      <div class="mb-1 flex items-center">
-          <input
-            [checked]="item.selected"
-            (click)="selectedTopic(item.id, $event)"
-            type="checkbox"
-            class="form-checkbox h-5 w-5 text-yellow-500"
-          />
-          <span class="ml-2">{{ item.title }}</span>
-      </div>
-      <div class="flex items-center">
-          <span class="mr-2">{{ item.quizCount }}</span>
-          <i (click)="startExamForSpecificTopic(item.id)"
-            title="Hacer examen"
-            class="fa-solid fa-arrow-right fa-lg"
-            style="cursor: pointer">
-          </i>
-      </div>
+<div [ngStyle]="{ 'margin-left': margin + 'rem' }" class="mt-1">
+  <div class="flex justify-between items-center py-2 border-b border-gray-200">
+    <div class="mb-1 flex items-center">
+      <input
+        [checked]="item.selected"
+        (click)="selectedTopic(item.id, $event)"
+        type="checkbox"
+        class="form-checkbox h-5 w-5 text-yellow-500"
+      />
+      <span class="ml-2">{{ item.title }}</span>
+    </div>
+    <div class="flex items-center">
+      <span class="mr-2">{{ item.quizCount }}</span>
+      <i
+        (click)="startExamForSpecificTopic(item.id)"
+        title="Hacer examen"
+        class="mr-2 fa-solid fa-pen-to-square fa-lg"
+        style="cursor: pointer"
+      >
+      </i>
+      <i
+        (click)="startReviewForSpecificTopic(item.id)"
+        title="Hacer repaso"
+        class="fa-solid fa-file-pen fa-lg"
+        style="cursor: pointer"
+      >
+      </i>
     </div>
   </div>
-  @if (topics.length > 0) {
-    <app-topics [margin]="margin + 2" [topics]="item.topics"/>
-  }
-}
+</div>
+@if (topics.length > 0) {
+<app-topics [margin]="margin + 2" [topics]="item.topics" />
+} }
