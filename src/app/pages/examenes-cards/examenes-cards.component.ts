@@ -33,7 +33,7 @@ export class ExamenesCardsComponent {
     //obtener las comunidades
     try {
       // Obtener los datos del servidor
-      this.pdfData = await this.requestService.request('GET', `/pdf`, {}, {}, true);
+      this.pdfData = await this.requestService.request('GET', `/pdf?sort=community`, {}, {}, true);
 
       // Filtrar comunidades únicas y asignarlas a la variable 'communities'
       this.communities = Array.from(
@@ -42,6 +42,7 @@ export class ExamenesCardsComponent {
 
       // Mostrar ciudades si 'community' está en la URL
       if (this.community && !this.city) {
+        this.pdfData = await this.requestService.request('GET', `/pdf?sort=city`, {}, {}, true);
         this.showCities(this.community);
       }
 
@@ -74,15 +75,13 @@ export class ExamenesCardsComponent {
       // Realizar petición para saber si el usuario está o no subscrito
       const user = await this.requestService.request('GET', `/user`, {}, {});
       const subscribed = user.subscribed == true;
-
-      // Realizar petición para generar preguntas solo del tema seleccionado
-      const questions = await this.requestService.request('POST', `/quiz/generate`, { pdfId: pdfId }, {});
-
       if(!subscribed){
         alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
         return;
       }
 
+      // Realizar petición para generar preguntas solo del tema seleccionado
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { pdfId: pdfId }, {});
       if (questions.length === 0) {
         alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
         return;

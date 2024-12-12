@@ -70,15 +70,13 @@ export class HomeComponent implements OnInit {
       // Realizar petición para saber si el usuario es demo
       const user = await this.requestService.request('GET', `/user`, {}, {});
       const subscribed = user.subscribed == true;
-
-      // Realizar petición para generar preguntas solo del tema seleccionado
-      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
-
       if(!subscribed && topicId !== 662){
         alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
         return;
       }
 
+      // Realizar petición para generar preguntas solo del tema seleccionado
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
       if (questions.length === 0) {
         alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
         return;
