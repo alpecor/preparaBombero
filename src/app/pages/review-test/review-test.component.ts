@@ -194,7 +194,6 @@ export class ReviewTestComponent {
 
   progressText() {
     const startQuestion = this.page.page * this.questionsPerPage + 1;
-    const endQuestion = Math.min((this.page.page + 1) * this.questionsPerPage, this.examQuestion.length);
     return `${startQuestion} de ${this.examQuestion.length}`;
   }
 
