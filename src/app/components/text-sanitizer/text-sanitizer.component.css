@@ -1,0 +1,31 @@
+ul {
+    margin: 0;              /* Elimina el margen por defecto */
+    padding: 0 0 0 20px;    /* Define el espacio a la izquierda */
+    list-style-type: disc;  /* Establece viñetas por defecto */
+  }
+  
+  /* Estilos base para li */
+  li {
+    margin-bottom: 8px;     /* Espacio entre elementos de lista */
+    line-height: 1.5;       /* Altura de línea para mejor legibilidad */
+    color: #333;            /* Color del texto */
+    font-size: 16px;        /* Tamaño del texto */
+  }
+
+.ql-align-center {
+    text-align: center;
+  }
+
+  p {
+    margin: 0;            /* Elimina el margen por defecto */
+    padding: 0;           /* Elimina el padding por defecto */
+    line-height: normal;  /* Reinicia la altura de línea */
+    font-size: inherit;   /* Hereda el tamaño de la fuente del contenedor padre */
+    font-weight: normal;  /* Hereda el grosor de la fuente */
+    color: inherit;       /* Hereda el color del texto */
+    text-align: left;     /* Reinicia la alineación a la izquierda */
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+  }
