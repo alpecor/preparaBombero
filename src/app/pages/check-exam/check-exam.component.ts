@@ -5,6 +5,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 import { CommonModule } from '@angular/common';
 import {NgOptimizedImage} from '@angular/common';
 import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
+import { RequestService } from '../../services/request.service';
 
 @Component({
   selector: 'app-check-exam',
@@ -15,12 +16,13 @@ import { TextSanitizerComponent } from '../../components/text-sanitizer/text-san
 })
 export class CheckExamComponent {
 
-  constructor(private localStorageService: LocalStorageService) { }
+  constructor(private localStorageService: LocalStorageService, private requestService:RequestService) { }
 
   correctedExamQuestions: any[] = []; //aquí se almacenarán las preguntas corregidas
   userAnswers: any[] = []; //aquí se almacenarán las respuestas seleccionadas por el usuario
   examSummary: { correctAnswers: number; incorrectAnswers: number; unansweredQuestions: number } | null = null; // Resumen del examen
-
+  idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
+  reportedQuestion: string[] = [];
   // Variables para las notas calculadas
   scores: { noPenalty: number; penaltyTwo: number; penaltyThree: number; penaltyFour: number } = {
     noPenalty: 0,
@@ -86,4 +88,42 @@ export class CheckExamComponent {
       this.scores.penaltyFour = Math.max(0, ((correctAnswers - Math.floor(incorrectAnswers / 4)) / totalQuestions) * 10);
     }
   }
+
+    //************************* FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL DE REPORTE ****************************//
+
+    openModal(questionId:number) {
+      this.idReportedQuestion = questionId; // Almacena el ID de la pregunta seleccionada
+      const modalReport = document.getElementById('reportModal');
+      const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement);
+      if (modalReport) {
+        modalReport.classList.remove('hidden');
+        reportReason.value = ''; // Limpiar el campo del motivo del reporte
+      }
+    }
+
+    closeModal() {
+      this.idReportedQuestion = null; // Limpiar el ID seleccionado
+      const modalReport = document.getElementById('reportModal');
+      if (modalReport) {
+        modalReport.classList.add('hidden');
+      }
+    }
+
+    async sendReport() {
+      // Obtener el motivo del reporte desde el textarea
+      const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
+      // Verifica que el campo no esté vacío
+      if (!reportReason || reportReason.trim().length === 0) {
+        alert("El campo del motivo no puede estar vacío");
+        return;
+      }
+      // realizar la petición del reporte
+      try{
+        this.reportedQuestion = await this.requestService.request('POST', `/report`,{reason: reportReason, quizId:this.idReportedQuestion},{}, true);
+        this.closeModal();
+        alert("se ha enviado el reporte de la pregunta.");
+      }catch(error: any){
+        console.log(error);
+      }
+    }
 }
