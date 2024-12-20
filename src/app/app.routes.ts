@@ -37,9 +37,9 @@ export const routes: Routes = [
     path:'login', component: AuthLoginComponent, canActivate:[noAuthGuard]
 
   },
-  // {
-  //   path:'register', component: AuthRegisterComponent, canActivate:[noAuthGuard]
-  // },
+  {
+    path:'register', component: AuthRegisterComponent, canActivate:[noAuthGuard]
+  },
 
 
   //URL DE EXAMENES
