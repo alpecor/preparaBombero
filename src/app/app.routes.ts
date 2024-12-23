@@ -23,66 +23,66 @@ import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.
 export const routes: Routes = [
   //URLs DE LA HOME
   {
-    path:'', component: WelcomeComponent, canActivate:[noAuthGuard]
+    path: '', component: WelcomeComponent, canActivate: [noAuthGuard]
   },
   {
-    path:'terminos-y-condiciones', component: TermsConditionsComponent
+    path: 'terminos-y-condiciones', component: TermsConditionsComponent
   },
   {
-    path:'politica-de-privacidad', component: PrivacyPolicyComponent
+    path: 'politica-de-privacidad', component: PrivacyPolicyComponent
   },
 
   //URLs DEL LOGIN
   {
-    path:'login', component: AuthLoginComponent, canActivate:[noAuthGuard]
+    path: 'login', component: AuthLoginComponent, canActivate: [noAuthGuard]
 
   },
-  // {
-  //   path:'register', component: AuthRegisterComponent, canActivate:[noAuthGuard]
-  // },
+  {
+    path: 'register', component: AuthRegisterComponent, canActivate: [noAuthGuard]
+  },
 
 
   //URL DE EXAMENES
   {
-    path:'listado-de-examenes', component: ExamenesComponent
+    path: 'listado-de-examenes', component: ExamenesComponent
   },
   {
-    path:'examenes', component: ExamenesCardsComponent
+    path: 'examenes', component: ExamenesCardsComponent
   },
   {
-    path:'examenes/:community', component: ExamenesCardsComponent
+    path: 'examenes/:community', component: ExamenesCardsComponent
   },
   {
-    path:'examenes/:community/:city', component: ExamenesCardsComponent
+    path: 'examenes/:community/:city', component: ExamenesCardsComponent
   },
 
   //URL DE Home
   {
-    path:'home', component: HomeComponent, canActivate:[userAuthGuard]
+    path: 'home', component: HomeComponent, canActivate: [userAuthGuard]
   },
 
-   //URL DE PREGUNTAS DESTACADAS
+  //URL DE PREGUNTAS DESTACADAS
   //  {
   //   path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
   // },
   //URL DE EXAMEN
   {
-    path:'test', component: QuestionsComponent, canActivate:[userAuthGuard]
+    path: 'test', component: QuestionsComponent, canActivate: [userAuthGuard]
   },
 
   //URL DE REPASO
   {
-    path:'review-test', component: ReviewTestComponent, canActivate:[userAuthGuard]
+    path: 'review-test', component: ReviewTestComponent, canActivate: [userAuthGuard]
   },
 
   //URL DE EXAMEN CORREGIDO
   {
-    path:'check-exam', component: CheckExamComponent, canActivate:[userAuthGuard]
+    path: 'check-exam', component: CheckExamComponent, canActivate: [userAuthGuard]
   },
 
   //URL DE PERFIL
   {
-    path:'profile', component: ProfileComponent, canActivate:[userAuthGuard]
+    path: 'profile', component: ProfileComponent, canActivate: [userAuthGuard]
   },
 
 
@@ -91,19 +91,19 @@ export const routes: Routes = [
 
 
 
-   //URLs DE ADMIN
+  //URLs DE ADMIN
   {
-    path:'admin/examenes', component: ExamsListComponent, canActivate:[adminAuthGuard]
+    path: 'admin/examenes', component: ExamsListComponent, canActivate: [adminAuthGuard]
   },
   {
-    path:'admin/reportes', component: ReportQuestionsListComponent, canActivate:[adminAuthGuard]
+    path: 'admin/reportes', component: ReportQuestionsListComponent, canActivate: [adminAuthGuard]
   },
 
   {
-    path:'admin/temario', component: TopicsListComponent, canActivate:[adminAuthGuard]
+    path: 'admin/temario', component: TopicsListComponent, canActivate: [adminAuthGuard]
   },
   {
-    path:'admin/temario/:topicId', component: QuestionCreateComponent, canActivate:[adminAuthGuard] // TODO cambiar el 10
+    path: 'admin/temario/:topicId', component: QuestionCreateComponent, canActivate: [adminAuthGuard] // TODO cambiar el 10
   },
 
 
@@ -111,6 +111,6 @@ export const routes: Routes = [
 
   //URL QUE NO EXISTE, REDIRECCIONA A LA HOME
   {
-    path:'**', redirectTo: ''
+    path: '**', redirectTo: ''
   },
 ];

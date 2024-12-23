@@ -20,6 +20,7 @@ export class topicsComponent implements OnInit {
     if(this.topics.length > 0){
       this.topics = this.topics.map((x:any) =>{
         let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
+        topicSelected.push({ id: 662, isChecked: true });
           if (topicSelected.length > 0) {
               const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
               if (topic.length > 0) {
