@@ -188,6 +188,25 @@ export class HomeComponent implements OnInit {
     localStorage.setItem('modalShown', 'true');  // Marca como mostrado
   }
   try{
+  // pedimos info del user para saber si esta o no subscrito
+  const user = await this.requestService.request('GET', `/user`,{},{}, true);
+  const subscribed = user.subscribed;
+  // Si el localStorage está vacío, inicializa con el topic 662 y sus hijos
+  let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
+  if (topicSelected.length === 0 && !subscribed ) {
+    topicSelected = [
+      { id: 662, isChecked: true },
+      { id: 1451, isChecked: true },
+      { id: 1453, isChecked: true },
+      { id: 1454, isChecked: true },
+      { id: 1452, isChecked: true },
+      { id: 1455, isChecked: true },
+      { id: 1456, isChecked: true },
+      { id: 1457, isChecked: true }
+    ];
+    this.localStorageService.setItem("topicsSelected", topicSelected);
+  }
+
     // Solicita los temas desde el servidor
     this.topics = await this.requestService.request('GET', `/topic`,{},{}, true);
 
