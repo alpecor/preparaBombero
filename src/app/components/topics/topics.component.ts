@@ -16,10 +16,13 @@ export class topicsComponent implements OnInit {
   @Input() margin:number= -1;
 
   constructor(private router: Router, private localStorageService:LocalStorageService, private requestService: RequestService){}
-  ngOnInit(): void {
+  async ngOnInit() {
+    // pedimos info del user para saber si esta o no subscrito
+    const user = await this.requestService.request('GET', `/user`,{},{}, true);
+    const subscribed = user.subscribed;
     let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     // Si el localStorage está vacío, inicializa con el topic 662 y sus hijos
-    if (topicSelected.length === 0) {
+    if (topicSelected.length === 0 && !subscribed ) {
         topicSelected = [
             { id: 662, isChecked: true },
             { id: 1451, isChecked: true },
@@ -32,6 +35,7 @@ export class topicsComponent implements OnInit {
         ];
         this.localStorageService.setItem("topicsSelected", topicSelected);
     }
+
     if(this.topics.length > 0){
       this.topics = this.topics.map((x:any) =>{
           if (topicSelected.length > 0) {
