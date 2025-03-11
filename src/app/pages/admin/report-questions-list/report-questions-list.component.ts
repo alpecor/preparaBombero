@@ -15,19 +15,19 @@ import { RequestService } from '../../../services/request.service';
 })
 export class ReportQuestionsListComponent implements OnInit {
 
-  questions:any[] = [];
+  questions: any[] = [];
   selectedReason: string = '';  // Almacena el motivo del reporte seleccionado
   questionToRemoveIndex: number | null = null; // Almacena el índice de la pregunta a eliminar
 
 
-  constructor(private http: HttpClient, private requestService: RequestService){}
+  constructor(private http: HttpClient, private requestService: RequestService) { }
 
   ngOnInit(): void {
     this.loadReportedQuestions();
   }
 
 
-//************************* PETICIÓN PARA OBTENER PREGUNTAS REPORTADAS ****************************//
+  //************************* PETICIÓN PARA OBTENER PREGUNTAS REPORTADAS ****************************//
 
   async loadReportedQuestions() {
     // Primero cargamos las preguntas reportadas
@@ -35,16 +35,19 @@ export class ReportQuestionsListComponent implements OnInit {
     // Iteramos sobre cada pregunta reportada para añadir el título del tema (topic.title)
     for (let question of data) {
       // Hacemos una petición para obtener el título del tema según el topicId de la pregunta
-      const topicData = await this.requestService.request('GET', `/topic/${question.quiz.topicId}`, {}, {}, true);
+      let topicData = null;
+      if (question.quiz.topicId != null) {
+        topicData = await this.requestService.request('GET', `/topic/${question.quiz.topicId}`, {}, {}, true);
+      }
       // Añadimos el título del tema a la pregunta
-      question.quiz.topicTitle = topicData.title;
+      question.quiz.topicTitle = topicData?.title ?? "Esta pregunta todavía no está asignada a ningún tema";
     }
     // Asignamos los datos modificados a la propiedad this.questions
     this.questions = data;
   }
 
 
-//************************* FUNCIONES PARA APERTURA, CIERRE y ELIMINACIÓN DE PREGUNTA REPORTADA ****************************//
+  //************************* FUNCIONES PARA APERTURA, CIERRE y ELIMINACIÓN DE PREGUNTA REPORTADA ****************************//
 
   openRemoveModal(index: number) {
     this.questionToRemoveIndex = index; // Almacena el índice de la pregunta a eliminar
@@ -63,7 +66,7 @@ export class ReportQuestionsListComponent implements OnInit {
   }
 
   async RemoveQuestion() {
-    try{
+    try {
       if (this.questionToRemoveIndex !== null) {
         const questionId = this.questions[this.questionToRemoveIndex].id;
         await this.requestService.request('DELETE', `/report/${questionId}`, {}, {}, true);
@@ -72,13 +75,13 @@ export class ReportQuestionsListComponent implements OnInit {
         this.questionToRemoveIndex = null;// Resetea el índice después de eliminar
         this.closeRemoveModal(); // Cierra el modal después de eliminar
       }
-    }catch (error){
+    } catch (error) {
       console.log(error);
     }
   }
 
 
-//************************* FUNCIÓN PARA VISUALIZACIÓN DE PREGUNTA REPORTADA ****************************//
+  //************************* FUNCIÓN PARA VISUALIZACIÓN DE PREGUNTA REPORTADA ****************************//
 
   openSeeModal(reason: string) {
     this.selectedReason = reason;
