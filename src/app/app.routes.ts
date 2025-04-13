@@ -19,6 +19,8 @@ import { ReviewTestComponent } from './pages/review-test/review-test.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { HighlightsComponent } from './pages/highlights/highlights.component';
 import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
+import { RecoveryPasswordComponent } from './pages/auth/recovery-password/recovery-password.component';
+import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -40,6 +42,13 @@ export const routes: Routes = [
   {
     path: 'register', component: AuthRegisterComponent, canActivate: [noAuthGuard]
   },
+  {
+    path: 'recovery-password/:token', component: RecoveryPasswordComponent, canActivate: [noAuthGuard]
+  },
+  {
+    path: 'reset-password', component: ResetPasswordComponent, canActivate: [noAuthGuard]
+  },
+  
 
 
   //URL DE EXAMENES
