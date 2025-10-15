@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
         "cookie": {
           "domain": window.location.hostname
         },
-        "position": "bottom-right",
+        "position": "bottom-left",
         "theme": "classic",
         "palette": {
           "popup": {

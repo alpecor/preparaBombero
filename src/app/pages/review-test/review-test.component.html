@@ -30,20 +30,29 @@
           <img
             (click)="openModal(question.id)"
             ngSrc="reporte2.png"
-            class="absolute top-[calc(50%-33px)] right-0"
-            width="24"
-            height="24"
-            alt="reportar pregunta"
+            class="absolute top-[calc(50%-33px)] right-0 "
+            width="20"
+            height="20"
+            title="reportar pregunta"
             style="cursor: pointer"
           />
         }@else{
-          <i
-            title="Ver motivo"
-            class="fa-solid fa-circle-info fa-lg absolute top-[calc(50%-22px)] right-0"
-            style="color: #DE9A17; cursor: pointer;"
-            (click)="toggleJustification(question)"
-          >
-          </i>
+            <img
+              (click)="openModal(question.id)"
+              ngSrc="reporte2.png"
+              class="absolute top-[calc(50%-33px)] right-0 "
+              width="20"
+              height="20"
+              title="reportar pregunta"
+              style="cursor: pointer"
+            />
+            <i
+              title="Ver motivo"
+              class="fa-solid fa-circle-info fa-lg absolute top-[calc(50%-23px)] right-7"
+              style="color: #DE9A17; cursor: pointer;"
+              (click)="toggleJustification(question)"
+            >
+            </i>
         }
       </div>
       <ul class="list-none space-y-2">
