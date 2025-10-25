@@ -1,6 +1,132 @@
- <!-- ****************************** AÑADIR HEADER AQUÍ **********************************--> 
-  <app-header />
+<!-- HEADER -->
+<app-header />
+
+ <h1 class="text-center font-bold" style="font-size: 2rem">
+    Preguntas Guardadas
+  </h1>
 
 
-  <!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
-  <app-footer />
+<!-- Barra centrada con fondo primario -->
+<div class="w-full bg-primaryColor shadow-sm">
+  <div class="max-w-5xl mx-auto px-4">
+    <!-- Fila: Bloque + Tema + Buscar -->
+    <div class="pt-3 pb-4 flex items-end justify-center gap-4">
+
+      <!-- BLOQUE -->
+      <div class="flex flex-col items-center">
+        <label class="mb-2 text-white font-semibold text-base sm:text-lg text-center">
+          Bloque
+        </label>
+        <select
+          class="h-11 px-3 py-0 leading-none align-middle rounded-lg border-0 bg-white/95 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
+          [(ngModel)]="selectedBlock"
+          (ngModelChange)="onBlockChange()"
+          name="bloque"
+        >
+          <option *ngFor="let b of blocks" [value]="b.id">{{ b.name }}</option>
+        </select>
+      </div>
+
+      <!-- TEMA -->
+      <div class="flex flex-col items-center">
+        <label class="mb-2 text-white font-semibold text-base sm:text-lg text-center">
+          Tema
+        </label>
+        <select
+          class="h-11 px-3 py-0 leading-none align-middle rounded-lg border-0 bg-white/95 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
+          [(ngModel)]="selectedTopic"
+          name="tema"
+        >
+          <!-- Siempre primero: Todos los temas -->
+          <option value="all">Todos los temas</option>
+          <!-- Después: 15 o 5 según el bloque -->
+          <option *ngFor="let t of topicOptions" [value]="t.id">{{ t.name }}</option>
+        </select>
+      </div>
+
+      <!-- BOTÓN -->
+      <button
+        type="button"
+        (click)="onSearch()"
+        class="h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-white/95 px-4 text-sm font-semibold text-primaryColor hover:bg-white focus:outline-none focus:ring-2 focus:ring-white"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Buscar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- CONTENIDO: preguntas de muestra -->
+<div class="max-w-5xl mx-auto px-4 py-6 space-y-14">
+  <!-- Pregunta 1 -->
+ <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
+    <div class="text-xs text-gray-500 mb-1">Tema: Hidráulica</div>
+    <h3 class="font-semibold text-gray-900 mb-3">1. ¿Cuál es la unidad de medida del caudal en el SI?</h3>
+    <ul class="space-y-2">
+      <li class="rounded-lg border border-gray-200 p-3">a) m²/s</li>
+      <li class="rounded-lg border border-gray-200 p-3">b) L/min</li>
+      <li class="rounded-lg border border-gray-200 p-3">c) m³/s</li>
+      <li class="rounded-lg border border-gray-200 p-3">d) N/m²</li>
+    </ul>
+  </article>
+
+  <!-- Pregunta 2 -->
+ <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
+    <div class="text-xs text-gray-500 mb-1">Tema: Primeros auxilios</div>
+    <h3 class="font-semibold text-gray-900 mb-3">2. En RCP básica para adultos, la relación compresiones/ventilaciones recomendada es:</h3>
+    <ul class="space-y-2">
+      <li class="rounded-lg border border-gray-200 p-3">a) 15:2</li>
+      <li class="rounded-lg border border-gray-200 p-3">b) 30:2</li>
+      <li class="rounded-lg border border-gray-200 p-3">c) 5:1</li>
+      <li class="rounded-lg border border-gray-200 p-3">d) 10:2</li>
+    </ul>
+  </article>
+
+  <!-- Pregunta 3 -->
+  <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
+    <div class="text-xs text-gray-500 mb-1">Tema: Materiales</div>
+    <h3 class="font-semibold text-gray-900 mb-3">3. ¿Qué extintor es más adecuado para fuegos eléctricos?</h3>
+    <ul class="space-y-2">
+      <li class="rounded-lg border border-gray-200 p-3">a) Agua a chorro</li>
+      <li class="rounded-lg border border-gray-200 p-3">b) Espuma (AFFF)</li>
+      <li class="rounded-lg border border-gray-200 p-3">c) Polvo ABC</li>
+      <li class="rounded-lg border border-gray-200 p-3">d) CO₂</li>
+    </ul>
+  </article>
+
+  <!-- Pregunta 4 -->
+  <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
+    <div class="text-xs text-gray-500 mb-1">Tema: Incendios forestales</div>
+    <h3 class="font-semibold text-gray-900 mb-3">4. El principal factor meteorológico que favorece la propagación de un incendio es:</h3>
+    <ul class="space-y-2">
+      <li class="rounded-lg border border-gray-200 p-3">a) Humedad relativa alta</li>
+      <li class="rounded-lg border border-gray-200 p-3">b) Viento fuerte</li>
+      <li class="rounded-lg border border-gray-200 p-3">c) Temperaturas moderadas</li>
+      <li class="rounded-lg border border-gray-200 p-3">d) Nubosidad</li>
+    </ul>
+  </article>
+
+  <!-- Pregunta 5 -->
+  <article class="rounded-xl border border-gray-200 bg-white p-4">
+    <div class="text-xs text-gray-500 mb-1">Tema: Vehículos de emergencia</div>
+    <h3 class="font-semibold text-gray-900 mb-3">5. ¿Cuál es la presión habitual de trabajo en una BIE de 25 mm?</h3>
+    <ul class="space-y-2">
+      <li class="rounded-lg border border-gray-200 p-3">a) 2 bar</li>
+      <li class="rounded-lg border border-gray-200 p-3">b) 3 bar</li>
+      <li class="rounded-lg border border-gray-200 p-3">c) 6 bar</li>
+      <li class="rounded-lg border border-gray-200 p-3">d) 12 bar</li>
+    </ul>
+  </article>
+</div>
+
+<!-- FOOTER -->
+<app-footer />

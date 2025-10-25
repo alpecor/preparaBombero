@@ -97,7 +97,7 @@ export const routes: Routes = [
 
   //URL DE PREGUNTAS GUARDADAS
   {
-    path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
+    path: 'preguntas-guardadas', component: SavedQuestionsComponent
   },
 
 
