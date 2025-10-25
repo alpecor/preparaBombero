@@ -23,6 +23,41 @@
       />
     </div>
 
+    <!------------------------------ iconos de Redes Sociales -------------------------->
+    <div class="hidden sm:flex items-center gap-4 ml-20">
+        <a
+          title="TikTok"
+          href="https://www.tiktok.com/@preparabombero"
+          target="_blank"
+          rel="noopener"
+          class="text-black-500 hover:text-primaryColor transition"
+          aria-label="TikTok"
+        >
+          <i class="fab fa-tiktok text-xl"></i>
+        </a>
+        <a
+          title="Instagram"
+          href="https://www.instagram.com/preparabombero"
+          target="_blank"
+          rel="noopener"
+          class="text-red-500 hover:text-primaryColor transition"
+          aria-label="Instagram"
+        >
+          <i class="fab fa-instagram text-xl"></i>
+        </a>
+        <a
+          title="Telegram"
+          href="https://t.me/+l1TvslhJrlNhYWI0"
+          target="_blank"
+          rel="noopener"
+          class="text-blue-500 hover:text-primaryColor transition"
+          aria-label="Telegram"
+        >
+          <i class="fab fa-telegram text-xl"></i>
+        </a>
+    </div>
+
+
     <div class="flex-1 flex justify-end items-center space-x-6">
       <!--------------- Botones e iconos de la home y examenes ---------------->
       @if(isNotAuth){
@@ -44,7 +79,7 @@
 
       <!--------------- Botones e iconos si eres ADMIN ---------------->
       @if(isAdmin || isUser){
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-3">
         <div
           class="icon-text mt-4"
           [routerLink]="['/home']"
@@ -62,6 +97,15 @@
         >
           <i class="fa-solid fa-folder fa-lg mb-3"></i>
           <span>Exámenes</span>
+        </div>
+        <div
+          class="icon-text mt-8"
+          [routerLink]="['/preguntas-guardadas']"
+          routerLinkActive="active-icon"
+          style="margin-right: 0.8rem; cursor: pointer"
+        >
+          <i class="fa-solid fa-house fa-lg mb-3"></i>
+          <span>Preguntas<br>guardadas</span>
         </div>
         <!-- <div
           class="icon-text mt-4"

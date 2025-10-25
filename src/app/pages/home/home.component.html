@@ -1,23 +1,34 @@
-<!-- // TODO
-1. Hacer que se quede selecciona los topics, guardandolos en localStorage
- hacer función que haga lo que hace el click, y aparte guardar en localstorage el topic.topicId. Después si este topic.topicId está en la lista, más, si no está -
-2. Añadir modal de aviso multicuentas
-2.1 Arreglar el icono que está alado del número de preguntas
-2.2 Alinear el número de preguntas
-3. Al hacer click en el boton de examen y de repaso, que te lleve a /test?topicId=1&topicId=10&topicId=564 -> Todos los id de los topic seleccionados, tanto topic como subtopics (tanto topics como subtopics, son los almacenados en el localStorage)
--->
-
 <!-- Para el footer -->
 <div class="flex flex-col h-screen">
   <!--------------- Añadir header aquí ---------------->
   <app-header />
 
-  <!--------------- Añadir temas aquí ---------------->
+  <!--------------- Eslogan ---------------->
   <div class="mx-auto py-4">
     LA ÚNICA PLATAFORMA DONDE TODAS LAS PREGUNTAS SON DE EXÁMENES OFICIALES POR SOLO 24,95€/MES
   </div>
+
+  <!--------------- Div de botones y temas ---------------->
   <div class="container mx-auto">
     <div class="space-y-6">
+
+      <!--------------- Botones de Examen y Repaso ---------------->
+      <div class="flex justify-center">
+        <div class="space-x-8 mt-8">
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
+            (click)="startExam()">
+            Examen
+          </button>
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
+            (click)="startReview()">
+            Repaso
+          </button>
+        </div>
+      </div>
+
+      <!------------------------ Temas -------------------------->
       <div>
         @for(item of objectKeys(topics); track $index){
           <h2 class="text-xl font-bold mt-8">{{item}}</h2>
@@ -60,20 +71,7 @@
         }
       </div>
 
-      <div class="flex justify-center">
-        <div class="space-x-8 mt-8">
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="startExam()">
-            Examen
-          </button>
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="startReview()">
-            Repaso
-          </button>
-        </div>
-      </div>
+      
     </div>
   </div>
 

@@ -21,11 +21,12 @@ import { HighlightsComponent } from './pages/highlights/highlights.component';
 import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
 import { RecoveryPasswordComponent } from './pages/auth/recovery-password/recovery-password.component';
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
+import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
   {
-    path: '', component: WelcomeComponent, canActivate: [noAuthGuard]
+    path: '', component: HomeComponent, canActivate: [noAuthGuard]
   },
   {
     path: 'terminos-y-condiciones', component: TermsConditionsComponent
@@ -92,6 +93,11 @@ export const routes: Routes = [
   //URL DE PERFIL
   {
     path: 'profile', component: ProfileComponent, canActivate: [userAuthGuard]
+  },
+
+  //URL DE PREGUNTAS GUARDADAS
+  {
+    path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
   },
 
 
