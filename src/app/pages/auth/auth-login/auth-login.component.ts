@@ -25,7 +25,7 @@ export default class AuthLoginComponent {
       const response = await this.requestService.request('POST', `/auth/login`, {email: this.email, password:this.password}, {}, false);
       localStorage.setItem("access_token", response.access_token);
       this.status = undefined;
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }catch(error: any){
       this.status = (error.error.errors) ? Array.isArray(error.error.errors) ? error.error.errors : [error.error.errors] : [error.error.message];
     }

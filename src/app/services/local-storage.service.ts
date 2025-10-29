@@ -15,7 +15,11 @@ export class LocalStorageService {
   // Obtener un valor de localStorage
   getItem(key: string): any {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : null;
+    try {
+      if(item) return JSON.parse(item)
+     } catch {
+      return item
+    }
   }
 
   // Eliminar un valor de localStorage

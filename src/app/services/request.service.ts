@@ -16,7 +16,11 @@ export class RequestService {
     }
     if (auth) {
       const access_token = localStorage.getItem('access_token');
-      headers = { ...headers, Authorization: 'Bearer ' + access_token };
+      if (!access_token) {
+        headers = { ...headers };
+      } else {
+        headers = { ...headers, Authorization: 'Bearer ' + access_token };
+      }
     }
 
     try {

@@ -25,25 +25,34 @@
     </div>
 
     <!-- Segundo bloque -->
-    <div class="p-4 text-center border rounded-xl bg-gray-100">
-      <h2 class="text-lg font-semibold mb-4">Tu NOTA sería la siguiente en los siguientes casos:</h2>
-      <li>
-        <span>Si no restan preguntas mal contestadas, tu nota sería:</span>
-        <span class="ml-1 font-bold">{{ scores.noPenalty.toFixed(2) }}</span>
-      </li>
-      <li>
-        <span>Si cada 2 mal, resta 1 bien, tu nota sería:</span>
-        <span class="ml-1 font-bold">{{ scores.penaltyTwo.toFixed(2) }}</span>
-      </li>
-      <li>
-        <span>Si cada 3 mal, resta 1 bien, tu nota sería:</span>
-        <span class="ml-1 font-bold">{{ scores.penaltyThree.toFixed(2) }}</span>
-      </li>
-      <li>
-        <span>Si cada 4 mal, resta 1 bien, tu nota sería:</span>
-        <span class="ml-1 font-bold">{{ scores.penaltyFour.toFixed(2) }}</span>
-      </li>
-    </div>
+    @if (!not_auth) {
+      <div class="p-4 text-center border rounded-xl bg-gray-100">
+        <h2 class="text-lg font-semibold mb-4">Tu NOTA sería la siguiente en los siguientes casos:</h2>
+        <li>
+          <span>Si no restan preguntas mal contestadas, tu nota sería:</span>
+          <span class="ml-1 font-bold">{{ scores.noPenalty.toFixed(2) }}</span>
+        </li>
+        <li>
+          <span>Si cada 2 mal, resta 1 bien, tu nota sería:</span>
+          <span class="ml-1 font-bold">{{ scores.penaltyTwo.toFixed(2) }}</span>
+        </li>
+        <li>
+          <span>Si cada 3 mal, resta 1 bien, tu nota sería:</span>
+          <span class="ml-1 font-bold">{{ scores.penaltyThree.toFixed(2) }}</span>
+        </li>
+        <li>
+          <span>Si cada 4 mal, resta 1 bien, tu nota sería:</span>
+          <span class="ml-1 font-bold">{{ scores.penaltyFour.toFixed(2) }}</span>
+        </li>
+      </div>
+    }
+    @if (not_auth) {
+      <div class="p-4 text-center rounded-xl dark:bg-gray-800 dark:text-red-400 bg-red-50">
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+          <span class="font-medium">Para obtener detalles sobre tu nota, debes iniciar sesión</span>
+        </div>
+      </div>
+    }
   </div>
 
 <!-- ****************************** AÑADIR CORRECCIÓN AQUÍ **********************************-->

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import {NgOptimizedImage} from '@angular/common';
 import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
 import { RequestService } from '../../services/request.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-check-exam',
@@ -16,7 +17,9 @@ import { RequestService } from '../../services/request.service';
 })
 export class CheckExamComponent {
 
-  constructor(private localStorageService: LocalStorageService, private requestService:RequestService) { }
+  constructor(private localStorageService: LocalStorageService, private requestService:RequestService, private authService: AuthService) { }
+
+  not_auth = this.authService.isNotAuth();
 
   correctedExamQuestions: any[] = []; //aquí se almacenarán las preguntas corregidas
   userAnswers: any[] = []; //aquí se almacenarán las respuestas seleccionadas por el usuario

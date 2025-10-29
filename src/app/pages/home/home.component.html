@@ -13,16 +13,26 @@
     <div class="space-y-6">
 
       <!--------------- Botones de Examen y Repaso ---------------->
+      @if (!not_auth) {
+        <div class="flex justify-center mt-8">
+          <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+            <span class="font-medium">Debes de estar registrado para poder hacer examenes</span>
+          </div>
+        </div>
+      }
+
       <div class="flex justify-center">
-        <div class="space-x-8 mt-8">
+        <div class="space-x-8">
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="startExam()">
+            (click)="startExam()"
+            [disabled]="!not_auth">
             Examen
           </button>
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="startReview()">
+            (click)="startReview()"
+            [disabled]="!not_auth">
             Repaso
           </button>
         </div>

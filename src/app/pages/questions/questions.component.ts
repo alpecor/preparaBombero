@@ -37,7 +37,7 @@ export class QuestionsComponent implements OnInit {
 
   async ngOnInit(){
     if (!this.examQuestion || this.examQuestion.length === 0) {
-      location.href="/home";
+      location.href="/";
       return;
     }
 

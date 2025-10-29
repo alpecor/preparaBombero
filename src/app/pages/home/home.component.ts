@@ -6,6 +6,7 @@ import { RequestService } from '../../services/request.service';
 import { Router, RouterLink } from '@angular/router';
 import { topicsComponent } from '../../components/topics/topics.component';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,8 +18,9 @@ import { LocalStorageService } from '../../services/local-storage.service';
 export class HomeComponent implements OnInit {
 
   questions:string[] = []; //definir array donde guardaremos las preguntas
+  not_auth: boolean = !this.authService.isNotAuth();
 
-  constructor(private router: Router,private requestService: RequestService, private localStorageService: LocalStorageService){
+  constructor(private router: Router, private authService: AuthService, private requestService: RequestService, private localStorageService: LocalStorageService){
   }
 
   // Función que se llama al hacer clic en el botón para empezar el examen
@@ -187,13 +189,16 @@ export class HomeComponent implements OnInit {
     this.openModalTest();  // Abre el modal si no se ha mostrado antes
     localStorage.setItem('modalShown', 'true');  // Marca como mostrado
   }
-  try{
+  try {
   // pedimos info del user para saber si esta o no subscrito
-  const user = await this.requestService.request('GET', `/user`,{},{}, true);
-  const subscribed = user.subscribed;
+  let subscribed;
+  if (this.not_auth) {
+    const user = await this.requestService.request('GET', `/user`,{},{}, true);
+    subscribed = user.subscribed;
+  }
   // Si el localStorage está vacío, inicializa con el topic 662 y sus hijos
   let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
-  if (topicSelected.length === 0 && !subscribed ) {
+  if (topicSelected.length === 0 && !subscribed) {
     topicSelected = [
       { id: 662, isChecked: true },
       { id: 1451, isChecked: true },
@@ -232,6 +237,10 @@ export class HomeComponent implements OnInit {
 
 
   selectedTopic(topicId: number, event: any, key: string) {
+    if (!this.not_auth) {
+      return
+    }
+
     const isChecked: boolean = event.target.checked;
     let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     if (isChecked) {

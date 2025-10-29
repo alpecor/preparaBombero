@@ -26,7 +26,7 @@ import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions
 export const routes: Routes = [
   //URLs DE LA HOME
   {
-    path: '', component: HomeComponent, canActivate: [noAuthGuard]
+    path: '', component: HomeComponent
   },
   {
     path: 'terminos-y-condiciones', component: TermsConditionsComponent
@@ -66,18 +66,13 @@ export const routes: Routes = [
     path: 'examenes/:community/:city', component: ExamenesCardsComponent
   },
 
-  //URL DE Home
-  {
-    path: 'home', component: HomeComponent, canActivate: [userAuthGuard]
-  },
-
   //URL DE PREGUNTAS DESTACADAS
   //  {
   //   path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
   // },
   //URL DE EXAMEN
   {
-    path: 'test', component: QuestionsComponent, canActivate: [userAuthGuard]
+    path: 'test', component: QuestionsComponent
   },
 
   //URL DE REPASO
@@ -87,7 +82,7 @@ export const routes: Routes = [
 
   //URL DE EXAMEN CORREGIDO
   {
-    path: 'check-exam', component: CheckExamComponent, canActivate: [userAuthGuard]
+    path: 'check-exam', component: CheckExamComponent
   },
 
   //URL DE PERFIL

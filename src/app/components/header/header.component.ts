@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
     localStorage.removeItem('userAnswer');
     localStorage.removeItem('correctedExamQuestions');
 
-    this.router.navigate(['']);
+    window.location.reload();
 
   }
 

@@ -72,14 +72,6 @@ export class ExamenesCardsComponent {
    // función para manejar el clic en el examen
    async startExam(pdfId: number) {
     try {
-      // Realizar petición para saber si el usuario está o no subscrito
-      const user = await this.requestService.request('GET', `/user`, {}, {});
-      const subscribed = user.subscribed == true;
-      if(!subscribed){
-        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-        return;
-      }
-
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { pdfId: pdfId }, {});
       if (questions.length === 0) {
@@ -91,7 +83,6 @@ export class ExamenesCardsComponent {
       this.localStorageService.setItem("examQuestions", questions);
 
       // Navegar a la vista del examen
-
       this.router.navigate(['/test']);
     } catch (error: any) {
       console.log(error);

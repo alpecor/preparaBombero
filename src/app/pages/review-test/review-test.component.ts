@@ -91,7 +91,7 @@ export class ReviewTestComponent {
       // Verificar si llegamos al final
       if (this.page.page >= Math.ceil(this.examQuestion.length / this.questionsPerPage)) {
         alert("Has completado todas las preguntas.");
-        this.router.navigate(['/home']); // Redirigir a la home
+        this.router.navigate(['/']); // Redirigir a la home
       }
     }
   }
