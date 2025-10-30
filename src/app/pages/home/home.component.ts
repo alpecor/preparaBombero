@@ -279,4 +279,28 @@ export class HomeComponent implements OnInit {
 
     this.localStorageService.setItem("topicsSelected", topicSelected);
   }
+
+
+
+  // Función Deseleccionar todos los temas
+ 
+
+
+  deselectAllTopics() {
+  const clear = (arr: any[]) => {
+    arr?.forEach(t => {
+      t.selected = false;
+      if (Array.isArray(t.topics) && t.topics.length) {
+        clear(t.topics);
+      }
+    });
+  };
+
+  Object.keys(this.topics || {}).forEach(group => clear(this.topics[group] || []));
+  this.localStorageService.setItem('topicsSelected', []);
+}
+
+
+
+
 }

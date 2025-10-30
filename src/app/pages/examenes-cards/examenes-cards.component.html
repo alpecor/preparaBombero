@@ -54,7 +54,7 @@
         *ngFor="let exam of selectedExams"
         class="w-2/3 bg-[rgba(255,149,0,0.5)] hover:bg-primaryColor hover:text-white text-black font-bold rounded-lg text-sm py-12 text-center border-2 border-primaryColor"
         style="cursor: pointer"
-        (click)="startExam(exam.id)"
+        (click)="startExam(exam.id, exam.name)"
       >
         {{ exam.name.split(".")[0] }}
       </div>

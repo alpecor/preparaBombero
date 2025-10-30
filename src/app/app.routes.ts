@@ -66,14 +66,16 @@ export const routes: Routes = [
     path: 'examenes/:community/:city', component: ExamenesCardsComponent
   },
 
-  //URL DE PREGUNTAS DESTACADAS
-  //  {
-  //   path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
-  // },
-  //URL DE EXAMEN
+  // URL DEL EXAMEN POR SLUG (carpeta examenes)
   {
-    path: 'test', component: QuestionsComponent
+    path: 'examen/:slug', component: QuestionsComponent
   },
+
+  //URL DE PREGUNTAS DESTACADAS
+  {
+     path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
+  },
+
 
   //URL DE REPASO
   {

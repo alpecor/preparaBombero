@@ -15,8 +15,8 @@
       <!--------------- Botones de Examen y Repaso ---------------->
       @if (!not_auth) {
         <div class="flex justify-center mt-8">
-          <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">Debes de estar registrado para poder hacer examenes</span>
+          <div class="text-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+            <span class="font-medium">Debes de estar registrado para poder realizar examenes/repaso por temas, pero sí puedes realizar los de la carpeta "Exámenes"</span>
           </div>
         </div>
       }
@@ -38,6 +38,22 @@
         </div>
       </div>
 
+      <!-- Boton deselección -->
+      <div class="max-w-4xl mx-auto w-full ">
+        <div class="mt-6">
+          <button class="inline-flex items-center gap-2 text-sm font-medium border rounded-lg px-4 py-2
+                  text-primaryColor border-primaryColor bg-transparent
+                  hover:bg-primaryColor hover:text-white transition"
+            (click)="deselectAllTopics()">
+            Desmarcar todos los temas
+          </button>
+        </div>
+      </div>
+
+
+
+
+
       <!------------------------ Temas -------------------------->
       <div>
         @for(item of objectKeys(topics); track $index){
@@ -52,7 +68,7 @@
                     </button>
                     <input
                       [checked]="topic.selected"
-                      (click)="selectedTopic(topic.id, $event, item)"
+                      (change)="selectedTopic(topic.id, $event, item)"
                       type="checkbox"
                       class="form-checkbox h-5 w-5 text-yellow-500"
                     />

@@ -69,8 +69,17 @@ export class ExamenesCardsComponent {
       .filter(item => item.community === community && item.city === city );
   }
 
+  // Método para normalizar nombre de examen
+  private slugify(name: string): string {
+    return name
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita acentos
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')                     // espacios/símbolos → guiones
+      .replace(/^-+|-+$/g, '');                        // trim guiones
+  }
+
    // función para manejar el clic en el examen
-   async startExam(pdfId: number) {
+  async startExam(pdfId: number, examenName: string) {
     try {
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { pdfId: pdfId }, {});
@@ -79,11 +88,16 @@ export class ExamenesCardsComponent {
         return;
       }
 
-      // Guardar las preguntas limitadas en localStorage
+      // Guardar las preguntas limitadas y nombre de examen en localStorage
       this.localStorageService.setItem("examQuestions", questions);
+      this.localStorageService.setItem('examenName', { pdfId, examenName });
+
+      //normalizar el nombre del examen y navegar a la vista del examen 
+      const slug = this.slugify(examenName);
+      this.router.navigate(['/examen', slug]);
 
       // Navegar a la vista del examen
-      this.router.navigate(['/test']);
+      //this.router.navigate(['/test']);
     } catch (error: any) {
       console.log(error);
     }
