@@ -71,6 +71,12 @@ export const routes: Routes = [
     path: 'examen/:slug', component: QuestionsComponent
   },
 
+  // URL DEL EXAMEN HOME
+  {
+    path: 'test', component: QuestionsComponent
+  },
+
+
   //URL DE PREGUNTAS DESTACADAS
   {
      path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
