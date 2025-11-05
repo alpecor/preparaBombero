@@ -24,7 +24,7 @@ export class QuestionsComponent implements OnInit {
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
   userResponses: { quizId: number, optionSelected: string }[] = []; // Array para almacenar las respuestas del usuario
-
+  savedQuestions = new Set<number>();  // ids de preguntas guardadas
   page: any = {page: 0, first:0}
   questionsPerPage:any = 20;
 
@@ -36,6 +36,13 @@ export class QuestionsComponent implements OnInit {
   }
 
   async ngOnInit(){
+    // recuperar guardadas de localStorage
+    const saved = this.localStorageService.getItem('savedQuestions');
+    if (Array.isArray(saved)) {
+      this.savedQuestions = new Set(saved);
+    }
+
+
     if (!this.examQuestion || this.examQuestion.length === 0) {
       location.href="/";
       return;
@@ -108,6 +115,24 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+
+  //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
+
+  isQuestionSaved(id: number): boolean {
+    return this.savedQuestions.has(id);
+  }
+
+
+  questionSaved(id: number): void {
+    if (this.savedQuestions.has(id)) {
+      this.savedQuestions.delete(id);
+    } else {
+      this.savedQuestions.add(id);
+    }
+    // persistir
+    this.localStorageService.setItem('savedQuestions',Array.from(this.savedQuestions)
+    );
+  }
 
 
 

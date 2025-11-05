@@ -20,34 +20,30 @@
 <!--------------- Añadir preguntas del test aquí ------------>
 <div class="flex justify-center p-4">
   <div class="w-full max-w-3xl">
-    <div
-      *ngFor="
+    <div *ngFor="
         let question of examQuestion.slice(
           page.first,
           page.first + questionsPerPage
         );
         let i = index
       "
-      class="p-6 mb-12 border rounded-xl bg-gray-50"
+      class="p-6 mb-12 border rounded-xl bg-gray-50 relative"
     >
       <h2
         class="text-lg font-semibold mb-2"
         [innerHTML]="
           page.page * questionsPerPage + i + 1 + '.' + question.title
-        "
-      ></h2>
-      <div class="relative">
-        <hr class="border-t border-gray-300 mb-4" />
-        <img
-          (click)="openModal(question.id)"
-          ngSrc="reporte2.png"
-          class="absolute top-[calc(50%-33px)] right-0"
-          width="24"
-          height="24"
-          title="reportar pregunta"
-          style="cursor: pointer"
-        />
-      </div>
+        ">
+      </h2>
+      
+      <hr class="border-t border-gray-300 mb-4" />
+    
+      <i class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-2xl
+         text-primaryColor hover:text-yellow-600 transition"
+        (click)="openModal(question.id)"
+        title="Reportar pregunta">
+      </i>
+      
       <ul class="list-none space-y-2">
         <li *ngFor="let respuesta of question.respuestas">
           @if (respuesta !="") {
@@ -69,6 +65,14 @@
           }
         </li>
       </ul>
+      <i class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
+        [ngClass]="{
+          'text-gray-400': !isQuestionSaved(question.id),
+          'text-primaryColor': isQuestionSaved(question.id)
+        }"
+        (click)="questionSaved(question.id)"
+        [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'">
+      </i>
     </div>
 
     <!-------------------- Modal de reporte ----------------->
