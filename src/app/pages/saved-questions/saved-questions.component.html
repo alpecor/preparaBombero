@@ -1,132 +1,117 @@
-<!-- HEADER -->
 <app-header />
 
- <h1 class="text-center font-bold" style="font-size: 2rem">
-    Preguntas Guardadas
-  </h1>
+<h1 class="text-center font-bold text-2xl my-6">
+  Preguntas guardadas
+</h1>
 
-
-<!-- Barra centrada con fondo primario -->
-<div class="w-full bg-primaryColor shadow-sm">
-  <div class="max-w-5xl mx-auto px-4">
-    <!-- Fila: Bloque + Tema + Buscar -->
-    <div class="pt-3 pb-4 flex items-end justify-center gap-4">
-
-      <!-- BLOQUE -->
-      <div class="flex flex-col items-center">
-        <label class="mb-2 text-white font-semibold text-base sm:text-lg text-center">
-          Bloque
-        </label>
-        <select
-          class="h-11 px-3 py-0 leading-none align-middle rounded-lg border-0 bg-white/95 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
-          [(ngModel)]="selectedBlock"
-          (ngModelChange)="onBlockChange()"
-          name="bloque"
-        >
-          <option *ngFor="let b of blocks" [value]="b.id">{{ b.name }}</option>
-        </select>
+<!--------------- Añadir preguntas aquí ---------------->
+  <div class="container mx-auto mt-8 max-w-2xl">
+    <div
+      class="question-block mb-12 relative"
+      *ngFor="let question of savedQuestions; let i = index"
+    >
+      <h2 class="text-lg font-medium mb-2">
+        Tema - {{ question.topicTitle }}
+      </h2>
+      <div class="mb-4 p-2 bg-gray-100 rounded-md" style="margin-right: 4rem">
+        <p>Pregunta {{ i + 1 }} - {{ question.title }}</p>
       </div>
-
-      <!-- TEMA -->
-      <div class="flex flex-col items-center">
-        <label class="mb-2 text-white font-semibold text-base sm:text-lg text-center">
-          Tema
-        </label>
-        <select
-          class="h-11 px-3 py-0 leading-none align-middle rounded-lg border-0 bg-white/95 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
-          [(ngModel)]="selectedTopic"
-          name="tema"
+      @if (question.isCorrected) {
+        <i
+          title="Ver motivo"
+          class="fa-solid fa-circle-info fa-lg absolute top-[calc(50%-23px)] right-7"
+          style="color: #DE9A17; cursor: pointer;"
+          (click)="showJustification(question.id, !question.showJustification)"
         >
-          <!-- Siempre primero: Todos los temas -->
-          <option value="all">Todos los temas</option>
-          <!-- Después: 15 o 5 según el bloque -->
-          <option *ngFor="let t of topicOptions" [value]="t.id">{{ t.name }}</option>
-        </select>
-      </div>
-
-      <!-- BOTÓN -->
-      <button
-        type="button"
-        (click)="onSearch()"
-        class="h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-white/95 px-4 text-sm font-semibold text-primaryColor hover:bg-white focus:outline-none focus:ring-2 focus:ring-white"
-      >
-        <i class="fa-solid fa-magnifying-glass"></i>
-        Buscar
-      </button>
+        </i>
+      }
+      <ul class="list-none space-y-2">
+        <li >
+          @if (question.option1 !="") {
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                [value]="question.option1"
+                [disabled]="question.isCorrected"
+                [checked]="question.isCorrected && question.optionSelected== question.option1"
+                (click)="handleButtonClick(question.id, question.option1)"
+              />
+              <span [ngClass]="{
+                'text-green-500': question.isCorrected && question.option1 === question.correctAnswer,
+                'text-red-500': question.isCorrected && question.option1 !== question.correctAnswer
+              }">
+                {{ question.option1 }}
+              </span>
+            </label>
+          }
+          @if (question.option2 !="") {
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                [value]="question.option2"
+                [disabled]="question.isCorrected"
+                [checked]="question.isCorrected && question.optionSelected == question.option2"
+                (click)="handleButtonClick(question.id, question.option2)"
+              />
+              <span [ngClass]="{
+                'text-green-500': question.isCorrected && question.option2 === question.correctAnswer,
+                'text-red-500': question.isCorrected && question.option2 !== question.correctAnswer
+              }">
+                {{ question.option2 }}
+              </span>
+            </label>
+          }
+          @if (question.option3 !="") {
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                [value]="question.option3"
+                [disabled]="question.isCorrected"
+                [checked]="question.isCorrected && question.optionSelected == question.option3"
+                (click)="handleButtonClick(question.id, question.option3)"
+              />
+              <span [ngClass]="{
+                'text-green-500': question.isCorrected && question.option3 === question.correctAnswer,
+                'text-red-500': question.isCorrected && question.option3 !== question.correctAnswer
+              }">
+                {{ question.option3 }}
+              </span>
+            </label>
+          }
+          @if (question.option4 !="") {
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
+                [value]="question.option4"
+                [disabled]="question.isCorrected"
+                [checked]="question.isCorrected && question.optionSelected == question.option4"
+                (click)="handleButtonClick(question.id, question.option4)"
+              />
+              <span [ngClass]="{
+                'text-green-500': question.isCorrected && question.option4 === question.correctAnswer,
+                'text-red-500': question.isCorrected && question.option4 !== question.correctAnswer
+              }">
+                {{ question.option4 }}
+              </span>
+            </label>
+          }
+        </li>
+        <!-- Mostrar el motivo condicionalmente -->
+        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded">
+          <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
+          <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
+        </div>
+      </ul>
+      <i class="text-primaryColor fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
+        (click)="deleteSavedQuestion(question.id)"
+        title="Quitar pregunta guardada">
+      </i>
     </div>
   </div>
-</div>
+  
 
-
-
-
-
-
-
-
-
-<!-- CONTENIDO: preguntas de muestra -->
-<div class="max-w-5xl mx-auto px-4 py-6 space-y-14">
-  <!-- Pregunta 1 -->
- <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
-    <div class="text-xs text-gray-500 mb-1">Tema: Hidráulica</div>
-    <h3 class="font-semibold text-gray-900 mb-3">1. ¿Cuál es la unidad de medida del caudal en el SI?</h3>
-    <ul class="space-y-2">
-      <li class="rounded-lg border border-gray-200 p-3">a) m²/s</li>
-      <li class="rounded-lg border border-gray-200 p-3">b) L/min</li>
-      <li class="rounded-lg border border-gray-200 p-3">c) m³/s</li>
-      <li class="rounded-lg border border-gray-200 p-3">d) N/m²</li>
-    </ul>
-  </article>
-
-  <!-- Pregunta 2 -->
- <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
-    <div class="text-xs text-gray-500 mb-1">Tema: Primeros auxilios</div>
-    <h3 class="font-semibold text-gray-900 mb-3">2. En RCP básica para adultos, la relación compresiones/ventilaciones recomendada es:</h3>
-    <ul class="space-y-2">
-      <li class="rounded-lg border border-gray-200 p-3">a) 15:2</li>
-      <li class="rounded-lg border border-gray-200 p-3">b) 30:2</li>
-      <li class="rounded-lg border border-gray-200 p-3">c) 5:1</li>
-      <li class="rounded-lg border border-gray-200 p-3">d) 10:2</li>
-    </ul>
-  </article>
-
-  <!-- Pregunta 3 -->
-  <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
-    <div class="text-xs text-gray-500 mb-1">Tema: Materiales</div>
-    <h3 class="font-semibold text-gray-900 mb-3">3. ¿Qué extintor es más adecuado para fuegos eléctricos?</h3>
-    <ul class="space-y-2">
-      <li class="rounded-lg border border-gray-200 p-3">a) Agua a chorro</li>
-      <li class="rounded-lg border border-gray-200 p-3">b) Espuma (AFFF)</li>
-      <li class="rounded-lg border border-gray-200 p-3">c) Polvo ABC</li>
-      <li class="rounded-lg border border-gray-200 p-3">d) CO₂</li>
-    </ul>
-  </article>
-
-  <!-- Pregunta 4 -->
-  <article class="rounded-xl border-2 border-gray-400 bg-white p-5 shadow-xl">
-    <div class="text-xs text-gray-500 mb-1">Tema: Incendios forestales</div>
-    <h3 class="font-semibold text-gray-900 mb-3">4. El principal factor meteorológico que favorece la propagación de un incendio es:</h3>
-    <ul class="space-y-2">
-      <li class="rounded-lg border border-gray-200 p-3">a) Humedad relativa alta</li>
-      <li class="rounded-lg border border-gray-200 p-3">b) Viento fuerte</li>
-      <li class="rounded-lg border border-gray-200 p-3">c) Temperaturas moderadas</li>
-      <li class="rounded-lg border border-gray-200 p-3">d) Nubosidad</li>
-    </ul>
-  </article>
-
-  <!-- Pregunta 5 -->
-  <article class="rounded-xl border border-gray-200 bg-white p-4">
-    <div class="text-xs text-gray-500 mb-1">Tema: Vehículos de emergencia</div>
-    <h3 class="font-semibold text-gray-900 mb-3">5. ¿Cuál es la presión habitual de trabajo en una BIE de 25 mm?</h3>
-    <ul class="space-y-2">
-      <li class="rounded-lg border border-gray-200 p-3">a) 2 bar</li>
-      <li class="rounded-lg border border-gray-200 p-3">b) 3 bar</li>
-      <li class="rounded-lg border border-gray-200 p-3">c) 6 bar</li>
-      <li class="rounded-lg border border-gray-200 p-3">d) 12 bar</li>
-    </ul>
-  </article>
-</div>
-
-<!-- FOOTER -->
 <app-footer />

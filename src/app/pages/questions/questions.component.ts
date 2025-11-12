@@ -5,6 +5,9 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Router, RouterLink } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { AuthService } from '../../services/auth.service';
+import {Title} from "@angular/platform-browser";
+
 
 
 @Component({
@@ -16,7 +19,9 @@ import { LocalStorageService } from '../../services/local-storage.service';
 })
 export class QuestionsComponent implements OnInit {
 
-  constructor(private requestService:RequestService, private localStorageService: LocalStorageService, private router: Router) {}
+  constructor(private titleService:Title, private requestService:RequestService, private localStorageService: LocalStorageService, private router: Router, private authService: AuthService) {
+    this.titleService.setTitle("PreparaBombero - " + this.localStorageService.getItem('examenName')?.examenName);
+  }
 
   //************************* DEFINICIÓN DE VARIABLES ****************************//
 
@@ -24,25 +29,28 @@ export class QuestionsComponent implements OnInit {
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
   userResponses: { quizId: number, optionSelected: string }[] = []; // Array para almacenar las respuestas del usuario
-  savedQuestions = new Set<number>();  // ids de preguntas guardadas
+  savedQuestions = [];  // ids de preguntas guardadas
   page: any = {page: 0, first:0}
   questionsPerPage:any = 20;
+  isNotAuth: boolean = this.authService.isNotAuth();
 
 
 
   //************************* ngOnInit ****************************//
   ngOnDestroy() {
     this.localStorageService.removeItem('examQuestions');
+    this.localStorageService.removeItem('examenName');
+    this.titleService.setTitle("PreparaBombero");
   }
 
   async ngOnInit(){
-    // recuperar guardadas de localStorage
-    const saved = this.localStorageService.getItem('savedQuestions');
-    if (Array.isArray(saved)) {
-      this.savedQuestions = new Set(saved);
+    
+    // aqui obtenemos las preguntas guardadas
+    if(!this.isNotAuth){
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
     }
-
-
+  
+    
     if (!this.examQuestion || this.examQuestion.length === 0) {
       location.href="/";
       return;
@@ -119,19 +127,22 @@ export class QuestionsComponent implements OnInit {
   //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
 
   isQuestionSaved(id: number): boolean {
-    return this.savedQuestions.has(id);
+    if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
+      return true
+    } else{
+      return false
+    }
   }
 
 
-  questionSaved(id: number): void {
-    if (this.savedQuestions.has(id)) {
-      this.savedQuestions.delete(id);
-    } else {
-      this.savedQuestions.add(id);
+  async questionSaved(id: number): Promise<void> {
+    if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
+      await this.requestService.request('DELETE', `/quiz/${id}/favorite`,{},{}, true);
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
+    } else{
+      await this.requestService.request('POST', `/quiz/favorite`,{quizId: id},{}, true);
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true); 
     }
-    // persistir
-    this.localStorageService.setItem('savedQuestions',Array.from(this.savedQuestions)
-    );
   }
 
 

@@ -20,8 +20,7 @@
 <!--------------- Añadir preguntas del test aquí ------------>
 <div class="flex justify-center p-4">
   <div class="w-full max-w-3xl">
-    <div *ngFor="
-        let question of examQuestion.slice(
+    <div *ngFor=" let question of examQuestion.slice(
           page.first,
           page.first + questionsPerPage
         );
@@ -38,7 +37,7 @@
       
       <hr class="border-t border-gray-300 mb-4" />
     
-      <i class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-2xl
+      <i class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-xl
          text-primaryColor hover:text-yellow-600 transition"
         (click)="openModal(question.id)"
         title="Reportar pregunta">
@@ -65,7 +64,8 @@
           }
         </li>
       </ul>
-      <i class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
+
+      <i *ngIf="!isNotAuth" class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
         [ngClass]="{
           'text-gray-400': !isQuestionSaved(question.id),
           'text-primaryColor': isQuestionSaved(question.id)

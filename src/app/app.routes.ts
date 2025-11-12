@@ -17,7 +17,6 @@ import { PrivacyPolicyComponent } from './components/welcome/privacy-policy/priv
 import { CheckExamComponent } from './pages/check-exam/check-exam.component';
 import { ReviewTestComponent } from './pages/review-test/review-test.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { HighlightsComponent } from './pages/highlights/highlights.component';
 import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
 import { RecoveryPasswordComponent } from './pages/auth/recovery-password/recovery-password.component';
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
@@ -77,12 +76,6 @@ export const routes: Routes = [
   },
 
 
-  //URL DE PREGUNTAS DESTACADAS
-  {
-     path:'preguntas-destacadas', component: HighlightsComponent, canActivate:[userAuthGuard]
-  },
-
-
   //URL DE REPASO
   {
     path: 'review-test', component: ReviewTestComponent, canActivate: [userAuthGuard]
@@ -100,7 +93,7 @@ export const routes: Routes = [
 
   //URL DE PREGUNTAS GUARDADAS
   {
-    path: 'preguntas-guardadas', component: SavedQuestionsComponent
+    path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
   },
 
 

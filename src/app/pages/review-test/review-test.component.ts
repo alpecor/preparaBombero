@@ -33,13 +33,17 @@ export class ReviewTestComponent {
   isCorrected: boolean = false; // Controla si la pregunta ha sido corregida
   quizResult: string = ""; // Controla si la pregunta ha sido corregida
 
+  savedQuestions = [];  // ids de preguntas guardadas
+
 
   //************************* ngOnInit ****************************//
   ngOnDestroy() {
     this.localStorageService.removeItem('examQuestions');
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    // aqui obtenemos las preguntas guardadas
+    this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
     //aqui se cargan un arrya con todas las preguntas a responder y como respuesta null,
     //a la espera de que el user marque una respuesta
     this.userResponses = this.examQuestion.map((question: any) => {
@@ -195,6 +199,28 @@ export class ReviewTestComponent {
   progressText() {
     const startQuestion = this.page.page * this.questionsPerPage + 1;
     return `${startQuestion} de ${this.examQuestion.length}`;
+  }
+
+
+//************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
+
+  isQuestionSaved(id: number): boolean {
+    if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
+      return true
+    } else{
+      return false
+    }
+  }
+
+
+  async questionSaved(id: number): Promise<void> {
+    if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
+      await this.requestService.request('DELETE', `/quiz/${id}/favorite`,{},{}, true);
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
+    } else{
+      await this.requestService.request('POST', `/quiz/favorite`,{quizId: id},{}, true);
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true); 
+    }
   }
 
 
