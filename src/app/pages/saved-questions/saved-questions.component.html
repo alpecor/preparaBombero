@@ -4,114 +4,177 @@
   Preguntas guardadas
 </h1>
 
-<!--------------- Añadir preguntas aquí ---------------->
-  <div class="container mx-auto mt-8 max-w-2xl">
-    <div
-      class="question-block mb-12 relative"
-      *ngFor="let question of savedQuestions; let i = index"
-    >
-      <h2 class="text-lg font-medium mb-2">
-        Tema - {{ question.topicTitle }}
-      </h2>
-      <div class="mb-4 p-2 bg-gray-100 rounded-md" style="margin-right: 4rem">
-        <p>Pregunta {{ i + 1 }} - {{ question.title }}</p>
+<!-- PANEL NARANJA SOLO VISUAL -->
+<div class="w-full bg-primaryColor shadow-sm mb-8">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="pt-3 pb-4 flex flex-wrap items-end justify-center gap-4">
+      <!-- Tema -->
+      <div class="flex flex-col items-center">
+        <label class="mb-2 text-white font-semibold text-base text-center">
+          Tema
+        </label>
+        <select
+          class="h-11 px-3 rounded-lg border-0 bg-white/95 text-sm text-gray-900
+                 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
+        >
+          <option>Todos los temas</option>
+        </select>
       </div>
+
+      <!-- Botón buscar -->
+      <button
+        type="button"
+        class="h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold 
+          text-primaryColor hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+        Buscar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PREGUNTAS -->
+<div class="flex justify-center p-4">
+  <div class="w-full max-w-3xl">
+
+    <div
+      *ngFor="let question of savedQuestions; let i = index"
+      class="p-6 mb-12 border rounded-xl bg-gray-50 relative"
+    >
+      <!-- tema -->
+      <h2 class="text-lg font-semibold mb-2">
+        Tema - {{ question.topicTitle || 'Sin tema asociado todavía' }}
+      </h2>
+      <!-- título -->
+      <h2 class="text-lg font-semibold mb-2">
+        {{ i + 1 }}. {{ question.title }}
+      </h2>
+
+      <!-- línea separadora -->
+      <hr class="border-t border-gray-300 mb-4" />
+
+      <!-- icono de información respuesta correcta (solo si está corregida) -->
       @if (question.isCorrected) {
         <i
           title="Ver motivo"
-          class="fa-solid fa-circle-info fa-lg absolute top-[calc(50%-23px)] right-7"
-          style="color: #DE9A17; cursor: pointer;"
+          class="fa-solid fa-circle-info absolute top-1 right-2 cursor-pointer text-xl text-primaryColor hover:text-yellow-600 transition"
           (click)="showJustification(question.id, !question.showJustification)"
-        >
-        </i>
+        ></i>
       }
+
+      <!-- icono de quitar de guardadas -->
+      <i
+        class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl text-primaryColor"
+        (click)="deleteSavedQuestion(question.id)"
+        title="Quitar pregunta guardada"
+      ></i>
+
+      <!-- respuestas -->
       <ul class="list-none space-y-2">
-        <li >
-          @if (question.option1 !="") {
+        @if (question.option1 != '') {
+          <li>
             <label class="flex items-center space-x-3">
               <input
                 type="radio"
                 class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [value]="question.option1"
                 [disabled]="question.isCorrected"
-                [checked]="question.isCorrected && question.optionSelected== question.option1"
+                [checked]="question.isCorrected && question.optionSelected == question.option1"
                 (click)="handleButtonClick(question.id, question.option1)"
               />
-              <span [ngClass]="{
-                'text-green-500': question.isCorrected && question.option1 === question.correctAnswer,
-                'text-red-500': question.isCorrected && question.option1 !== question.correctAnswer
-              }">
+              <span
+                [ngClass]="{
+                  'text-green-500': question.isCorrected && question.option1 === question.correctAnswer,
+                  'text-red-500': question.isCorrected && question.option1 !== question.correctAnswer
+                }"
+                class="text-gray-700"
+              >
                 {{ question.option1 }}
               </span>
             </label>
-          }
-          @if (question.option2 !="") {
+          </li>
+        }
+
+        @if (question.option2 != '') {
+          <li>
             <label class="flex items-center space-x-3">
               <input
                 type="radio"
                 class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [value]="question.option2"
                 [disabled]="question.isCorrected"
                 [checked]="question.isCorrected && question.optionSelected == question.option2"
                 (click)="handleButtonClick(question.id, question.option2)"
               />
-              <span [ngClass]="{
-                'text-green-500': question.isCorrected && question.option2 === question.correctAnswer,
-                'text-red-500': question.isCorrected && question.option2 !== question.correctAnswer
-              }">
+              <span
+                [ngClass]="{
+                  'text-green-500': question.isCorrected && question.option2 === question.correctAnswer,
+                  'text-red-500': question.isCorrected && question.option2 !== question.correctAnswer
+                }"
+                class="text-gray-700"
+              >
                 {{ question.option2 }}
               </span>
             </label>
-          }
-          @if (question.option3 !="") {
+          </li>
+        }
+
+        @if (question.option3 != '') {
+          <li>
             <label class="flex items-center space-x-3">
               <input
                 type="radio"
                 class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [value]="question.option3"
                 [disabled]="question.isCorrected"
                 [checked]="question.isCorrected && question.optionSelected == question.option3"
                 (click)="handleButtonClick(question.id, question.option3)"
               />
-              <span [ngClass]="{
-                'text-green-500': question.isCorrected && question.option3 === question.correctAnswer,
-                'text-red-500': question.isCorrected && question.option3 !== question.correctAnswer
-              }">
+              <span
+                [ngClass]="{
+                  'text-green-500': question.isCorrected && question.option3 === question.correctAnswer,
+                  'text-red-500': question.isCorrected && question.option3 !== question.correctAnswer
+                }"
+                class="text-gray-700"
+              >
                 {{ question.option3 }}
               </span>
             </label>
-          }
-          @if (question.option4 !="") {
+          </li>
+        }
+
+        @if (question.option4 != '') {
+          <li>
             <label class="flex items-center space-x-3">
               <input
                 type="radio"
                 class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [value]="question.option4"
                 [disabled]="question.isCorrected"
                 [checked]="question.isCorrected && question.optionSelected == question.option4"
                 (click)="handleButtonClick(question.id, question.option4)"
               />
-              <span [ngClass]="{
-                'text-green-500': question.isCorrected && question.option4 === question.correctAnswer,
-                'text-red-500': question.isCorrected && question.option4 !== question.correctAnswer
-              }">
+              <span
+                [ngClass]="{
+                  'text-green-500': question.isCorrected && question.option4 === question.correctAnswer,
+                  'text-red-500': question.isCorrected && question.option4 !== question.correctAnswer
+                }"
+                class="text-gray-700"
+              >
                 {{ question.option4 }}
               </span>
             </label>
-          }
-        </li>
-        <!-- Mostrar el motivo condicionalmente -->
-        <div *ngIf="question.showJustification" class="mt-4 p-4 bg-gray-200 rounded">
-          <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
-          <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
-        </div>
+          </li>
+        }
       </ul>
-      <i class="text-primaryColor fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
-        (click)="deleteSavedQuestion(question.id)"
-        title="Quitar pregunta guardada">
-      </i>
+
+      <!-- motivo -->
+      <div
+        *ngIf="question.showJustification"
+        class="mt-4 p-4 bg-gray-200 rounded"
+      >
+        <h1 class="text-center font-bold mb-2">Motivo de respuesta correcta:</h1>
+        <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
+      </div>
     </div>
   </div>
-  
+</div>
 
 <app-footer />

@@ -141,6 +141,7 @@ export class QuestionsComponent implements OnInit {
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
     } else{
       await this.requestService.request('POST', `/quiz/favorite`,{quizId: id},{}, true);
+      alert("se ha guardado la pregunta seleccionada.");
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true); 
     }
   }
