@@ -1,12 +1,24 @@
-<!-- // TODO
-1. Obtener el topicId de la url y hacerme una petición a POST /quiz/generate para obtener las preguntas del examen
-2. Cuando se pase de paginación, se debe almacenar las respuestas seleccionadas (esto almacenarlo tmben localStorage)
-3. Al enviar el examen, te tiene que llevar a una nueva vista que hagas y enviarle por body(no por la url) las preguntas seleccionadas, esta nueva pagina hará una petición a /POST /quiz/check para obtener la nota
-4. Hacer una petición a POST /report cuando se envíe un reporte (está hecho pero da 404)
--->
-
 <!--------------- Añadir header aquí ------------>
 <app-header />
+
+<!-- Toast para mensaje de preguntas guardadas -->
+<div
+  *ngIf="showSavedToast"
+  class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
+  [ngClass]="{
+    'bg-primaryColor text-white': toastType === 'success',
+    'bg-red-100 text-red-800': toastType === 'error'
+  }"
+>
+  <i class="fa-solid"
+    [ngClass]="{
+      'fa-check-circle': toastType === 'success',
+      'fa-circle-xmark': toastType === 'error'
+    }"
+  ></i>
+  <span>{{ toastMessage }}</span>
+</div>
+
 
 <!--------------- Añadir barra de progreso aquí ------------>
 <div class="flex justify-center">
@@ -65,7 +77,7 @@
         </li>
       </ul>
 
-      <i *ngIf="!isNotAuth" class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
+      <i class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
         [ngClass]="{
           'text-gray-400': !isQuestionSaved(question.id),
           'text-primaryColor': isQuestionSaved(question.id)

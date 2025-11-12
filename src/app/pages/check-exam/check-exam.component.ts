@@ -33,14 +33,30 @@ export class CheckExamComponent {
     penaltyThree: 0,
     penaltyFour: 0
   };
+  savedQuestions = [];  // ids de preguntas guardadas
+  //variables para mostrar mensaje de pregunta guardada
+  showSavedToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
+  //variables para saber si esta subscrito el usuario y poder guardar preguntas
+  isSubscribed = false;
+  
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Obtener las preguntas corregidas y las respuestas del usuario desde el localStorage
     this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') ?? [];
     this.userAnswers = this.localStorageService.getItem('userAnswer') ?? [];
 
     // Obtener resultado del examen desde el localStorage
     this.examSummary = this.localStorageService.getItem('examSummary') ?? { correctAnswers: 0, incorrectAnswers: 0, unansweredQuestions: 0 };
+
+    //saber si el user esta subscrito para acceder a funcionalidad de preguntas guardadas
+    try {
+      const user = await this.requestService.request('GET', '/user', {}, {}, true);
+      this.isSubscribed = user.subscribed === true;
+    } catch (err) {
+      this.isSubscribed = false;
+    }
 
     // Combinar las respuestas del usuario con las preguntas corregidas
     this.correctedExamQuestions = this.correctedExamQuestions.map((question: any) => {
@@ -129,4 +145,45 @@ export class CheckExamComponent {
         console.log(error);
       }
     }
+
+
+    //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
+  
+
+  isQuestionSaved(id: number): boolean {
+    if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
+      return true
+    } else{
+      return false
+    }
+  }
+
+
+  async questionSaved(id: number): Promise<void> {
+    if (!this.isSubscribed) {
+      this.showToast('Esta es una funcionalidad PREMIUM solo para usuarios subscritos.','error');
+      return;
+    }
+
+    if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
+      await this.requestService.request('DELETE', `/quiz/${id}/favorite`,{},{}, true);
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
+      this.showToast('Se ha quitado la pregunta de la sección preguntas guardadas.', 'error');
+    } else{
+      await this.requestService.request('POST', `/quiz/favorite`,{quizId: id},{}, true);
+      this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true); 
+      this.showToast('Se ha guardado la pregunta en la sección preguntas guardadas.', 'success');
+    }
+  }
+
+
+  private showToast(msg: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = msg;
+    this.toastType = type;
+    this.showSavedToast = true;
+
+    setTimeout(() => {
+      this.showSavedToast = false;
+    }, 2500); //el mensaje se queda 2 segundo y medio
+  }
 }

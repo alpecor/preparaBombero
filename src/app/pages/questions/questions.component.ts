@@ -29,10 +29,15 @@ export class QuestionsComponent implements OnInit {
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
   userResponses: { quizId: number, optionSelected: string }[] = []; // Array para almacenar las respuestas del usuario
-  savedQuestions = [];  // ids de preguntas guardadas
   page: any = {page: 0, first:0}
   questionsPerPage:any = 20;
-  isNotAuth: boolean = this.authService.isNotAuth();
+  savedQuestions = [];  // ids de preguntas guardadas
+  //variables para mostrar mensaje de pregunta guardada
+  showSavedToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
+  //variables para saber si esta subscrito el usuario y poder guardar preguntas
+  isSubscribed = false;
 
 
 
@@ -45,9 +50,16 @@ export class QuestionsComponent implements OnInit {
 
   async ngOnInit(){
     
-    // aqui obtenemos las preguntas guardadas
-    if(!this.isNotAuth){
+    // aqui obtenemos las preguntas guardadas si el usuario está subscrito
+    if(this.isSubscribed){
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
+    }
+
+    try {
+      const user = await this.requestService.request('GET', '/user', {}, {}, true);
+      this.isSubscribed = user.subscribed === true;
+    } catch (err) {
+      this.isSubscribed = false;
     }
   
     
@@ -125,6 +137,7 @@ export class QuestionsComponent implements OnInit {
 
 
   //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
+  
 
   isQuestionSaved(id: number): boolean {
     if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
@@ -136,16 +149,32 @@ export class QuestionsComponent implements OnInit {
 
 
   async questionSaved(id: number): Promise<void> {
+    if (!this.isSubscribed) {
+      this.showToast('Esta es una funcionalidad PREMIUM solo para usuarios subscritos.','error');
+      return;
+    }
+
     if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
       await this.requestService.request('DELETE', `/quiz/${id}/favorite`,{},{}, true);
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
+      this.showToast('Se ha quitado la pregunta de la sección preguntas guardadas.', 'error');
     } else{
       await this.requestService.request('POST', `/quiz/favorite`,{quizId: id},{}, true);
-      alert("se ha guardado la pregunta seleccionada.");
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true); 
+      this.showToast('Se ha guardado la pregunta en la sección preguntas guardadas.', 'success');
     }
   }
 
+
+  private showToast(msg: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = msg;
+    this.toastType = type;
+    this.showSavedToast = true;
+
+    setTimeout(() => {
+      this.showSavedToast = false;
+    }, 2500); //el mensaje se queda 2 segundo y medio
+  }
 
 
   //************************* FUNCIONES PARA CONTROLAR LA PAGINACIÓN Y PREGUNTAS POR PÁGINA ****************************//
