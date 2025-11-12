@@ -14,10 +14,12 @@
           Tema
         </label>
         <select
-          class="h-11 px-3 rounded-lg border-0 bg-white/95 text-sm text-gray-900
-                 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
+          [(ngModel)]="topicSelected"
+          class="h-11 px-3 rounded-lg border-0 bg-white/95 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
         >
-          <option>Todos los temas</option>
+          <option value="">Todos los temas</option>
+          <option *ngFor="let topic of topics" [value]="topic">{{ topic }}</option>
+          
         </select>
       </div>
 
@@ -26,6 +28,7 @@
         type="button"
         class="h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold 
           text-primaryColor hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+        (click)="loadSavedQuestions()"
       >
         <i class="fa-solid fa-magnifying-glass"></i>
         Buscar
@@ -44,7 +47,7 @@
     >
       <!-- tema -->
       <h2 class="text-lg font-semibold mb-2">
-        Tema - {{ question.topicTitle || 'Sin tema asociado todavía' }}
+        {{ question.topicTitle || 'Sin tema asociado todavía' }}
       </h2>
       <!-- título -->
       <h2 class="text-lg font-semibold mb-2">

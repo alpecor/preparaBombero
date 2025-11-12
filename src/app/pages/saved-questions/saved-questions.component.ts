@@ -21,6 +21,8 @@ type BlockKey = 'all' | 'leg' | 'esp' | 'otr';
 export class SavedQuestionsComponent implements OnInit {
 
   savedQuestions: any[] = [];
+  topics = new Set();
+  topicSelected: string = '';
 
   constructor(private requestService: RequestService,private localStorageService: LocalStorageService) {}
 
@@ -35,8 +37,11 @@ export class SavedQuestionsComponent implements OnInit {
 
   async loadSavedQuestions() {
     // Primero cargamos las preguntas reportadas
-    this.savedQuestions= await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
-
+    this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
+    this.topics = new Set(this.savedQuestions.map( (x:any) => x.topicTitle));
+    if (this.topicSelected != ''){
+      this.savedQuestions = this.savedQuestions.filter( (x:any) => x.topicTitle == this.topicSelected); 
+    }
     this.savedQuestions.map((x:any)=>x.isCorrected = false);
     this.savedQuestions.map((x:any)=>x.showJustification = false);
     this.savedQuestions.map((x:any)=>x.optionSelected = null);
