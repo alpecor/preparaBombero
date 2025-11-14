@@ -15,6 +15,11 @@ export class topicsComponent implements OnInit {
   @Input() topics:any;
   @Input() margin:number= -1;
 
+  //variables para mostrar mensaje de pregunta guardada
+  showSavedToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
+
   constructor(private router: Router, private localStorageService:LocalStorageService, private requestService: RequestService){}
   async ngOnInit() {
    
@@ -82,16 +87,16 @@ export class topicsComponent implements OnInit {
     try {
        // Realizar petición para saber si el usuario es demo
        const user = await this.requestService.request('GET', `/user`,{},{}, true);
-       const subscribed = user.subscribed == true;
-      if(!subscribed && topicId !== 662){
-        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-        return;
-      }
+      // const subscribed = user.subscribed == true;
+      // if(!subscribed && topicId !== 662){
+      //   alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+      //   return;
+      // }
 
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
       if (questions.length === 0) {
-        alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
+        this.showToast('El temario seleccionado no tiene preguntas todavía para realizar un examen.', 'error');
         return;
       }
       // Limitar las preguntas a un máximo de 100
@@ -108,21 +113,25 @@ export class topicsComponent implements OnInit {
   }
 
 
+  //************************* FUNCION PRA TOAST ****************************//
+  showToast(msg: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = msg;
+    this.toastType = type;
+    this.showSavedToast = true;
+
+    setTimeout(() => {
+      this.showSavedToast = false;
+    }, 2500); //el mensaje se queda 2 segundo y medio
+  }
+
+
   // Función que se llama al hacer clic en el botón para empezar el repaso
   async startReviewForSpecificTopic(topicId:number) {
     try{
-      const user = await this.requestService.request('GET', `/user`,{},{}, true);
-      const subscribed = user.subscribed == true;
-
-      if(!subscribed && topicId !== 662){
-        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-        return;
-      }
-
       // Hacer la solicitud POST al backend
       const questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds: [topicId]},{});
       if (questions.length === 0) {
-        alert("No hay suficientes preguntas para generarte un repaso.");
+        this.showToast('El temario seleccionado no tiene preguntas todavía para realizar un repaso.', 'error');
         return;
       }
       //Guardar las preguntas generadas en localStorage

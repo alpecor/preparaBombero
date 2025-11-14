@@ -1,5 +1,24 @@
 <app-header />
 
+<!-- Toast para mensaje de preguntas guardadas -->
+<div
+  *ngIf="showSavedToast"
+  class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
+  [ngClass]="{
+    'bg-primaryColor text-white': toastType === 'success',
+    'bg-red-100 text-red-800': toastType === 'error'
+  }"
+>
+  <i class="fa-solid"
+    [ngClass]="{
+      'fa-check-circle': toastType === 'success',
+      'fa-circle-xmark': toastType === 'error'
+    }"
+  ></i>
+  <span>{{ toastMessage }}</span>
+</div>
+
+
 <h1 class="text-center font-bold text-2xl my-6">
   Preguntas guardadas
 </h1>
@@ -18,7 +37,11 @@
           class="h-11 px-3 rounded-lg border-0 bg-white/95 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-white min-w-64"
         >
           <option value="">Todos los temas</option>
-          <option *ngFor="let topic of topics" [value]="topic">{{ topic }}</option>
+          <ng-container *ngFor="let topic of topics">
+            <option *ngIf="topic" [value]="topic">
+              {{ topic }}
+            </option>
+          </ng-container>
           
         </select>
       </div>
@@ -46,7 +69,9 @@
       class="p-6 mb-12 border rounded-xl bg-gray-50 relative"
     >
       <!-- tema -->
-      <h2 class="text-lg font-semibold mb-2">
+      <h2
+        class="text-lg font-semibold mb-2 text-primaryColor
+              underline underline-offset-4 decoration-2 decoration-primaryColor">
         {{ question.topicTitle || 'Sin tema asociado todavía' }}
       </h2>
       <!-- título -->
@@ -167,15 +192,20 @@
           </li>
         }
       </ul>
-
+      
       <!-- motivo -->
-      <div
-        *ngIf="question.showJustification"
-        class="mt-4 p-4 bg-gray-200 rounded"
-      >
-        <h1 class="text-center font-bold mb-2">Motivo de respuesta correcta:</h1>
-        <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
-      </div>
+      @if (question.showJustification) {
+        @if ((question.justification ?? '').trim().length > 0) {
+          <div class="mt-4 p-4 bg-gray-200 rounded">
+            <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
+            <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
+          </div>
+        } @else {
+          <div class="mt-4 p-4 bg-yellow-50 text-yellow-900 rounded">
+            Esta pregunta todavía no tiene asociada el motivo de la respuesta correcta, seguimos trabajando en ello.
+          </div>
+        }
+      }
     </div>
   </div>
 </div>

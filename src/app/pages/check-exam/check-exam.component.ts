@@ -17,15 +17,14 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CheckExamComponent {
 
-  constructor(private localStorageService: LocalStorageService, private requestService:RequestService, private authService: AuthService) { }
-
-  not_auth = this.authService.isNotAuth();
+  constructor(private localStorageService: LocalStorageService, private requestService:RequestService) { }
 
   correctedExamQuestions: any[] = []; //aquí se almacenarán las preguntas corregidas
   userAnswers: any[] = []; //aquí se almacenarán las respuestas seleccionadas por el usuario
   examSummary: { correctAnswers: number; incorrectAnswers: number; unansweredQuestions: number } | null = null; // Resumen del examen
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
+
   // Variables para las notas calculadas
   scores: { noPenalty: number; penaltyTwo: number; penaltyThree: number; penaltyFour: number } = {
     noPenalty: 0,
@@ -33,15 +32,19 @@ export class CheckExamComponent {
     penaltyThree: 0,
     penaltyFour: 0
   };
+
   savedQuestions = [];  // ids de preguntas guardadas
+
   //variables para mostrar mensaje de pregunta guardada
   showSavedToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  
   //variables para saber si esta subscrito el usuario y poder guardar preguntas
   isSubscribed = false;
   
 
+  //************************* FUNCION ngOnInit ****************************//
   async ngOnInit(): Promise<void> {
     // Obtener las preguntas corregidas y las respuestas del usuario desde el localStorage
     this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') ?? [];
@@ -72,27 +75,32 @@ export class CheckExamComponent {
     this.calculateScores();
   }
 
-  // Función para determinar si una opción es la correcta
+
+  //************************* FUNCION PARA DETERMINAR SI UNA RESPUESTA ES CORRECTA ****************************//
   isCorrect(question: any, option: string): boolean {
     return question.result === option;
   }
 
-  // Función para determinar si es la opción seleccionada por el usuario y si está mal
+
+  //************************* FUNCION PARA DETERMINAR SI ES LA OPCION SELECCIONADA POR EL USUARIO Y SI ESTA MAL ****************************//
   isUserSelectedAndIncorrect(question: any, option: string): boolean {
     return question.userAnswer === option && question.status === 'fail';
   }
 
-   // Función para determinar si es la opción seleccionada por el usuario y si está bien
-   isUserSelectedAndCorrect(question: any, option: string): boolean {
+
+  //************************* FUNCION PARA DETERMINAR SI ES LA OPCION SELECCIONADA POR EL USUARIO Y SI ESTA BIEN ****************************//
+  isUserSelectedAndCorrect(question: any, option: string): boolean {
     return question.userAnswer === option && question.status === 'success';
   }
 
-  // Función para mostras justifiación de la pregunta
+
+  //************************* FUNCION PARA MOSTRAR JUSTIFICACION DE PREGUNTA ****************************//
   toggleJustification(question: any): void {
     question.showJustification = !question.showJustification;
   }
 
-  // Función para calcular las notas del examen
+
+  //************************* FUNCION PARA CALCULAR NOTAS DEL EXAMEN ****************************//
   calculateScores(): void {
     const totalQuestions = this.correctedExamQuestions.length;
     const { correctAnswers, incorrectAnswers } = this.examSummary ?? { correctAnswers: 0, incorrectAnswers: 0 };
@@ -107,49 +115,49 @@ export class CheckExamComponent {
       this.scores.penaltyFour = Math.max(0, ((correctAnswers - Math.floor(incorrectAnswers / 4)) / totalQuestions) * 10);
     }
   }
-
-    //************************* FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL DE REPORTE ****************************//
-
-    openModal(questionId:number) {
-      this.idReportedQuestion = questionId; // Almacena el ID de la pregunta seleccionada
-      const modalReport = document.getElementById('reportModal');
-      const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement);
-      if (modalReport) {
-        modalReport.classList.remove('hidden');
-        reportReason.value = ''; // Limpiar el campo del motivo del reporte
-      }
-    }
-
-    closeModal() {
-      this.idReportedQuestion = null; // Limpiar el ID seleccionado
-      const modalReport = document.getElementById('reportModal');
-      if (modalReport) {
-        modalReport.classList.add('hidden');
-      }
-    }
-
-    async sendReport() {
-      // Obtener el motivo del reporte desde el textarea
-      const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
-      // Verifica que el campo no esté vacío
-      if (!reportReason || reportReason.trim().length === 0) {
-        alert("El campo del motivo no puede estar vacío");
-        return;
-      }
-      // realizar la petición del reporte
-      try{
-        this.reportedQuestion = await this.requestService.request('POST', `/report`,{reason: reportReason, quizId:this.idReportedQuestion},{}, true);
-        this.closeModal();
-        alert("se ha enviado el reporte de la pregunta.");
-      }catch(error: any){
-        console.log(error);
-      }
-    }
-
-
-    //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
   
 
+  //************************* FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL DE REPORTE ****************************//
+  openModal(questionId:number) {
+    this.idReportedQuestion = questionId; // Almacena el ID de la pregunta seleccionada
+    const modalReport = document.getElementById('reportModal');
+    const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement);
+    if (modalReport) {
+      modalReport.classList.remove('hidden');
+      reportReason.value = ''; // Limpiar el campo del motivo del reporte
+    }
+  }
+
+
+  closeModal() {
+    this.idReportedQuestion = null; // Limpiar el ID seleccionado
+    const modalReport = document.getElementById('reportModal');
+    if (modalReport) {
+      modalReport.classList.add('hidden');
+    }
+  }
+
+
+  async sendReport() {
+    // Obtener el motivo del reporte desde el textarea
+    const reportReason = (document.getElementById('reportReason') as HTMLTextAreaElement).value;
+    // Verifica que el campo no esté vacío
+    if (!reportReason || reportReason.trim().length === 0) {
+      alert("El campo del motivo no puede estar vacío");
+      return;
+    }
+    // realizar la petición del reporte
+    try{
+      this.reportedQuestion = await this.requestService.request('POST', `/report`,{reason: reportReason, quizId:this.idReportedQuestion},{}, true);
+      this.closeModal();
+      alert("se ha enviado el reporte de la pregunta.");
+    }catch(error: any){
+      console.log(error);
+    }
+  }
+
+
+  //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
   isQuestionSaved(id: number): boolean {
     if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
       return true
@@ -177,6 +185,7 @@ export class CheckExamComponent {
   }
 
 
+//************************* FUNCION PARA MOSTRAR TOAST ****************************//
   private showToast(msg: string, type: 'success' | 'error' = 'success') {
     this.toastMessage = msg;
     this.toastType = type;
@@ -186,4 +195,6 @@ export class CheckExamComponent {
       this.showSavedToast = false;
     }, 2500); //el mensaje se queda 2 segundo y medio
   }
+
+
 }

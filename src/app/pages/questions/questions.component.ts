@@ -19,12 +19,7 @@ import {Title} from "@angular/platform-browser";
 })
 export class QuestionsComponent implements OnInit {
 
-  constructor(private titleService:Title, private requestService:RequestService, private localStorageService: LocalStorageService, private router: Router, private authService: AuthService) {
-    this.titleService.setTitle("PreparaBombero - " + this.localStorageService.getItem('examenName')?.examenName);
-  }
-
-  //************************* DEFINICIÓN DE VARIABLES ****************************//
-
+  //************************* VARIABLES ****************************//
   examQuestion:any = this.localStorageService.getItem("examQuestions"); //aquí se guardan las preguntas del examen
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
@@ -40,34 +35,36 @@ export class QuestionsComponent implements OnInit {
   isSubscribed = false;
 
 
+  //************************* CONSTRUCTOR ****************************//
+  constructor(private titleService:Title, private requestService:RequestService, private localStorageService: LocalStorageService, private router: Router, private authService: AuthService) {
+    this.titleService.setTitle("PreparaBombero - " + this.localStorageService.getItem('examenName')?.examenName+" examen bombero");
+  }
 
-  //************************* ngOnInit ****************************//
+
+  //************************* ngOnInit DESTROY ****************************//
   ngOnDestroy() {
     this.localStorageService.removeItem('examQuestions');
     this.localStorageService.removeItem('examenName');
     this.titleService.setTitle("PreparaBombero");
   }
 
+
+  //************************* ngOnInit ****************************//
   async ngOnInit(){
-    
     // aqui obtenemos las preguntas guardadas si el usuario está subscrito
     if(this.isSubscribed){
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
     }
-
     try {
       const user = await this.requestService.request('GET', '/user', {}, {}, true);
       this.isSubscribed = user.subscribed === true;
     } catch (err) {
       this.isSubscribed = false;
-    }
-  
-    
+    } 
     if (!this.examQuestion || this.examQuestion.length === 0) {
       location.href="/";
       return;
     }
-
     // Inicializar userResponses con el id de cada pregunta y optionSelected como vacío
     this.userResponses = this.examQuestion.map((question: any) => {
       return {
@@ -75,7 +72,6 @@ export class QuestionsComponent implements OnInit {
         optionSelected: null // Inicialmente vacío
       };
     });
-
     //para recorrer las opciones de respuestas
     this.examQuestion = this.examQuestion.map((question:any) => {
       return {
@@ -86,19 +82,14 @@ export class QuestionsComponent implements OnInit {
   }
 
 
-
-
-  //************************* FUNCIONES PARA RECOGER LAS OPCIONES SEÑALADAS EN EL EXAMEN ****************************//
-
+  //************************* FUNCION PARA RECOGER LAS OPCIONES SEÑALADAS EN EL EXAMEN ****************************//
   onSelectAnswer(questionIndex: number, answer: string) {
     // Actualizar la opción seleccionada en userResponses
     this.userResponses[questionIndex].optionSelected = answer;
   }
 
 
-
   //************************* FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL DE REPORTE ****************************//
-
   openModal(questionId:number) {
     this.idReportedQuestion = questionId; // Almacena el ID de la pregunta seleccionada
     const modalReport = document.getElementById('reportModal');
@@ -109,6 +100,7 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+
   closeModal() {
     this.idReportedQuestion = null; // Limpiar el ID seleccionado
     const modalReport = document.getElementById('reportModal');
@@ -116,6 +108,7 @@ export class QuestionsComponent implements OnInit {
       modalReport.classList.add('hidden');
     }
   }
+
 
   async sendReport() {
     // Obtener el motivo del reporte desde el textarea
@@ -137,8 +130,6 @@ export class QuestionsComponent implements OnInit {
 
 
   //************************* FUNCIONES PARA GUARDAR PREGUNTA DESTACADA ****************************//
-  
-
   isQuestionSaved(id: number): boolean {
     if(this.savedQuestions.filter((x: any)=> x.id == id).length > 0){
       return true
@@ -166,7 +157,8 @@ export class QuestionsComponent implements OnInit {
   }
 
 
-  private showToast(msg: string, type: 'success' | 'error' = 'success') {
+  //************************* FUNCION PRA TOAST ****************************//
+  showToast(msg: string, type: 'success' | 'error' = 'success') {
     this.toastMessage = msg;
     this.toastType = type;
     this.showSavedToast = true;
@@ -178,17 +170,18 @@ export class QuestionsComponent implements OnInit {
 
 
   //************************* FUNCIONES PARA CONTROLAR LA PAGINACIÓN Y PREGUNTAS POR PÁGINA ****************************//
-
   onPageChange($event: PaginatorState) {
     this.page = $event;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
 
   progress() {
     const endQuestion = Math.min((this.page.page + 1) * this.questionsPerPage, this.examQuestion.length);
     const progress = (endQuestion / this.examQuestion.length) * 100;
     return Math.min(progress, 100); // para asegurar de que el valor no exceda 100%
   }
+
 
   progressText() {
     const startQuestion = this.page.page  * this.questionsPerPage + 1;
@@ -197,16 +190,14 @@ export class QuestionsComponent implements OnInit {
   }
 
 
-
-
-  //************************* FUNCIÓNES PARA EL ENVÍO DEL TEST ****************************//
-
+  //************************* FUNCIÓNES PARA APERTURA/CIERRE DEL MODAL Y ENVÍO DEL EXAMEN ****************************//
   openModalTest() {
     const modalTest = document.getElementById('finishTest');
     if (modalTest) {
       modalTest.classList.remove('hidden');
     }
   }
+
 
   closeModalTest() {
     const modalTest = document.getElementById('finishTest');
@@ -215,18 +206,16 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+
   async sendTest() {
     try{
       // Encapsula el array userResponses dentro de un objeto con la clave 'quizzes'
       const payload = {quizzes: this.userResponses, type: "EXAM"};
-
       // Hacer la petición POST al backend para corregir el examen
       const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
-
       // Guardar las preguntas corregidas y las respuestas del usuario en el localStorage
       this.localStorageService.setItem('correctedExamQuestions', response.quizzes);
       this.localStorageService.setItem('userAnswer', this.userResponses);
-
       // Guardar el resumen del resultado en el localStorage
       const summary = {
         correctAnswers: response.success,
@@ -234,13 +223,10 @@ export class QuestionsComponent implements OnInit {
         unansweredQuestions: response.not_answered
       };
       this.localStorageService.setItem('examSummary', summary);
-
       // Redirigir al componente de chequeo de examen
       this.router.navigate(['/check-exam']);
-
       //eliminar del localStorage las preguntas del examen
       this.localStorageService.removeItem('examQuestions')
-
     }catch(error){
       console.log(error);
     }
@@ -249,5 +235,6 @@ export class QuestionsComponent implements OnInit {
       modalTest.classList.add('hidden');
     }
   }
+  
 
 }

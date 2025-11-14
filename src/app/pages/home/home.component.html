@@ -1,3 +1,18 @@
+<!-- Toast -->
+<div *ngIf="showToast"
+     class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
+     [ngClass]="{
+       'bg-primaryColor text-white': toastType === 'success',
+       'bg-red-100 text-red-800': toastType === 'error'
+     }">
+  <i class="fa-solid"
+     [ngClass]="{
+       'fa-check-circle': toastType === 'success',
+       'fa-circle-xmark': toastType === 'error'
+     }"></i>
+  <span>{{ toastMessage }}</span>
+</div>
+
 <!-- Para el footer -->
 <div class="flex flex-col h-screen">
   <!--------------- Añadir header aquí ---------------->
@@ -13,26 +28,18 @@
     <div class="space-y-6">
 
       <!--------------- Botones de Examen y Repaso ---------------->
-      @if (!not_auth) {
-        <div class="flex justify-center mt-8">
-          <div class="text-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-            <span class="font-medium">Debes de estar registrado para poder realizar examenes/repaso por temas, pero sí puedes realizar los de la carpeta "Exámenes"</span>
-          </div>
-        </div>
-      }
-
       <div class="flex justify-center">
         <div class="space-x-8">
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="startExam()"
-            [disabled]="!not_auth">
+            (click)="onStartExam()"
+            >
             Examen
           </button>
           <button
             class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="startReview()"
-            [disabled]="!not_auth">
+            (click)="onStartReview()"
+            >
             Repaso
           </button>
         </div>

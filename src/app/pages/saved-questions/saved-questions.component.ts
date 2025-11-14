@@ -20,21 +20,27 @@ type BlockKey = 'all' | 'leg' | 'esp' | 'otr';
 })
 export class SavedQuestionsComponent implements OnInit {
 
+  //************************* VARIABLES ****************************//
   savedQuestions: any[] = [];
   topics = new Set();
   topicSelected: string = '';
+  //variables para mostrar mensaje de pregunta guardada
+  showSavedToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
 
+
+  //************************* CONSTRUCTOR ****************************//
   constructor(private requestService: RequestService,private localStorageService: LocalStorageService) {}
 
 
+  //************************* ngOnInit ****************************//
   ngOnInit(): void {
     this.loadSavedQuestions();
   }
 
 
-
-  //************************* PETICIÓN PARA OBTENER PREGUNTAS GUARDADAS ****************************//
-
+  //************************* FUNCION PARA OBTENER PREGUNTAS GUARDADAS ****************************//
   async loadSavedQuestions() {
     // Primero cargamos las preguntas reportadas
     this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
@@ -45,18 +51,6 @@ export class SavedQuestionsComponent implements OnInit {
     this.savedQuestions.map((x:any)=>x.isCorrected = false);
     this.savedQuestions.map((x:any)=>x.showJustification = false);
     this.savedQuestions.map((x:any)=>x.optionSelected = null);
-    // Iteramos sobre cada pregunta reportada para añadir el título del tema (topic.title)
-    // for (let question of data) {
-    //   // Hacemos una petición para obtener el título del tema según el topicId de la pregunta
-    //   let topicData = null;
-    //   if (question.quiz.topicId != null) {
-    //     topicData = await this.requestService.request('GET', `/topic/${question.quiz.topicId}`, {}, {}, true);
-    //   }
-    //   // Añadimos el título del tema a la pregunta
-    //   question.quiz.topicTitle = topicData?.title ?? "Esta pregunta todavía no está asignada a ningún tema";
-    // }
-    // Asignamos los datos modificados a la propiedad this.questions
-    //this.questions = data;
   }
 
 
@@ -112,19 +106,29 @@ export class SavedQuestionsComponent implements OnInit {
   }
 
 
-  
-
- 
   //************************* FUNCIÓN PARA ELIMINAR LA PREGUNTA GUARDADA ****************************//
   async deleteSavedQuestion(id: number) {
     try{
       await this.requestService.request('DELETE', `/quiz/${id}/favorite`,{},{}, true);
       this.loadSavedQuestions();
-      alert("se ha eliminado la pregunta guardada.");
+      this.showToast('Se ha quitado la pregunta de la sección preguntas guardadas.', 'error');
     }catch(error: any){
       console.log(error);
     }
   }
+
+
+  /************************* FUNCION PARA MOSTRAR toast *********************/
+  showToast(msg: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = msg;
+    this.toastType = type;
+    this.showSavedToast = true;
+
+    setTimeout(() => {
+      this.showSavedToast = false;
+    }, 2500); //el mensaje se queda 2 segundo y medio
+  }
+
 
 
 }

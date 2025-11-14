@@ -17,45 +17,97 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HomeComponent implements OnInit {
 
+  //************************* VARIABLES ****************************//
   questions:string[] = []; //definir array donde guardaremos las preguntas
   not_auth: boolean = !this.authService.isNotAuth();
+  isSubscribed = false;
+  topics: any = {};
+  objectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+  // Toast
+  showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
 
+
+  //************************* CONSTRUCTOR ****************************//
   constructor(private router: Router, private authService: AuthService, private requestService: RequestService, private localStorageService: LocalStorageService){
   }
 
-  // Función que se llama al hacer clic en el botón para empezar el examen
-  async startExam() {
-    try{
-      const user = await this.requestService.request('GET', `/user`,{},{}, true);
-      const subscribed = user.subscribed == true;
 
-      // Validación de subscripción
-      const topicsSelected = this.localStorageService.getItem("topicsSelected");
-      if(!subscribed && topicsSelected?.filter((x: any) => x.id == 662).length <= 0){
-        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-        return;
-      }
-    }catch(error){
-      console.log(error);
+  //************************* ngOnInit ****************************//
+  async ngOnInit(): Promise<void> {
+    const modalShown = localStorage.getItem('modalShown');
+    if (!modalShown) {
+      this.openModalTest();  // Abre el modal si no se ha mostrado antes
+      localStorage.setItem('modalShown', 'true');  // Marca como mostrado
     }
-    // Obtener los temas seleccionados del localStorage
-    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+    try {
+      // pedimos info del user para saber si esta o no subscrito
+      let subscribed;
+      if (this.not_auth) {
+        const user = await this.requestService.request('GET', `/user`,{},{}, true);
+        this.isSubscribed = user.subscribed;
+      }
+      // Solicita los temas desde el servidor
+      this.topics = await this.requestService.request('GET', `/topic`,{},{}, true);
+
+      Object.keys(this.topics).forEach(key => {
+        // Iterando sobre el array correspondiente a cada clave
+        this.topics[key] = this.topics[key].map((x: any) => {
+          let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
+          if (topicSelected.length > 0) {
+            const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
+            if (topic.length > 0) {
+              x.selected = true;
+            } else {
+              x.selected = false; // En caso de que no esté seleccionado en localStorage
+            }
+          }
+          return x;
+        });
+      });
+    }catch(error: any){
+      this.router.navigate(['/error']);
+    }
+  }
 
 
-
-    if (!topicsSelected || topicsSelected.length === 0) {
-      alert("No hay temario seleccionado para realizar el examen.");
+  //************************* FUNCION PARA MOSTAR FUNCIONALIDAD PREMIUM EN EXAMEN Y REPASO ****************************//
+  onStartExam() {
+    if (!this.isSubscribed) {
+      this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar exámenes por temas.');
       return;
     }
+    this.startExam(); // tu función existente
+  }
 
+
+  onStartReview() {
+    if (!this.isSubscribed) {
+      this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar el repaso por temas.');
+      return;
+    }
+    this.startReview(); // tu función existente
+  }
+
+
+  //************************* FUNCION AL HACER CLICK EN EMPEZAR EXAMEN ****************************//
+  async startExam() {
+    // Obtener los temas seleccionados del localStorage
+    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+    if (!topicsSelected || topicsSelected.length === 0) {
+      this.showToastMsg('No hay temario seleccionado para realizar el examen.');
+      return;
+    }
     // Extraer los IDs de los temas seleccionados
     const topicIds = topicsSelected.map((topic: any) => topic.id);
-
     // Hacer la solicitud POST al backend
     try{
       this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{});
       if (this.questions.length === 0) {
-        alert("No hay suficientes preguntas para generarte un examen.");
+        this.showToastMsg('El temario seleccionado no tiene preguntas todavía para realizar un examen.');
         return;
       }
       //Guardar las preguntas generadas en localStorage
@@ -66,31 +118,34 @@ export class HomeComponent implements OnInit {
     }
   }
 
-   // función para manejar el clic en la flecha
-  async startExamForSpecificTopic(topicId: number) {
-    try {
-      // Realizar petición para saber si el usuario es demo
-      const user = await this.requestService.request('GET', `/user`, {}, {});
-      const subscribed = user.subscribed == true;
-      if(!subscribed && topicId !== 662){
-        alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-        return;
-      }
 
+  //************************* FUNCION PARA TOAST ****************************//
+  showToastMsg(msg: string, type: 'success' | 'error' = 'error') {
+    this.toastMessage = msg;
+    this.toastType = type;
+    this.showToast = true;
+    setTimeout(() => (this.showToast = false), 2500);
+  }
+
+
+  //************************* FUNCION AL HACER CLICK EN EXAMEN TEMA ESPECIFICO ****************************//
+  async startExamForSpecificTopic(topicId: number) {
+    if (!this.isSubscribed) {
+      this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar exámenes por tema.');
+      return;
+    }
+    try {
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
       if (questions.length === 0) {
-        alert("El temario seleccionado no tiene preguntas todavía para realizar un examen.");
+        this.showToastMsg('El temario seleccionado no tiene preguntas todavía para realizar un examen.');
         return;
       }
       // Limitar las preguntas a un máximo de 100
       const limitedQuestions = questions.slice(0, 100);
-
       // Guardar las preguntas limitadas en localStorage
       this.localStorageService.setItem("examQuestions", limitedQuestions);
-
       // Navegar a la vista del examen
-
       this.router.navigate(['/test']);
     } catch (error: any) {
       console.log(error);
@@ -98,33 +153,21 @@ export class HomeComponent implements OnInit {
   }
 
 
-
-
-   // Función que se llama al hacer clic en el botón para empezar el repaso
-   async startReview() {
-    const user = await this.requestService.request('GET', `/user`,{},{}, true);
-    const subscribed = user.subscribed == true;
-
+  //************************* FUNCION AL HACER CLICK EN EMPEZAR REPASO ****************************//
+  async startReview() {
     const topicsSelected = this.localStorageService.getItem("topicsSelected");
-    if(!subscribed && topicsSelected?.filter((x: any) => x.id == 662).length <= 0){
-      alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
-      return;
-    }
-
     // Obtener los temas seleccionados del localStorage
     if (!topicsSelected || topicsSelected.length === 0) {
-      alert("No hay temario seleccionado para realizar el repaso.");
+      this.showToastMsg('No hay temario seleccionado para realizar el repaso.');
       return;
     }
-
     // Extraer los IDs de los temas seleccionados
     const topicIds = topicsSelected.map((topic: any) => topic.id);
-
     // Hacer la solicitud POST al backend
     try{
       this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{});
       if (this.questions.length === 0) {
-        alert("No hay suficientes preguntas para generarte un repaso.");
+        this.showToastMsg('El temario seleccionado no tiene preguntas todavía para realizar el repaso.');
         return;
       }
       //Guardar las preguntas generadas en localStorage
@@ -135,21 +178,18 @@ export class HomeComponent implements OnInit {
     }
   }
 
-   // Función que se llama al hacer clic en el botón para empezar el repaso
-   async startReviewForSpecificTopic(topicId:number) {
-    const user = await this.requestService.request('GET', `/user`,{},{}, true);
-    const subscribed = user.subscribed == true;
-
-    if(!subscribed && topicId !== 662){
-      alert("Los usuarios no subscritos solo puede realizar exámenes del TÍTULO I: DE LOS DERECHOS Y DEBERES FUNDAMENTALES (Arts. 10-55), del TEMA 1: CONSTITUCIÓN ESPAÑOLA, del bloque legislación.");
+ 
+  //************************* FUNCION AL HACER CLICK EN EMPEZAR REPASO TEMA ESPECIFICO ****************************//
+  async startReviewForSpecificTopic(topicId:number) {
+    if (!this.isSubscribed) {
+      this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar el repaso por tema.');
       return;
     }
-
     // Hacer la solicitud POST al backend
     try{
       this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds: [topicId]},{});
       if (this.questions.length === 0) {
-        alert("No hay suficientes preguntas para generarte un repaso.");
+        this.showToastMsg('El temario seleccionado no tiene preguntas todavía para realizar un repaso.');
         return;
       }
       //Guardar las preguntas generadas en localStorage
@@ -161,15 +201,14 @@ export class HomeComponent implements OnInit {
   }
 
 
-
-
-  //FUNCIÓN PARA EL MODAL
+  //************************* FUNCIONES PARA EL MODAL ****************************//
   openModalTest() {
     const modalTest = document.getElementById('multicuentas');
     if (modalTest) {
       modalTest.classList.remove('hidden');
     }
   }
+
 
   closeModalTest() {
     const modalTest = document.getElementById('multicuentas');
@@ -178,69 +217,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  topics: any = {};
-  objectKeys(obj: any): string[] {
-    return Object.keys(obj);
-  }
-
- async ngOnInit(): Promise<void> {
-  const modalShown = localStorage.getItem('modalShown');
-  if (!modalShown) {
-    this.openModalTest();  // Abre el modal si no se ha mostrado antes
-    localStorage.setItem('modalShown', 'true');  // Marca como mostrado
-  }
-  try {
-  // pedimos info del user para saber si esta o no subscrito
-  let subscribed;
-  if (this.not_auth) {
-    const user = await this.requestService.request('GET', `/user`,{},{}, true);
-    subscribed = user.subscribed;
-  }
-  // Si el localStorage está vacío, inicializa con el topic 662 y sus hijos
-  let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
-  if (topicSelected.length === 0 && !subscribed) {
-    topicSelected = [
-      { id: 662, isChecked: true },
-      { id: 1451, isChecked: true },
-      { id: 1453, isChecked: true },
-      { id: 1454, isChecked: true },
-      { id: 1452, isChecked: true },
-      { id: 1455, isChecked: true },
-      { id: 1456, isChecked: true },
-      { id: 1457, isChecked: true }
-    ];
-    this.localStorageService.setItem("topicsSelected", topicSelected);
-  }
-
-    // Solicita los temas desde el servidor
-    this.topics = await this.requestService.request('GET', `/topic`,{},{}, true);
-
-    Object.keys(this.topics).forEach(key => {
-      // Iterando sobre el array correspondiente a cada clave
-      this.topics[key] = this.topics[key].map((x: any) => {
-          let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
-          if (topicSelected.length > 0) {
-              const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
-              if (topic.length > 0) {
-                  x.selected = true;
-              } else {
-                  x.selected = false; // En caso de que no esté seleccionado en localStorage
-              }
-          }
-          return x;
-      });
-  });
-    }catch(error: any){
-      this.router.navigate(['/error']);
-    }
-  }
-
-
+  
+  //************************* FUNCION PARA TOPIC SELECCIONADO ****************************//
   selectedTopic(topicId: number, event: any, key: string) {
-    if (!this.not_auth) {
-      return
-    }
-
     const isChecked: boolean = event.target.checked;
     let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     if (isChecked) {
@@ -273,31 +252,25 @@ export class HomeComponent implements OnInit {
             }
         }
     };
-
     // Actualizar la variable topics
     updateTopicSelection(this.topics[key], topicId, isChecked);
-
     this.localStorageService.setItem("topicsSelected", topicSelected);
   }
 
 
-
-  // Función Deseleccionar todos los temas
+  //************************* FUNCION PARA DESELECCIONAR TODOS LOS TEMAS ****************************//
   deselectAllTopics() {
-    const clear = (arr: any[]) => {arr?.forEach(t => {t.selected = false;
+    const clear = (arr: any[]) => {
+      arr?.forEach(t => {
+        t.selected = false;
         if (Array.isArray(t.topics) && t.topics.length) {
           clear(t.topics);
         }
       });
     };
-
     Object.keys(this.topics || {}).forEach(group => clear(this.topics[group] || []));
     this.localStorageService.setItem('topicsSelected', []);
   }
-
-
-
-
 
 
 }

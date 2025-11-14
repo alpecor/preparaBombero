@@ -20,11 +20,56 @@ export class HeaderComponent implements OnInit {
   isAdmin: boolean = this.authService.isAdmin();
   isUser: boolean = this.authService.isUser();
   isNotAuth: boolean = this.authService.isNotAuth();
+  isSubscribed = false;
+  // Toast
+  showSavedToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.loadInfo();
+    
+    //para saber si el usuario esta subscrito
+    try {
+      const user = await this.requestService.request('GET', '/user', {}, {}, true);
+      this.isSubscribed = user.subscribed === true;
+    } catch (err) {
+      this.isSubscribed = false;
+    }
   }
+
+  // Método para el click de preguntas guardadas si estas subscrito o no
+  onSavedClick(): void {
+    if (!this.isSubscribed) {
+      this.showToast(
+        'Funcionalidad PREMIUM: debes estar susbcrito para acceder a Preguntas guardadas.',
+        'error'
+      );
+      return;
+    }
+    this.router.navigate(['/preguntas-guardadas']);
+  }
+
+  // Método para el click de icono examanes si estas registrado o no
+  onExamsClick(): void {
+    // Si NO está autenticado, mostramos aviso y no navegamos
+    if (this.isNotAuth) {
+      this.showToast('Debes estar registrado para acceder a la carpeta "Exámenes. Una vez registrado, podrás realizar exámenes OFICIALES".', 'error');
+      return;
+    }
+    // Si está autenticado, navegamos
+    this.router.navigate(['/examenes']);
+  }
+
+  // Método para mostrar mensaje si no estas subscrito 
+  private showToast(msg: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = msg;
+    this.toastType = type;
+    this.showSavedToast = true;
+    setTimeout(() => (this.showSavedToast = false), 3500);
+  }
+
 
    // Método para cargar la información desde el servicio
    async loadInfo(): Promise<void> {

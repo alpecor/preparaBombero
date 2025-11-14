@@ -14,17 +14,25 @@ import { TextSanitizerComponent } from '../../components/text-sanitizer/text-san
 })
 export class ExamenesComponent {
 
+  //************************* VARIABLES ****************************//
   description: string = "";
 
+
+  //************************* CONSTRUCTOR ****************************//
   constructor(private requestService: RequestService) {}
 
+
+  //************************* ngOnInit ****************************//
   ngOnInit(): void {
     this.loadInfo();
   }
 
-   // Método para cargar la información desde el servicio
-   async loadInfo(): Promise<void> {
+
+  //************************* FUNCION PARA CARGAR LA INFO DESDE EL SERVICIO ****************************//
+  async loadInfo(): Promise<void> {
     const data = await this.requestService.request('GET', `/info`, {}, {}, false);
       this.description = data.description;
   }
+
+
 }

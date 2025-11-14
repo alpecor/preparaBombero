@@ -1,3 +1,21 @@
+<!-- Toast  -->
+<div
+  *ngIf="showSavedToast"
+  class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
+  [ngClass]="{
+    'bg-primaryColor text-white': toastType === 'success',
+    'bg-red-100 text-red-800': toastType === 'error'
+  }"
+>
+  <i class="fa-solid"
+    [ngClass]="{
+      'fa-check-circle': toastType === 'success',
+      'fa-circle-xmark': toastType === 'error'
+    }"
+  ></i>
+  <span>{{ toastMessage }}</span>
+</div>
+
 @for (item of topics; track $index) {
 <div [ngStyle]="{ 'margin-left': margin + 'rem' }" class="mt-1">
   <div class="flex justify-between items-center py-2 border-b border-gray-200">

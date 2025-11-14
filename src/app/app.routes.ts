@@ -67,7 +67,7 @@ export const routes: Routes = [
 
   // URL DEL EXAMEN POR SLUG (carpeta examenes)
   {
-    path: 'examen/:slug', component: QuestionsComponent
+    path: 'examen/:slug-examen-bombero', component: QuestionsComponent
   },
 
   // URL DEL EXAMEN HOME
