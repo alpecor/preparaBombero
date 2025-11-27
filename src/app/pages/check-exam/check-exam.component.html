@@ -110,8 +110,8 @@
         <li
           *ngFor="let respuesta of [question.option1, question.option2, question.option3, question.option4]"
           [ngClass]="{
-            'text-green-500': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
-            'text-red-500': isUserSelectedAndIncorrect(question, respuesta)
+            'text-green-400 font-bold': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
+            'text-red-400 font-semibold': isUserSelectedAndIncorrect(question, respuesta)
           }"
         >
           @if (respuesta != '') {

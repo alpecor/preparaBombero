@@ -38,14 +38,16 @@ export class HomeComponent implements OnInit {
 
   //************************* ngOnInit ****************************//
   async ngOnInit(): Promise<void> {
-    const modalShown = localStorage.getItem('modalShown');
-    if (!modalShown) {
-      this.openModalTest();  // Abre el modal si no se ha mostrado antes
-      localStorage.setItem('modalShown', 'true');  // Marca como mostrado
+     // Recalcular auth por si cambió
+    this.not_auth = !this.authService.isNotAuth();
+    // Solo mostrar modal si el usuario está logueado
+    if (this.not_auth && !localStorage.getItem('modalShown')) {
+      this.openModalTest();                  // Abre el modal solo tras login
+      localStorage.setItem('modalShown', 'true');
     }
+
     try {
       // pedimos info del user para saber si esta o no subscrito
-      let subscribed;
       if (this.not_auth) {
         const user = await this.requestService.request('GET', `/user`,{},{}, true);
         this.isSubscribed = user.subscribed;

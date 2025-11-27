@@ -51,6 +51,10 @@ export class SavedQuestionsComponent implements OnInit {
     this.savedQuestions.map((x:any)=>x.isCorrected = false);
     this.savedQuestions.map((x:any)=>x.showJustification = false);
     this.savedQuestions.map((x:any)=>x.optionSelected = null);
+
+    // Reset de barajado cada vez que recargas/buscas
+    this.originalOrder = null;
+    this.isShuffled = false;
   }
 
 
@@ -104,6 +108,41 @@ export class SavedQuestionsComponent implements OnInit {
       console.error('Error al corregir la pregunta:', error);
     }
   }
+
+
+  //************************* FUNCIÓN PARA ALETORIEDAD ****************************//
+  // --- Estado para barajar/restaurar
+private originalOrder: any[] | null = null;
+isShuffled = false;
+
+// Fisher–Yates
+private shuffleInPlace(arr: any[]): void {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+toggleShuffle(): void {
+  if (!this.savedQuestions || this.savedQuestions.length === 0) {
+    this.showToast('No hay preguntas que barajar.', 'error');
+    return;
+  }
+
+  if (!this.isShuffled) {
+    // Guardamos el orden actual y barajamos la lista visible
+    this.originalOrder = [...this.savedQuestions];
+    this.shuffleInPlace(this.savedQuestions);
+    this.isShuffled = true;
+  } else {
+    // Restauramos el orden original
+    if (this.originalOrder) {
+      this.savedQuestions = [...this.originalOrder];
+    }
+    this.originalOrder = null;
+    this.isShuffled = false;
+  }
+}
 
 
   //************************* FUNCIÓN PARA ELIMINAR LA PREGUNTA GUARDADA ****************************//

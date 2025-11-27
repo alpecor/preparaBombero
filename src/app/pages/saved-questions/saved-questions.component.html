@@ -56,6 +56,18 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         Buscar
       </button>
+
+      <!-- Botón Aleatorio / Restaurar -->
+      <button
+        type="button"
+        class="h-11 inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 text-sm font-semibold 
+              text-primaryColor hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white"
+        (click)="toggleShuffle()"
+        [title]="isShuffled ? 'Restaurar orden original' : 'Barajar preguntas'"
+      >
+        <i class="fa-solid" [ngClass]="isShuffled ? 'fa-rotate-left' : 'fa-shuffle'"></i>
+        {{ isShuffled ? 'Orden original' : 'Aleatorio' }}
+      </button>
     </div>
   </div>
 </div>
