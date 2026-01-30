@@ -23,12 +23,14 @@
 
 <!--------------- Añadir barra de progreso aquí ------------>
 <div class="flex justify-center">
-  <div class="progress-bar-container">
-    <div class="progress-bar" [style.width.%]="progress()">
+  <div class="progress-bar-container relative">
+    <div class="progress-bar" [style.width.%]="progress()"></div>
+    <span class="absolute inset-0 flex items-center justify-center text-xs font-semibold">
       {{ progressText() }}
-    </div>
+    </span>
   </div>
 </div>
+
 
 <!--------------- Añadir preguntas del test aquí ------------>
 <div class="flex justify-center p-4">
@@ -118,13 +120,38 @@
     </div>
 
     <!--boton de corregir / siguiente pregunta-->
-    <div class="pagination-container relative flex justify-center mt-6 space-x-2">
-      <button class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border
-        border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-        (click)="handleButtonClick()"
-      >
-        {{ getButtonText() }} <!-- Cambiar el texto del botón -->
-      </button>
+    <div class="w-full max-w-3xl mx-auto mt-6">
+      <div class="flex justify-center gap-4">
+
+        <!-- 1) Pregunta anterior -->
+        @if (isCorrected) {
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+            (click)="previousQuestion()"
+            [disabled]="page.page === 0"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': page.page === 0 }"
+          >
+            Pregunta anterior
+          </button>
+        }
+
+        <!-- 2) Siguiente pregunta / Corregir (tu botón principal) -->
+        <button
+          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          (click)="handleButtonClick()"
+        >
+          {{ getButtonText() }}
+        </button>
+
+        <!-- 3) Finalizar repaso -->
+        <button
+          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          (click)="openFinishReviewModal()"
+        >
+          Finalizar repaso
+        </button>
+
+      </div>
     </div>
 
 
@@ -160,5 +187,37 @@
         </div>
       </div>
     </div>
+
+    <!-------------------- Modal finalizar repaso ----------------->
+  <div
+    id="finishReviewModal"
+    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+  >
+    <div class="bg-white p-8 rounded-lg max-w-md w-full">
+      <h2 class="text-xl mb-4 font-bold">
+        ¿Seguro que quieres finalizar el repaso?
+      </h2>
+      <p class="text-gray-600">
+        Finalizará el repaso con las preguntas realizadas hasta ahora.
+      </p>
+
+      <div class="flex justify-center mt-6">
+        <button
+          class="text-gray-600 bg-gray-200 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2 mr-2"
+          (click)="closeFinishReviewModal()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          (click)="confirmFinishReview()"
+        >
+          Finalizar repaso
+        </button>
+      </div>
+    </div>
+  </div>
+
   </div>
 </div>

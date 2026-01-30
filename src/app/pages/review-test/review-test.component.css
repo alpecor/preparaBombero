@@ -1,29 +1,33 @@
 /* Contenedor de la barra de progreso */
 .progress-bar-container {
-  background-color: #e9ebee; /* Color de fondo del contenedor */
-  border-radius: 9999px; /* Bordes redondeados */
-  height: 1.rem; /* Altura de la barra */
-  position: relative; /* Posicionamiento relativo para el texto */
-  width: 75%; /* Ancho del contenedor */
+  background-color: #e9ebee;
+  border-radius: 9999px;
+  height: 1rem;          /* ✅ antes: 1.rem */
+  position: relative;
+  width: 75%;
   margin-top: 1rem;
   margin-bottom: 1rem;
+  overflow: hidden;      /* ✅ para que no se salga el relleno */
 }
 
 /* Barra de progreso */
 .progress-bar {
-  background-color: var(--primary-color); /* Color de la barra de progreso */
-  height: 100%; /* Altura completa */
-  border-radius: 9999px; /* Bordes redondeados */
-  width: 0; /* Ancho inicial de 0 */
-  display: flex; /* Usar flexbox */
-  align-items: center; /* Centrar elementos verticalmente */
-  justify-content: center; /* Centrar elementos horizontalmente */
-  color: white; /* Color del texto */
-  white-space: nowrap; /* Evitar que el texto se envuelva */
-  overflow: hidd; /* Ocultar el desbordamiento */
-  text-overflow: ellipsis; /* Añadir puntos suspensivos si el texto es demasiado largo */
-  transition: width 0.5s ease; /* Añadir una transición suave al cambiar el ancho */
+  background-color: var(--primary-color);
+  height: 100%;
+  border-radius: 9999px;
+  width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;    /* ✅ para que quepa bien */
+  line-height: 1rem;     /* ✅ alinea texto vertical */
+  white-space: nowrap;
+  overflow: hidden;      /* ✅ antes: hidd */
+  text-overflow: ellipsis;
+  transition: width 0.5s ease;
 }
+
 
 
 /* ------ Paginación ------------- */

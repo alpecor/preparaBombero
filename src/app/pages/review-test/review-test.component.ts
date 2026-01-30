@@ -109,6 +109,19 @@ export class ReviewTestComponent {
   }
 
 
+  //************************* FUNCION PARA MANEJO DEL BOTON PREGUNTA ANTERIOR ****************************//
+  previousQuestion() {
+    if (this.page.page > 0) {
+      this.isCorrected = false; // al cambiar de pregunta, volvemos al estado "sin corregir"
+      this.page.page -= 1;
+      this.page.first = this.page.page * this.questionsPerPage;
+
+      // opcional: cerrar el motivo si estaba abierto
+      const q = this.examQuestion[this.page.page * this.questionsPerPage];
+      if (q) q.showJustification = false;
+    }
+  }
+
   //************************* FUNCION PARA CORREGIR PREGUNTA A PREGUNTA ****************************//
   async correctSingleQuestion(questionId: number, selectedOption: string) {
     const payload = {
@@ -195,6 +208,29 @@ export class ReviewTestComponent {
   }
 
 
+//************************* FUNCIONES PARA APERTURA, CIERRE y ENVÍO DEL MODAL DE FIN REPASO ****************************//
+
+
+openFinishReviewModal() {
+  const modal = document.getElementById('finishReviewModal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+closeFinishReviewModal() {
+  const modal = document.getElementById('finishReviewModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+confirmFinishReview() {
+  // Cerrar modal
+  this.closeFinishReviewModal();
+
+  // Limpiar el examen y salir
+  this.localStorageService.removeItem('examQuestions');
+  this.router.navigate(['/']);
+}
+
+
   //************************* FUNCIONES PARA CONTROLAR LA PAGINACIÓN Y PREGUNTAS POR PÁGINA ****************************//
   progress() {
     const endQuestion = Math.min((this.page.page + 1) * this.questionsPerPage, this.examQuestion.length);
@@ -242,6 +278,20 @@ export class ReviewTestComponent {
       this.showSavedToast = false;
     }, 2500); //el mensaje se queda 2 segundo y medio
   }
+
+
+  /************************* FUNCION PARA FINALIZAR REPASO *********************/
+  finishReview() {
+  const ok = confirm('¿Seguro que quieres finalizar el repaso?');
+  if (!ok) return;
+
+  // Opcional: limpiar preguntas del localStorage ya aquí, además del ngOnDestroy
+  this.localStorageService.removeItem('examQuestions');
+
+  // Navegar a donde quieras
+  this.router.navigate(['/']);
+}
+
 
 
 
