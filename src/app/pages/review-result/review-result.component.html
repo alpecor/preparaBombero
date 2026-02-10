@@ -1,0 +1,82 @@
+<!--------------- Añadir header aquí ------------>
+<app-header />
+
+<div class="w-full max-w-4xl mx-auto px-4 py-2">
+  <h1 class="text-3xl font-extrabold text-center mb-2">Resultado del repaso</h1>
+  <p class="text-center text-gray-600 mb-4">
+    Total del repaso: <b>{{ total }}</b> preguntas
+  </p>
+
+  <!-- Bloque principal -->
+ <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 md:p-6">
+
+
+    <!-- Mensaje resumen -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div>
+        <p class="text-sm text-gray-500">Resumen</p>
+        <p class="text-xl font-semibold">
+          {{ accuracy >= 80 ? '¡Muy buen resultado!' : accuracy >= 50 ? 'Buen trabajo, sigue mejorando.' : 'Vamos a por la siguiente, puedes mejorar.' }}
+        </p>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border"
+           [ngClass]="{
+             'bg-green-50 border-green-200 text-green-800': accuracy >= 80,
+             'bg-yellow-50 border-yellow-200 text-yellow-800': accuracy >= 50 && accuracy < 80,
+             'bg-red-50 border-red-200 text-red-800': accuracy < 50
+           }">
+        <span class="text-sm font-semibold">Precisión</span>
+        <span class="text-sm">•</span>
+        <span class="text-sm font-bold">{{ accuracy }}%</span>
+      </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="p-4 rounded-xl border bg-gray-50">
+        <p class="text-sm text-gray-500">Corregidas</p>
+        <p class="text-3xl font-extrabold mt-1">{{ answered }}</p>
+      </div>
+
+      <div class="p-4 rounded-xl border bg-green-50 border-green-200">
+        <p class="text-sm text-green-800">Aciertos</p>
+        <p class="text-3xl font-extrabold mt-1 text-green-900">{{ correct }}</p>
+      </div>
+
+      <div class="p-4 rounded-xl border bg-red-50 border-red-200">
+        <p class="text-sm text-red-800">Fallos</p>
+        <p class="text-3xl font-extrabold mt-1 text-red-900">{{ wrong }}</p>
+      </div>
+
+      <div class="p-4 rounded-xl border bg-yellow-50 border-yellow-200">
+        <p class="text-sm text-yellow-800">% Acierto</p>
+        <p class="text-3xl font-extrabold mt-1 text-yellow-900">{{ accuracy }}%</p>
+      </div>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+        <span>Progreso de acierto</span>
+        <span class="font-semibold">{{ correct }} / {{ answered }}</span>
+      </div>
+
+      <div class="h-3 w-full bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full bg-primaryColor rounded-full transition-all"
+             [style.width.%]="accuracy">
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-col sm:flex-row justify-center gap-3 mt-8">
+      <button
+        class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-6 py-3"
+        (click)="goHome()"
+      >
+        Volver al inicio
+      </button>
+    </div>
+  </div>
+</div>

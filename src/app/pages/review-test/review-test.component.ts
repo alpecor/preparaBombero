@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { RequestService } from '../../services/request.service';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { PaginatorModule} from 'primeng/paginator';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
@@ -34,7 +34,13 @@ export class ReviewTestComponent {
   toastType: 'success' | 'error' = 'success';
   //variables para saber si esta subscrito el usuario y poder guardar preguntas
   isSubscribed = false;
-
+  //variables para llevar las preguntas acertadas y falladas en el repaso
+  answeredCount = 0;
+  correctCount = 0;
+  wrongCount = 0;
+  countedByQuestionId: Record<number, boolean> = {}; // Guarda si una pregunta ya fue contabilizada (primera corrección)
+  firstResultByQuestionId: Record<number, 'correct' | 'wrong'> = {}; // Guarda el resultado de la PRIMERA corrección (para estadísticas)
+ 
 
   //************************* CONSTRUCTOR ****************************//
   constructor(private requestService: RequestService, private localStorageService: LocalStorageService, private router: Router) { }
@@ -109,6 +115,12 @@ export class ReviewTestComponent {
   }
 
 
+  //************************* FUNCION PARA SABER SI ES ULTIMA PREGUNTA ****************************//
+  isLastQuestion(): boolean {
+    return this.page.page >= Math.ceil(this.examQuestion.length / this.questionsPerPage) - 1;
+  }
+
+
   //************************* FUNCION PARA MANEJO DEL BOTON PREGUNTA ANTERIOR ****************************//
   previousQuestion() {
     if (this.page.page > 0) {
@@ -136,7 +148,9 @@ export class ReviewTestComponent {
     try {
       const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
       const quizResponse = response.quizzes[0];
-      // Guardar la respuesta correcta en la pregunta correspondiente
+      const correctAnswer = quizResponse.result;
+      const isCorrect = selectedOption === correctAnswer;
+      // 1) Guardar la respuesta correcta en la pregunta (para pintar colores)
       this.examQuestion = this.examQuestion.map((question: any) => {
         if (question.id === questionId) {
           return {
@@ -147,7 +161,24 @@ export class ReviewTestComponent {
         }
         return question;
       });
-      this.isCorrected = true; // Marcar como corregida
+      // 2) CONTABILIZAR SOLO LA PRIMERA VEZ QUE SE CORRIGE ESA PREGUNTA
+    if (!this.countedByQuestionId[questionId]) {
+      this.countedByQuestionId[questionId] = true;
+
+      this.answeredCount += 1;
+
+      if (isCorrect) {
+        this.correctCount += 1;
+        this.firstResultByQuestionId[questionId] = 'correct';
+      } else {
+        this.wrongCount += 1;
+        this.firstResultByQuestionId[questionId] = 'wrong';
+      }
+    }
+
+    // 3) Marcar como corregida para UI
+    this.isCorrected = true;
+
     } catch (error) {
       console.error('Error al corregir la pregunta:', error);
     }
@@ -209,25 +240,53 @@ export class ReviewTestComponent {
 
 
 //************************* FUNCIONES PARA APERTURA, CIERRE y ENVÍO DEL MODAL DE FIN REPASO ****************************//
-
-
 openFinishReviewModal() {
   const modal = document.getElementById('finishReviewModal');
   if (modal) modal.classList.remove('hidden');
 }
+
 
 closeFinishReviewModal() {
   const modal = document.getElementById('finishReviewModal');
   if (modal) modal.classList.add('hidden');
 }
 
-confirmFinishReview() {
-  // Cerrar modal
+
+async confirmFinishReview() {
   this.closeFinishReviewModal();
 
-  // Limpiar el examen y salir
+  const total = this.examQuestion.length;
+
+  const payload = {
+    correct: this.correctCount,
+    wrong: this.wrongCount,
+    answered: this.answeredCount,
+    unanswered: total - this.answeredCount,
+    type: 'REVIEW'
+  };
+
+  try {
+    // Guardar stats en backend
+    await this.requestService.request('POST', '/quiz/stats', payload, {}, true);
+  } catch (error) {
+    console.error('Error enviando stats del repaso:', error);
+  }
+
+  // Guardar resumen para pintar en ReviewResultComponent
+  const summary = {
+    total,
+    answered: payload.answered,
+    correct: payload.correct,
+    wrong: payload.wrong,
+    unanswered: payload.unanswered
+  };
+
+  // guardar nota del repaso
+  this.localStorageService.setItem('reviewSummary', summary);
+  // Limpiar el examen 
   this.localStorageService.removeItem('examQuestions');
-  this.router.navigate(['/']);
+
+  this.router.navigate(['/check-review']);
 }
 
 

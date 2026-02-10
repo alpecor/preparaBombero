@@ -136,12 +136,14 @@
         }
 
         <!-- 2) Siguiente pregunta / Corregir (tu botón principal) -->
-        <button
-          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          (click)="handleButtonClick()"
-        >
-          {{ getButtonText() }}
-        </button>
+        @if (!(isCorrected && isLastQuestion())) {
+          <button
+            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+            (click)="handleButtonClick()"
+          >
+            {{ getButtonText() }}
+          </button>
+        }
 
         <!-- 3) Finalizar repaso -->
         <button

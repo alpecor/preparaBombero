@@ -21,6 +21,7 @@ import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.
 import { RecoveryPasswordComponent } from './pages/auth/recovery-password/recovery-password.component';
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
 import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions.component';
+import { ReviewResultComponent } from './pages/review-result/review-result.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -79,6 +80,11 @@ export const routes: Routes = [
   //URL DE REPASO
   {
     path: 'review-test', component: ReviewTestComponent, canActivate: [userAuthGuard]
+  },
+
+  //URL DE REPASO CORREGIDO
+  {
+    path: 'check-review', component: ReviewResultComponent
   },
 
   //URL DE EXAMEN CORREGIDO
