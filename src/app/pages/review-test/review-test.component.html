@@ -124,16 +124,16 @@
       <div class="flex justify-center gap-4">
 
         <!-- 1) Pregunta anterior -->
-        @if (isCorrected) {
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="previousQuestion()"
-            [disabled]="page.page === 0"
-            [ngClass]="{ 'opacity-50 cursor-not-allowed': page.page === 0 }"
-          >
-            Pregunta anterior
-          </button>
-        }
+  
+        <button
+          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
+          (click)="previousQuestion()"
+          [disabled]="page.page === 0"
+          [ngClass]="{ 'opacity-50 cursor-not-allowed': page.page === 0 }"
+        >
+          Pregunta anterior
+        </button>
+        
 
         <!-- 2) Siguiente pregunta / Corregir (tu botón principal) -->
         @if (!(isCorrected && isLastQuestion())) {

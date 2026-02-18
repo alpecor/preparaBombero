@@ -40,7 +40,7 @@ export class ReviewTestComponent {
   wrongCount = 0;
   countedByQuestionId: Record<number, boolean> = {}; // Guarda si una pregunta ya fue contabilizada (primera corrección)
   firstResultByQuestionId: Record<number, 'correct' | 'wrong'> = {}; // Guarda el resultado de la PRIMERA corrección (para estadísticas)
- 
+checkedByQuestionId: Record<number, boolean> = {}; //guarda el estado de cada pregunta
 
   //************************* CONSTRUCTOR ****************************//
   constructor(private requestService: RequestService, private localStorageService: LocalStorageService, private router: Router) { }
@@ -111,6 +111,7 @@ export class ReviewTestComponent {
         alert("Has completado todas las preguntas.");
         this.router.navigate(['/']); // Redirigir a la home
       }
+      this.syncCorrectedStateForCurrentQuestion();
     }
   }
 
@@ -124,15 +125,13 @@ export class ReviewTestComponent {
   //************************* FUNCION PARA MANEJO DEL BOTON PREGUNTA ANTERIOR ****************************//
   previousQuestion() {
     if (this.page.page > 0) {
-      this.isCorrected = false; // al cambiar de pregunta, volvemos al estado "sin corregir"
       this.page.page -= 1;
       this.page.first = this.page.page * this.questionsPerPage;
 
-      // opcional: cerrar el motivo si estaba abierto
-      const q = this.examQuestion[this.page.page * this.questionsPerPage];
-      if (q) q.showJustification = false;
+      this.syncCorrectedStateForCurrentQuestion();
     }
   }
+  
 
   //************************* FUNCION PARA CORREGIR PREGUNTA A PREGUNTA ****************************//
   async correctSingleQuestion(questionId: number, selectedOption: string) {
@@ -175,7 +174,7 @@ export class ReviewTestComponent {
         this.firstResultByQuestionId[questionId] = 'wrong';
       }
     }
-
+    this.checkedByQuestionId[questionId] = true;
     // 3) Marcar como corregida para UI
     this.isCorrected = true;
 
@@ -189,6 +188,19 @@ export class ReviewTestComponent {
   toggleJustification(question: any): void {
     question.showJustification = !question.showJustification;
   }
+
+
+  //************************* FUNCION PARA REFRESCAR "isCorrected" ****************************//
+  private syncCorrectedStateForCurrentQuestion(): void {
+  const idx = this.page.page * this.questionsPerPage;
+  const q = this.examQuestion[idx];
+  if (!q) return;
+
+  this.isCorrected = !!this.checkedByQuestionId[q.id];
+
+  // opcional: si al cambiar de pregunta quieres cerrar el motivo
+  q.showJustification = false;
+}
 
 
   //************************* FUNCIONES PARA RECOGER LAS OPCIONES SEÑALADAS EN EL EXAMEN ****************************//
