@@ -22,6 +22,7 @@ import { RecoveryPasswordComponent } from './pages/auth/recovery-password/recove
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
 import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions.component';
 import { ReviewResultComponent } from './pages/review-result/review-result.component';
+import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -100,6 +101,11 @@ export const routes: Routes = [
   //URL DE PREGUNTAS GUARDADAS
   {
     path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
+  },
+
+   //URL DE LANDING
+  {
+    path: 'landing', component: LandingComponent
   },
 
 
