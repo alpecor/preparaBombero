@@ -7,11 +7,12 @@ import { Router, RouterLink } from '@angular/router';
 import { topicsComponent } from '../../components/topics/topics.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent,FooterComponent,CommonModule, NgOptimizedImage, RouterLink, topicsComponent],
+  imports: [HeaderComponent,FooterComponent,CommonModule, FormsModule, NgOptimizedImage, RouterLink, topicsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -29,6 +30,15 @@ export class HomeComponent implements OnInit {
   showToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+
+  //configurar preguntas examen y repaso
+  showExamConfigModal = false;
+  questionOptions: Array<number | 'all'> = [10, 25, 50, 100, 'all'];
+  selectedQuestionOption: number | 'all' = 50;
+  customQuestionNumber: number | null = null;
+  maxAvailableQuestions = 0;
+  examModalSubtitle = '';
+  examConfigMode: 'exam' | 'review' = 'exam';
 
 
   //************************* CONSTRUCTOR ****************************//
@@ -82,7 +92,7 @@ export class HomeComponent implements OnInit {
       this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar exámenes por temas.');
       return;
     }
-    this.startExam(); // tu función existente
+    //this.openQuestionConfigModal(); // tu función existente
   }
 
 
@@ -96,29 +106,41 @@ export class HomeComponent implements OnInit {
 
 
   //************************* FUNCION AL HACER CLICK EN EMPEZAR EXAMEN ****************************//
-  async startExam() {
-    // Obtener los temas seleccionados del localStorage
-    const topicsSelected = this.localStorageService.getItem("topicsSelected");
-    if (!topicsSelected || topicsSelected.length === 0) {
-      this.showToastMsg('No hay temario seleccionado para realizar el examen.');
+  async startExamWithSelectedQuestions() {
+  const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+  if (!topicsSelected || topicsSelected.length === 0) {
+    this.showToastMsg('No hay temario seleccionado para realizar el examen.');
+    return;
+  }
+
+  const numberOfQuestions = this.getSelectedQuestionNumber();
+
+  if (!numberOfQuestions || numberOfQuestions <= 0) {
+    this.showToastMsg('Introduce un número de preguntas válido.');
+    return;
+  }
+
+  const topicIds = topicsSelected.map((topic: any) => topic.id);
+
+  try {
+    this.questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds }, {});
+
+    if (this.questions.length === 0) {
+      this.showToastMsg('El temario seleccionado no tiene preguntas todavía para realizar un examen.');
       return;
     }
-    // Extraer los IDs de los temas seleccionados
-    const topicIds = topicsSelected.map((topic: any) => topic.id);
-    // Hacer la solicitud POST al backend
-    try{
-      this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds},{});
-      if (this.questions.length === 0) {
-        this.showToastMsg('El temario seleccionado no tiene preguntas todavía para realizar un examen.');
-        return;
-      }
-      //Guardar las preguntas generadas en localStorage
-      this.localStorageService.setItem("examQuestions", this.questions);
-      this.router.navigate(['/test']);
-    }catch(error: any){
-      console.log(error);
-    }
+
+    const limitedQuestions = this.questions.slice(0, numberOfQuestions);
+
+    this.localStorageService.setItem("examQuestions", limitedQuestions);
+    this.closeExamConfigModal();
+    this.router.navigate(['/test']);
+
+  } catch (error: any) {
+    console.log(error);
   }
+}
 
 
   //************************* FUNCION PARA TOAST ****************************//
@@ -273,6 +295,160 @@ export class HomeComponent implements OnInit {
     Object.keys(this.topics || {}).forEach(group => clear(this.topics[group] || []));
     this.localStorageService.setItem('topicsSelected', []);
   }
+
+
+
+  //************************* FUNCIONES PARA CONFIGURAR PREGUNTAS EN EXAMEN Y REPASO ****************************//
+  openQuestionConfigModal(mode: 'exam' | 'review') {
+    if (!this.isSubscribed) {
+      this.showToastMsg(
+        mode === 'exam'
+          ? 'Funcionalidad PREMIUM: necesitas estar subscrito para realizar exámenes por temas.'
+          : 'Funcionalidad PREMIUM: necesitas estar subscrito para realizar el repaso por temas.'
+      );
+      return;
+    }
+
+    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+    if (!topicsSelected || topicsSelected.length === 0) {
+      this.showToastMsg(
+        mode === 'exam'
+          ? 'No hay temario seleccionado para realizar el examen.'
+          : 'No hay temario seleccionado para realizar el repaso.'
+      );
+      return;
+    }
+
+    this.examConfigMode = mode;
+    this.maxAvailableQuestions = this.getSelectedTopicsQuestionCount();
+
+    this.examModalSubtitle =
+      `${topicsSelected.length} temas seleccionados · ${this.maxAvailableQuestions} preguntas disponibles`;
+
+    this.selectedQuestionOption = this.maxAvailableQuestions >= 50 ? 50 : 'all';
+    this.customQuestionNumber = null;
+    this.showExamConfigModal = true;
+  }
+
+
+  closeExamConfigModal() {
+    this.showExamConfigModal = false;
+  }
+
+
+  selectQuestionOption(option: number | 'all') {
+    this.selectedQuestionOption = option;
+    this.customQuestionNumber = null;
+  }
+
+
+  onCustomQuestionInput() {
+    this.selectedQuestionOption = 'all';
+  }
+
+
+  getSelectedQuestionNumber(): number {
+    if (this.customQuestionNumber) {
+      return Math.min(this.customQuestionNumber, this.maxAvailableQuestions);
+    }
+
+    if (this.selectedQuestionOption === 'all') {
+      return this.maxAvailableQuestions;
+    }
+
+    return Math.min(this.selectedQuestionOption, this.maxAvailableQuestions);
+  }
+
+
+  getSelectedQuestionNumberText(): string {
+    return String(this.getSelectedQuestionNumber());
+  }
+
+
+  getSelectedTopicsQuestionCount(): number {
+    const topicsSelected = this.localStorageService.getItem("topicsSelected") ?? [];
+    const selectedIds = topicsSelected.map((topic: any) => topic.id);
+
+    let total = 0;
+
+    const walk = (items: any[]) => {
+      items?.forEach(topic => {
+        if (selectedIds.includes(topic.id)) {
+          total += Number(topic.quizCount || 0);
+        }
+
+        if (Array.isArray(topic.topics) && topic.topics.length > 0) {
+          walk(topic.topics);
+        }
+      });
+    };
+
+    Object.keys(this.topics || {}).forEach(key => {
+      walk(this.topics[key]);
+    });
+
+    return total;
+
+
+  }
+
+
+
+
+  async startQuestionModeWithSelectedQuestions() {
+    const topicsSelected = this.localStorageService.getItem("topicsSelected");
+
+    if (!topicsSelected || topicsSelected.length === 0) {
+      this.showToastMsg(
+        this.examConfigMode === 'exam'
+          ? 'No hay temario seleccionado para realizar el examen.'
+          : 'No hay temario seleccionado para realizar el repaso.'
+      );
+      return;
+    }
+
+    const numberOfQuestions = this.getSelectedQuestionNumber();
+
+    if (!numberOfQuestions || numberOfQuestions <= 0) {
+      this.showToastMsg('Introduce un número de preguntas válido.');
+      return;
+    }
+
+    const topicIds = topicsSelected.map((topic: any) => topic.id);
+
+    try {
+      this.questions = await this.requestService.request(
+        'POST',
+        `/quiz/generate`,
+        { topicIds },
+        {}
+      );
+
+      if (this.questions.length === 0) {
+        this.showToastMsg(
+          this.examConfigMode === 'exam'
+            ? 'El temario seleccionado no tiene preguntas todavía para realizar un examen.'
+            : 'El temario seleccionado no tiene preguntas todavía para realizar un repaso.'
+        );
+        return;
+      }
+
+      const limitedQuestions = this.questions.slice(0, numberOfQuestions);
+
+      this.localStorageService.setItem("examQuestions", limitedQuestions);
+      this.closeExamConfigModal();
+
+      this.router.navigate([
+        this.examConfigMode === 'exam' ? '/test' : '/review-test'
+      ]);
+
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+
+
 
 
 }
