@@ -37,7 +37,8 @@ export class QuestionsComponent implements OnInit {
 
   //************************* CONSTRUCTOR ****************************//
   constructor(private titleService:Title, private requestService:RequestService, private localStorageService: LocalStorageService, private router: Router, private authService: AuthService) {
-    this.titleService.setTitle("PreparaBombero - " + this.localStorageService.getItem('examenName')?.examenName+" examen bombero");
+    const examenName = this.localStorageService.getItem('examenName')?.examenName;
+    this.titleService.setTitle(examenName ? `PreparaBombero - ${examenName} examen bombero` : "PreparaBombero");
   }
 
 

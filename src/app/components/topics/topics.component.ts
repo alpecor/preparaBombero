@@ -3,11 +3,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-topics',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './topics.component.html',
   styleUrl: './topics.component.css'
 })
@@ -19,6 +20,17 @@ export class topicsComponent implements OnInit {
   showSavedToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+
+  //configurar preguntas examen y repaso por tema
+  questions:string[] = [];
+  showExamConfigModal = false;
+  questionOptions: number[] = [10, 25, 50, 100, 200];
+  selectedQuestionOption: number | null = 50;
+  customQuestionNumber: number | null = null;
+  maxAvailableQuestions = 0;
+  examModalSubtitle = '';
+  examConfigMode: 'exam' | 'review' = 'exam';
+  specificTopicId: number | null = null;
 
   constructor(private router: Router, private localStorageService:LocalStorageService, private requestService: RequestService){}
   async ngOnInit() {
@@ -94,7 +106,7 @@ export class topicsComponent implements OnInit {
       // }
 
       // Realizar petición para generar preguntas solo del tema seleccionado
-      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId] }, {});
+      const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId], numberOfQuestions: 100 }, {});
       if (questions.length === 0) {
         this.showToast('El temario seleccionado no tiene preguntas todavía para realizar un examen.', 'error');
         return;
@@ -129,7 +141,7 @@ export class topicsComponent implements OnInit {
   async startReviewForSpecificTopic(topicId:number) {
     try{
       // Hacer la solicitud POST al backend
-      const questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds: [topicId]},{});
+      const questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds: [topicId], numberOfQuestions: 100},{});
       if (questions.length === 0) {
         this.showToast('El temario seleccionado no tiene preguntas todavía para realizar un repaso.', 'error');
         return;
@@ -141,5 +153,94 @@ export class topicsComponent implements OnInit {
       console.log(error);
     }
   }
-}
 
+
+  //************************* FUNCIONES PARA CONFIGURAR PREGUNTAS EN EXAMEN Y REPASO POR TEMA ****************************//
+  openQuestionConfigModal(mode: 'exam' | 'review', topic: any) {
+    this.examConfigMode = mode;
+    this.specificTopicId = topic.id;
+    this.maxAvailableQuestions = Number(topic.quizCount || 0);
+    this.examModalSubtitle = topic.title;
+
+    this.selectedQuestionOption = this.maxAvailableQuestions >= 50 ? 50 : this.maxAvailableQuestions;
+    this.customQuestionNumber = null;
+    this.showExamConfigModal = true;
+  }
+
+
+  closeExamConfigModal() {
+    this.showExamConfigModal = false;
+    this.specificTopicId = null;
+  }
+
+
+  selectQuestionOption(option: number) {
+    this.selectedQuestionOption = option;
+    this.customQuestionNumber = null;
+  }
+
+
+  onCustomQuestionInput() {
+    this.selectedQuestionOption = null;
+  }
+
+
+  getSelectedQuestionNumber(): number {
+    if (this.customQuestionNumber) {
+      return Math.min(this.customQuestionNumber, this.maxAvailableQuestions);
+    }
+
+    return Math.min(this.selectedQuestionOption ?? this.maxAvailableQuestions, this.maxAvailableQuestions);
+  }
+
+
+  async startQuestionModeForSpecificTopic() {
+    if (!this.specificTopicId) {
+      this.showToast(
+        this.examConfigMode === 'exam'
+          ? 'No hay tema seleccionado para realizar el examen.'
+          : 'No hay tema seleccionado para realizar el repaso.',
+        'error'
+      );
+      return;
+    }
+
+    const numberOfQuestions = this.getSelectedQuestionNumber();
+
+    if (!numberOfQuestions || numberOfQuestions <= 0) {
+      this.showToast('Introduce un número de preguntas válido.', 'error');
+      return;
+    }
+
+    try {
+      this.questions = await this.requestService.request(
+        'POST',
+        `/quiz/generate`,
+        { topicIds: [this.specificTopicId], numberOfQuestions },
+        {}
+      );
+
+      if (this.questions.length === 0) {
+        this.showToast(
+          this.examConfigMode === 'exam'
+            ? 'El temario seleccionado no tiene preguntas todavía para realizar un examen.'
+            : 'El temario seleccionado no tiene preguntas todavía para realizar un repaso.',
+          'error'
+        );
+        return;
+      }
+
+      const limitedQuestions = this.questions.slice(0, numberOfQuestions);
+
+      this.localStorageService.setItem("examQuestions", limitedQuestions);
+      this.closeExamConfigModal();
+
+      this.router.navigate([
+        this.examConfigMode === 'exam' ? '/test' : '/review-test'
+      ]);
+
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+}
