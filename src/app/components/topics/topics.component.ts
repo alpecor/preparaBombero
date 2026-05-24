@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class topicsComponent implements OnInit {
   @Input() topics:any;
   @Input() margin:number= -1;
+  @Input() isSubscribed = false;
 
   //variables para mostrar mensaje de pregunta guardada
   showSavedToast = false;
@@ -34,8 +35,6 @@ export class topicsComponent implements OnInit {
 
   constructor(private router: Router, private localStorageService:LocalStorageService, private requestService: RequestService){}
   async ngOnInit() {
-   
-
     let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     if(this.topics.length > 0){
       this.topics = this.topics.map((x:any) =>{
@@ -195,6 +194,14 @@ export class topicsComponent implements OnInit {
 
 
   async startQuestionModeForSpecificTopic() {
+    if (!this.isSubscribed) {
+      this.showToast(
+        'Funcionalidad PREMIUM: necesitas estar subscrito.',
+        'error'
+      );
+      return;
+    }
+
     if (!this.specificTopicId) {
       this.showToast(
         this.examConfigMode === 'exam'

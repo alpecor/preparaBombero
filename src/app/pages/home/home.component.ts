@@ -98,10 +98,6 @@ export class HomeComponent implements OnInit {
 
   //************************* FUNCION AL HACER CLICK EN EXAMEN TEMA ESPECIFICO ****************************//
   async startExamForSpecificTopic(topicId: number) {
-    if (!this.isSubscribed) {
-      this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar exámenes por tema.');
-      return;
-    }
     try {
       // Realizar petición para generar preguntas solo del tema seleccionado
       const questions = await this.requestService.request('POST', `/quiz/generate`, { topicIds: [topicId], numberOfQuestions: 100 }, {});
@@ -122,10 +118,6 @@ export class HomeComponent implements OnInit {
 
   //************************* FUNCION AL HACER CLICK EN EMPEZAR REPASO TEMA ESPECIFICO ****************************//
   async startReviewForSpecificTopic(topicId:number) {
-    if (!this.isSubscribed) {
-      this.showToastMsg('Funcionalidad PREMIUM: necesitas estar subscrito para realizar el repaso por tema.');
-      return;
-    }
     // Hacer la solicitud POST al backend
     try{
       this.questions = await this.requestService.request('POST', `/quiz/generate`,{topicIds: [topicId], numberOfQuestions: 100},{});
@@ -217,15 +209,6 @@ export class HomeComponent implements OnInit {
 
   //************************* FUNCIONES PARA CONFIGURAR PREGUNTAS EN EXAMEN Y REPASO ****************************//
   openQuestionConfigModal(mode: 'exam' | 'review', topic?: any) {
-    if (!this.isSubscribed) {
-      this.showToastMsg(
-        mode === 'exam'
-          ? 'Funcionalidad PREMIUM: necesitas estar subscrito para realizar exámenes por temas.'
-          : 'Funcionalidad PREMIUM: necesitas estar subscrito para realizar el repaso por temas.'
-      );
-      return;
-    }
-
     this.examConfigMode = mode;
     this.specificTopicId = topic?.id ?? null;
 
@@ -317,6 +300,13 @@ export class HomeComponent implements OnInit {
 
 
   async startQuestionMode() {
+    if (!this.isSubscribed) {
+      this.showToastMsg(
+        'Funcionalidad PREMIUM: necesitas estar subscrito.'
+      );
+      return;
+    }
+
     if (this.specificTopicId) {
       await this.startQuestionModeForSpecificTopic();
       return;

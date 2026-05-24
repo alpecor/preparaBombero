@@ -48,7 +48,7 @@
   </div>
 </div>
 @if (item.topics?.length > 0) {
-<app-topics [margin]="margin + 2" [topics]="item.topics" />
+<app-topics [margin]="margin + 2" [topics]="item.topics" [isSubscribed]="isSubscribed" />
 } }
 
 @if (showExamConfigModal) {
