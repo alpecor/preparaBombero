@@ -37,23 +37,26 @@
         style="cursor: pointer"
       >
       </i>
-      <i
-        (click)="openQuestionConfigModal('review', item)"
-        title="Hacer repaso"
-        class="fa-solid fa-file-pen fa-lg"
-        style="cursor: pointer"
-      >
-      </i>
-      @if (item.url) {
-        <button
-          (click)="showPdfPreview(item.url)"
-          title="Ver PDF"
-          class="ml-2"
-          type="button"
+      <span class="inline-flex w-8 justify-center">
+        <i
+          (click)="openQuestionConfigModal('review', item)"
+          title="Hacer repaso"
+          class="fa-solid fa-file-pen fa-lg"
+          style="cursor: pointer"
         >
-          <i class="fa-solid fa-file-pdf fa-lg"></i>
-        </button>
-      }
+        </i>
+      </span>
+      <span class="inline-flex w-8 justify-center">
+        @if (item.url) {
+          <button
+            (click)="showPdfPreview(item.url)"
+            title="Ver PDF"
+            type="button"
+          >
+            <i class="fa-solid fa-file-pdf fa-lg"></i>
+          </button>
+        }
+      </span>
     </div>
   </div>
 </div>
