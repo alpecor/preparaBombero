@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit {
 
   showPdfPreview(url: string) {
     this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
 
