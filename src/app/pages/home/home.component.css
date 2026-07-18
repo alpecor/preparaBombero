@@ -32,6 +32,13 @@ h2 {
 
 }
 
+.pdf-preview {
+  width: 100%;
+  min-height: 70vh;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+}
+
 /* ------ MODAL ------------- */
 .modal.hidden {
   display: none;

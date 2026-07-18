@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -16,6 +16,7 @@ export class topicsComponent implements OnInit {
   @Input() topics:any;
   @Input() margin:number= -1;
   @Input() isSubscribed = false;
+  @Output() pdfPreview = new EventEmitter<string>();
 
   //variables para mostrar mensaje de pregunta guardada
   showSavedToast = false;
@@ -89,6 +90,10 @@ export class topicsComponent implements OnInit {
     updateTopicSelection(this.topics, topicId, isChecked);
 
     this.localStorageService.setItem("topicsSelected", topicSelected);
+  }
+
+  showPdfPreview(url: string) {
+    this.pdfPreview.emit(url);
   }
 
 

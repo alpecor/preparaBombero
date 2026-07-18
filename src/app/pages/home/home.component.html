@@ -93,16 +93,41 @@
                       class="fa-solid fa-file-pen fa-lg"
                       style="cursor: pointer">
                     </i>
+                    @if (topic.url) {
+                      <button
+                        (click)="showPdfPreview(topic.url)"
+                        title="Ver PDF"
+                        class="ml-2"
+                        type="button">
+                        <i class="fa-solid fa-file-pdf fa-lg"></i>
+                      </button>
+                    }
                   </div>
                 </div>
                 <div [hidden]="topic.expanded">
-                  <app-topics [topics]="topic.topics" [margin]="3" [isSubscribed]="isSubscribed" />
+                  <app-topics
+                    [topics]="topic.topics"
+                    [margin]="3"
+                    [isSubscribed]="isSubscribed"
+                    (pdfPreview)="showPdfPreview($event)"
+                  />
                 </div>
               </div>
             }
           </div>
         }
       </div>
+
+      @if (pdfPreviewUrl) {
+        <section class="max-w-4xl mx-auto w-full">
+          <h2 class="text-xl font-bold mt-8">Vista previa del PDF</h2>
+          <iframe
+            [src]="pdfPreviewUrl"
+            class="pdf-preview mt-2"
+            title="Vista previa del PDF"
+          ></iframe>
+        </section>
+      }
 
       
     </div>

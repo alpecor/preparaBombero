@@ -44,11 +44,26 @@
         style="cursor: pointer"
       >
       </i>
+      @if (item.url) {
+        <button
+          (click)="showPdfPreview(item.url)"
+          title="Ver PDF"
+          class="ml-2"
+          type="button"
+        >
+          <i class="fa-solid fa-file-pdf fa-lg"></i>
+        </button>
+      }
     </div>
   </div>
 </div>
 @if (item.topics?.length > 0) {
-<app-topics [margin]="margin + 2" [topics]="item.topics" [isSubscribed]="isSubscribed" />
+<app-topics
+  [margin]="margin + 2"
+  [topics]="item.topics"
+  [isSubscribed]="isSubscribed"
+  (pdfPreview)="showPdfPreview($event)"
+/>
 } }
 
 @if (showExamConfigModal) {

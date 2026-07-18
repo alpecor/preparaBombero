@@ -8,6 +8,7 @@ import { topicsComponent } from '../../components/topics/topics.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +24,7 @@ export class HomeComponent implements OnInit {
   not_auth: boolean = !this.authService.isNotAuth();
   isSubscribed = false;
   topics: any = {};
+  pdfPreviewUrl: SafeResourceUrl | null = null;
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
@@ -43,7 +45,11 @@ export class HomeComponent implements OnInit {
 
 
   //************************* CONSTRUCTOR ****************************//
-  constructor(private router: Router, private authService: AuthService, private requestService: RequestService, private localStorageService: LocalStorageService){
+  constructor(private router: Router, private authService: AuthService, private requestService: RequestService, private localStorageService: LocalStorageService, private sanitizer: DomSanitizer){
+  }
+
+  showPdfPreview(url: string) {
+    this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 
