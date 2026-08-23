@@ -1,0 +1,424 @@
+<div class="study-plan-page min-h-screen bg-gray-50" [class.study-plan-settings-page]="showSettings">
+  <app-header />
+
+  <main>
+    @if (!showSettings) {
+      <section class="study-plan-hero">
+        <div class="study-plan-hero-content">
+          @if (!hasPlan) {
+            <span class="study-plan-eyebrow">
+              <i class="fa-solid fa-calendar-check"></i>
+              Configuración inicial
+            </span>
+            <h1>Configura tu plan</h1>
+            <p>Cuéntanos a qué te presentas y cuánto tiempo tienes</p>
+          } @else {
+            <h1>Tu plan de estudio personalizado</h1>
+          }
+        </div>
+      </section>
+    }
+
+    <section class="study-plan-content">
+      @if (isLoading) {
+        <div class="study-plan-state" role="status">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <span>Cargando tu plan de estudio...</span>
+        </div>
+      } @else if (showSettings) {
+        <div class="study-plan-settings">
+          <div class="study-plan-settings-topbar">
+            <button type="button" class="study-plan-back-button" (click)="backToPlan()">
+              <i class="fa-solid fa-arrow-left"></i>
+              Volver
+            </button>
+            <h2>Ajustes del plan</h2>
+          </div>
+
+          <section class="study-plan-settings-card">
+            <div class="study-plan-settings-summary">
+              <div>
+                <span>Tu plan finaliza en:</span>
+                <strong>{{ currentExamDateLabel() }}</strong>
+              </div>
+              <span class="study-plan-settings-current-duration">
+                {{ currentDurationLabel() }}
+              </span>
+            </div>
+
+            <div class="study-plan-settings-section">
+              <span class="study-plan-settings-label">Nueva estimación</span>
+              <label for="settings-duration">Tiempo estimado hasta el examen</label>
+              <div class="study-plan-select-wrap">
+                <select id="settings-duration" [(ngModel)]="settingsSelectedDuration">
+                  @for (duration of durationOptions; track duration.value) {
+                    <option [value]="duration.value">
+                      {{ duration.label }}{{ isCurrentDuration(duration) ? ' (actual)' : '' }}
+                    </option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div class="study-plan-settings-divider"></div>
+
+            <div class="study-plan-settings-section">
+              <h3><i class="fa-solid fa-building-columns"></i> Administración convocante</h3>
+              <p class="study-plan-settings-description">
+                Solo puedes tener una administración activa a la vez
+              </p>
+
+              <div class="study-plan-current-administration">
+                <div>
+                  <span>Administración actual</span>
+                  <strong>{{ currentPlan?.type || 'No disponible' }}</strong>
+                  <small>{{ currentPlan?.community || '—' }} · {{ currentPlan?.city || '—' }}</small>
+                </div>
+                <i class="fa-solid fa-square-check"></i>
+              </div>
+
+              <div class="study-plan-administration-warning">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Cambiar administración</h4>
+                <p>
+                  Si cambias de administración <strong>perderás todo tu historial</strong>:
+                  el rendimiento acumulado por temas y los exámenes guardados de este plan.
+                  Esta acción no se puede deshacer.
+                </p>
+                <button
+                  type="button"
+                  class="study-plan-delete-history-button"
+                  [disabled]="isDeletingPlan"
+                  (click)="openDeleteConfirmation()">
+                  @if (isDeletingPlan) {
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    Eliminando plan...
+                  } @else {
+                    Cambiar administración y borrar historial
+                  }
+                </button>
+              </div>
+            </div>
+          </section>
+
+          @if (errorMessage) {
+            <div class="study-plan-feedback study-plan-feedback-error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+          }
+        </div>
+      } @else if (hasPlan) {
+        <div class="study-plan-dashboard">
+          <div class="study-plan-plan-actions">
+            <button
+              type="button"
+              class="study-plan-edit-button"
+              [disabled]="isDeletingPlan"
+              (click)="modifyStudyPlan()">
+              <i class="fa-solid" [ngClass]="isDeletingPlan ? 'fa-spinner fa-spin' : 'fa-pen-to-square'"></i>
+              {{ isDeletingPlan ? 'Preparando cambios...' : 'Modificar plan' }}
+            </button>
+          </div>
+
+          <div class="study-plan-dashboard-grid">
+            @if (isRestDay) {
+              <section class="study-plan-rest-card">
+                <i class="fa-solid fa-mug-hot"></i>
+                <div>
+                  <span>DOMINGO · DESCANSO</span>
+                  <h3>Hoy es tu día de descanso</h3>
+                  <p>Aprovéchalo para recargar fuerzas. El lunes retomamos tu plan.</p>
+                </div>
+              </section>
+            } @else if (todaySession) {
+              <section class="study-plan-today-card">
+                <div class="study-plan-today-topline">
+                  <span>
+                    <i class="fa-solid fa-fire"></i>
+                    Sesión de hoy · {{ sessionDateLabel(todaySession) }}
+                  </span>
+                  @if (todaySession.type === 'SIMULACRO') {
+                    <span class="study-plan-session-kind">Simulacro</span>
+                  }
+                </div>
+
+                <h3>{{ sessionTitle(todaySession) }}</h3>
+                <p class="study-plan-topic-meta">
+                  25 preguntas temáticas · 5 territoriales
+                </p>
+
+                <div class="study-plan-question-pill">
+                  <i class="fa-regular fa-rectangle-list"></i>
+                  30 preguntas
+                </div>
+
+                @if (todaySession.status === 'PENDIENTE') {
+                  <button
+                    type="button"
+                    class="study-plan-submit"
+                    [disabled]="isStartingSession"
+                    (click)="startStudySession(todaySession)">
+                    @if (isStartingSession) {
+                      <i class="fa-solid fa-spinner fa-spin"></i>
+                      Cargando sesión...
+                    } @else {
+                      <i class="fa-solid fa-play"></i>
+                      Empezar examen de hoy
+                    }
+                  </button>
+                } @else {
+                  <div class="study-plan-completed-banner">
+                    <i class="fa-solid fa-circle-check"></i>
+                    {{ sessionStatusLabel(todaySession) }}
+                  </div>
+                }
+              </section>
+
+            } @else {
+              <div class="study-plan-state">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>No hay sesiones disponibles para mostrar.</span>
+              </div>
+            }
+
+            <section class="study-plan-list-card">
+              <div class="study-plan-list-heading">
+                <span>Próximas sesiones</span>
+                <i class="fa-solid fa-list-check"></i>
+              </div>
+
+              @if (upcomingSessions.length > 0) {
+                <div class="study-plan-session-list">
+                  @for (session of upcomingSessions; track session.id) {
+                    <div class="study-plan-session-item">
+                      <button
+                        type="button"
+                        class="study-plan-session-row"
+                        [class.study-plan-session-row-expanded]="expandedSessionId === session.id"
+                        [attr.aria-expanded]="expandedSessionId === session.id"
+                        [attr.aria-controls]="'study-plan-session-topics-' + session.id"
+                        (click)="toggleUpcomingSession(session.id)">
+                        <span class="study-plan-session-day">{{ sessionShortDay(session) }}</span>
+                        <strong>{{ sessionTitle(session) }}</strong>
+                        <span class="study-plan-session-count">
+                          {{ session.type === 'SIMULACRO' ? 'Simulacro' : '30 preg.' }}
+                          <i
+                            class="fa-solid"
+                            [ngClass]="expandedSessionId === session.id ? 'fa-chevron-up' : 'fa-chevron-down'"
+                            aria-hidden="true"></i>
+                        </span>
+                      </button>
+
+                      @if (expandedSessionId === session.id) {
+                        <div
+                          class="study-plan-session-topics"
+                          [id]="'study-plan-session-topics-' + session.id">
+                          <span>Temas del examen</span>
+                          @if (session.topics.length > 0) {
+                            <ol>
+                              @for (topic of session.topics; track $index) {
+                                <li>{{ topic }}</li>
+                              }
+                            </ol>
+                          } @else {
+                            <p>No hay temas disponibles para esta sesión.</p>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="study-plan-empty">No hay próximas sesiones pendientes.</p>
+              }
+            </section>
+          </div>
+
+          @if (historySessions.length > 0) {
+            <section class="study-plan-history-card">
+              <div class="study-plan-list-heading">
+                <span>Historial reciente</span>
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </div>
+              @for (session of historySessions; track session.id) {
+                <div class="study-plan-history-row">
+                  <span>{{ sessionDateLabel(session) }}</span>
+                  <strong>{{ sessionTitle(session) }}</strong>
+                  <span>{{ sessionStatusLabel(session) }}</span>
+                </div>
+              }
+            </section>
+          }
+
+          @if (errorMessage) {
+            <div class="study-plan-feedback study-plan-feedback-error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+          }
+        </div>
+      } @else if (errorMessage && communities.length === 0) {
+        <div class="study-plan-state study-plan-state-error" role="alert">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <p>{{ errorMessage }}</p>
+          <button
+            type="button"
+            class="rounded-lg border border-primaryColor bg-white px-4 py-2 font-semibold text-yellow-700 hover:bg-yellow-50"
+            (click)="loadPlan()">
+            Reintentar
+          </button>
+        </div>
+      } @else {
+        <div class="study-plan-card">
+          <div class="study-plan-card-header">
+            <div>
+              <span class="study-plan-section-label">Primer paso</span>
+              <h2>Cuéntanos cómo quieres prepararte</h2>
+            </div>
+          </div>
+
+          <div class="study-plan-form-grid">
+            <div class="study-plan-field">
+              <label for="community">Comunidad autónoma</label>
+              <div class="study-plan-select-wrap">
+                <select
+                  id="community"
+                  [(ngModel)]="selectedCommunity"
+                  (ngModelChange)="onCommunityChange()">
+                  <option value="">Selecciona una comunidad</option>
+                  @for (community of communities; track community) {
+                    <option [value]="community">{{ community }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div class="study-plan-field">
+              <label for="province">Provincia</label>
+              <div class="study-plan-select-wrap">
+                <select
+                  id="province"
+                  [(ngModel)]="selectedProvince"
+                  (ngModelChange)="onProvinceChange()"
+                  [disabled]="provinces.length === 0">
+                  <option value="">Selecciona una provincia</option>
+                  @for (province of provinces; track province) {
+                    <option [value]="province">{{ province }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div class="study-plan-field">
+              <label for="administration">Administración convocante</label>
+              <div class="study-plan-select-wrap">
+                <select
+                  id="administration"
+                  [(ngModel)]="selectedAdministration"
+                  [disabled]="administrations.length === 0">
+                  <option value="">Selecciona una administración</option>
+                  @for (administration of administrations; track administration) {
+                    <option [value]="administration">{{ administration }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <div class="study-plan-field">
+              <label for="duration">Tiempo estimado hasta el examen</label>
+              <div class="study-plan-select-wrap">
+                <select id="duration" [(ngModel)]="selectedDuration">
+                  <option value="">Selecciona el tiempo disponible</option>
+                  @for (duration of durationOptions; track duration.value) {
+                    <option [value]="duration.value">{{ duration.label }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="study-plan-notice">
+            <i class="fa-regular fa-lightbulb"></i>
+            <p>
+              El sistema obtendrá automáticamente el temario oficial de las bases del
+              <strong>{{ selectedAdministration || 'organismo convocante' }}</strong>
+              y creará tu plan personalizado.
+            </p>
+          </div>
+
+          @if (errorMessage) {
+            <div class="study-plan-feedback study-plan-feedback-error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+          }
+
+          @if (successMessage) {
+            <div class="study-plan-feedback study-plan-feedback-success" role="status">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>{{ successMessage }}</span>
+            </div>
+          }
+
+          <button
+            type="button"
+            class="study-plan-submit"
+            [disabled]="!canSubmit"
+            (click)="createStudyPlan()">
+            @if (isSubmitting) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              Creando tu plan...
+            } @else {
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              Crear mi plan de estudio
+            }
+          </button>
+        </div>
+      }
+    </section>
+  </main>
+
+  @if (showDeleteConfirmation) {
+    <div
+      class="study-plan-modal-backdrop"
+      role="presentation"
+      (click)="closeDeleteConfirmation()">
+      <section
+        class="study-plan-confirmation-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="study-plan-confirmation-title"
+        (click)="$event.stopPropagation()">
+        <div class="study-plan-confirmation-icon" aria-hidden="true">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+
+        <div class="study-plan-confirmation-content">
+          <span class="study-plan-confirmation-eyebrow">Acción irreversible</span>
+          <h2 id="study-plan-confirmation-title">¿Cambiar administración?</h2>
+          <p>
+            Al cambiar de administración se eliminarán tu plan actual y todo el historial
+            de sesiones. Esta acción no se puede deshacer.
+          </p>
+        </div>
+
+        <div class="study-plan-confirmation-actions">
+          <button
+            type="button"
+            class="study-plan-confirmation-cancel"
+            (click)="closeDeleteConfirmation()">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="study-plan-confirmation-danger"
+            (click)="changeAdministrationAndDelete()">
+            Cambiar y borrar historial
+          </button>
+        </div>
+      </section>
+    </div>
+  }
+
+  <app-footer />
+</div>

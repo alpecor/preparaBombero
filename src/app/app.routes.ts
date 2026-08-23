@@ -23,6 +23,7 @@ import { ResetPasswordComponent } from './pages/auth/reset-password/reset-passwo
 import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions.component';
 import { ReviewResultComponent } from './pages/review-result/review-result.component';
 import { LandingComponent } from './pages/landing/landing.component';
+import { StudyPlanComponent } from './pages/study-plan/study-plan.component';
 
 export const routes: Routes = [
   //URLs DE LA HOME
@@ -101,6 +102,11 @@ export const routes: Routes = [
   //URL DE PREGUNTAS GUARDADAS
   {
     path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
+  },
+
+  // URL DEL PLAN DE ESTUDIO
+  {
+    path: 'plan-estudio', component: StudyPlanComponent, canActivate: [userAuthGuard]
   },
 
    //URL DE LANDING

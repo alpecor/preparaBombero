@@ -24,6 +24,7 @@ export class QuestionsComponent implements OnInit {
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
   userResponses: { quizId: number, optionSelected: string }[] = []; // Array para almacenar las respuestas del usuario
+  studyPlanSessionId: number | null = null;
   page: any = {page: 0, first:0}
   questionsPerPage:any = 20;
   savedQuestions = [];  // ids de preguntas guardadas
@@ -46,12 +47,15 @@ export class QuestionsComponent implements OnInit {
   ngOnDestroy() {
     this.localStorageService.removeItem('examQuestions');
     this.localStorageService.removeItem('examenName');
+    this.localStorageService.removeItem('studyPlanSessionId');
     this.titleService.setTitle("PreparaBombero");
   }
 
 
   //************************* ngOnInit ****************************//
   async ngOnInit(){
+    this.studyPlanSessionId = this.localStorageService.getItem('studyPlanSessionId') ?? null;
+
     // aqui obtenemos las preguntas guardadas si el usuario está subscrito
     if(this.isSubscribed){
       this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`,{},{}, true);
@@ -211,7 +215,10 @@ export class QuestionsComponent implements OnInit {
   async sendTest() {
     try{
       // Encapsula el array userResponses dentro de un objeto con la clave 'quizzes'
-      const payload = {quizzes: this.userResponses, type: "EXAM"};
+      const payload: any = {quizzes: this.userResponses, type: "EXAM"};
+      if (this.studyPlanSessionId) {
+        payload.studyPlanSessionId = this.studyPlanSessionId;
+      }
       // Hacer la petición POST al backend para corregir el examen
       const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
       // Guardar las preguntas corregidas y las respuestas del usuario en el localStorage
