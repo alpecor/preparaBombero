@@ -1,4 +1,4 @@
-<div class="study-plan-page min-h-screen bg-gray-50" [class.study-plan-settings-page]="showSettings">
+<div class="study-plan-page min-h-screen" [class.study-plan-settings-page]="showSettings">
   <app-header />
 
   <main>
@@ -6,14 +6,11 @@
       <section class="study-plan-hero">
         <div class="study-plan-hero-content">
           @if (!hasPlan) {
-            <span class="study-plan-eyebrow">
-              <i class="fa-solid fa-calendar-check"></i>
-              Configuración inicial
-            </span>
             <h1>Configura tu plan</h1>
             <p>Cuéntanos a qué te presentas y cuánto tiempo tienes</p>
           } @else {
             <h1>Tu plan de estudio personalizado</h1>
+            <p class="study-plan-hero-countdown">{{ remainingDaysLabel() }}</p>
           }
         </div>
       </section>
@@ -41,16 +38,16 @@
                 <span>Tu plan finaliza en:</span>
                 <strong>{{ currentExamDateLabel() }}</strong>
               </div>
-              <span class="study-plan-settings-current-duration">
-                {{ currentDurationLabel() }}
-              </span>
             </div>
 
             <div class="study-plan-settings-section">
-              <span class="study-plan-settings-label">Nueva estimación</span>
-              <label for="settings-duration">Tiempo estimado hasta el examen</label>
+              <span class="study-plan-settings-label">Nueva estimación - Tiempo estimado hasta el examen</span>
               <div class="study-plan-select-wrap">
-                <select id="settings-duration" [(ngModel)]="settingsSelectedDuration">
+                <select
+                  id="settings-duration"
+                  [(ngModel)]="settingsSelectedDuration"
+                  [disabled]="isUpdatingExamDate"
+                  (ngModelChange)="onSettingsDurationChange($event)">
                   @for (duration of durationOptions; track duration.value) {
                     <option [value]="duration.value">
                       {{ duration.label }}{{ isCurrentDuration(duration) ? ' (actual)' : '' }}
@@ -63,7 +60,7 @@
             <div class="study-plan-settings-divider"></div>
 
             <div class="study-plan-settings-section">
-              <h3><i class="fa-solid fa-building-columns"></i> Administración convocante</h3>
+              <h3><i class="fa-solid fa-building-columns"></i> Administración</h3>
               <p class="study-plan-settings-description">
                 Solo puedes tener una administración activa a la vez
               </p>
@@ -74,7 +71,6 @@
                   <strong>{{ currentPlan?.type || 'No disponible' }}</strong>
                   <small>{{ currentPlan?.community || '—' }} · {{ currentPlan?.city || '—' }}</small>
                 </div>
-                <i class="fa-solid fa-square-check"></i>
               </div>
 
               <div class="study-plan-administration-warning">
@@ -116,7 +112,7 @@
               [disabled]="isDeletingPlan"
               (click)="modifyStudyPlan()">
               <i class="fa-solid" [ngClass]="isDeletingPlan ? 'fa-spinner fa-spin' : 'fa-pen-to-square'"></i>
-              {{ isDeletingPlan ? 'Preparando cambios...' : 'Modificar plan' }}
+              {{ isDeletingPlan ? 'Preparando cambios...' : 'Ajustes del plan' }}
             </button>
           </div>
 
@@ -142,7 +138,24 @@
                   }
                 </div>
 
-                <h3>{{ sessionTitle(todaySession) }}</h3>
+                <div class="study-plan-today-title-row">
+                  <h3>
+                    {{ isTodayTopicsExpanded ? sessionTitle(todaySession) : sessionPreviewTitle(todaySession) }}
+                  </h3>
+                  @if (todaySession.topics.length > 1) {
+                    <button
+                      type="button"
+                      class="study-plan-today-title-toggle"
+                      [attr.aria-expanded]="isTodayTopicsExpanded"
+                      aria-label="Mostrar temas de la sesión"
+                      (click)="toggleTodayTopics()">
+                      <i
+                        class="fa-solid"
+                        [ngClass]="isTodayTopicsExpanded ? 'fa-chevron-up' : 'fa-chevron-down'"
+                        aria-hidden="true"></i>
+                    </button>
+                  }
+                </div>
                 <p class="study-plan-topic-meta">
                   25 preguntas temáticas · 5 territoriales
                 </p>
@@ -184,7 +197,6 @@
             <section class="study-plan-list-card">
               <div class="study-plan-list-heading">
                 <span>Próximas sesiones</span>
-                <i class="fa-solid fa-list-check"></i>
               </div>
 
               @if (upcomingSessions.length > 0) {
@@ -199,7 +211,7 @@
                         [attr.aria-controls]="'study-plan-session-topics-' + session.id"
                         (click)="toggleUpcomingSession(session.id)">
                         <span class="study-plan-session-day">{{ sessionShortDay(session) }}</span>
-                        <strong>{{ sessionTitle(session) }}</strong>
+                        <strong>{{ sessionPreviewTitle(session) }}</strong>
                         <span class="study-plan-session-count">
                           {{ session.type === 'SIMULACRO' ? 'Simulacro' : '30 preg.' }}
                           <i
@@ -215,11 +227,11 @@
                           [id]="'study-plan-session-topics-' + session.id">
                           <span>Temas del examen</span>
                           @if (session.topics.length > 0) {
-                            <ol>
+                            <ul>
                               @for (topic of session.topics; track $index) {
                                 <li>{{ topic }}</li>
                               }
-                            </ol>
+                            </ul>
                           } @else {
                             <p>No hay temas disponibles para esta sesión.</p>
                           }
@@ -236,16 +248,62 @@
 
           @if (historySessions.length > 0) {
             <section class="study-plan-history-card">
-              <div class="study-plan-list-heading">
-                <span>Historial reciente</span>
-                <i class="fa-solid fa-clock-rotate-left"></i>
-              </div>
-              @for (session of historySessions; track session.id) {
-                <div class="study-plan-history-row">
-                  <span>{{ sessionDateLabel(session) }}</span>
-                  <strong>{{ sessionTitle(session) }}</strong>
-                  <span>{{ sessionStatusLabel(session) }}</span>
+              <div class="study-plan-list-heading study-plan-history-heading">
+                <div class="study-plan-list-heading-copy">
+                  <span>Historial reciente</span>
                 </div>
+              </div>
+              @for (session of visibleHistorySessions; track session.id) {
+                <div class="study-plan-history-item">
+                  <button
+                    type="button"
+                    class="study-plan-history-row"
+                    [class.study-plan-history-row-expanded]="expandedSessionId === session.id"
+                    [attr.aria-expanded]="expandedSessionId === session.id"
+                    [attr.aria-controls]="'study-plan-history-topics-' + session.id"
+                    (click)="toggleHistorySession(session.id)">
+                    <span class="study-plan-history-date">
+                      <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                      {{ sessionDateLabel(session) }}
+                    </span>
+                    <strong>{{ sessionPreviewTitle(session) }}</strong>
+                    <span class="study-plan-history-status">
+                      <span class="study-plan-history-status-label">
+                        <i class="study-plan-history-status-dot" aria-hidden="true"></i>
+                        {{ sessionStatusLabel(session) }}
+                      </span>
+                      <i
+                        class="fa-solid"
+                        [ngClass]="expandedSessionId === session.id ? 'fa-chevron-up' : 'fa-chevron-down'"
+                        aria-hidden="true"></i>
+                    </span>
+                  </button>
+
+                  @if (expandedSessionId === session.id) {
+                    <div
+                      class="study-plan-session-topics study-plan-history-topics"
+                      [id]="'study-plan-history-topics-' + session.id">
+                      <span>Temas del examen</span>
+                      @if (session.topics.length > 0) {
+                        <ul>
+                          @for (topic of session.topics; track $index) {
+                            <li>{{ topic }}</li>
+                          }
+                        </ul>
+                      } @else {
+                        <p>No hay temas disponibles para esta sesión.</p>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+              @if (historySessions.length > 5) {
+                <button
+                  type="button"
+                  class="study-plan-history-more-button"
+                  (click)="toggleHistoryVisibility()">
+                  {{ showAllHistory ? 'Ver menos' : 'Ver más' }}
+                </button>
               }
             </section>
           }
@@ -414,6 +472,57 @@
             class="study-plan-confirmation-danger"
             (click)="changeAdministrationAndDelete()">
             Cambiar y borrar historial
+          </button>
+        </div>
+      </section>
+    </div>
+  }
+
+  @if (showDateConfirmation) {
+    <div
+      class="study-plan-modal-backdrop"
+      role="presentation"
+      (click)="closeDateConfirmation()">
+      <section
+        class="study-plan-confirmation-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="study-plan-date-confirmation-title"
+        (click)="$event.stopPropagation()">
+        <div class="study-plan-confirmation-icon study-plan-confirmation-icon-date" aria-hidden="true">
+          <i class="fa-solid fa-calendar-days"></i>
+        </div>
+
+        <div class="study-plan-confirmation-content">
+          <span class="study-plan-confirmation-eyebrow study-plan-confirmation-eyebrow-date">
+            Actualizar plan
+          </span>
+          <h2 id="study-plan-date-confirmation-title">¿Cambiar la fecha del examen?</h2>
+          <p>
+            La nueva fecha será el <strong>{{ pendingExamDateLabel() }}</strong>.
+            Se mantendrán las sesiones hasta hoy y se recalcularán las futuras.
+          </p>
+        </div>
+
+        <div class="study-plan-confirmation-actions">
+          <button
+            type="button"
+            class="study-plan-confirmation-cancel"
+            [disabled]="isUpdatingExamDate"
+            (click)="closeDateConfirmation()">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="study-plan-confirmation-primary"
+            [disabled]="isUpdatingExamDate"
+            (click)="confirmDateChange()">
+            @if (isUpdatingExamDate) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              Actualizando...
+            } @else {
+              Confirmar cambio
+            }
           </button>
         </div>
       </section>

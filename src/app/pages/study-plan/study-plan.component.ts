@@ -27,6 +27,8 @@ interface StudyPlanSummary {
   type?: string;
 }
 
+const SPAIN_TIME_ZONE = 'Europe/Madrid';
+
 @Component({
   selector: 'app-study-plan',
   standalone: true,
@@ -50,16 +52,22 @@ export class StudyPlanComponent implements OnInit {
   todaySession: StudySession | null = null;
   upcomingSessions: StudySession[] = [];
   historySessions: StudySession[] = [];
+  showAllHistory = false;
   expandedSessionId: number | null = null;
   hasPlan = false;
   isRestDay = false;
+  isTodayTopicsExpanded = false;
   isStartingSession = false;
   isDeletingPlan = false;
   showDeleteConfirmation = false;
+  isUpdatingExamDate = false;
+  showDateConfirmation = false;
+  pendingExamDate = '';
   showSettings = false;
   currentPlan: StudyPlanSummary | null = null;
   currentExamDate: string | number | null = null;
   settingsSelectedDuration = '';
+  confirmedSettingsDuration = '';
 
   isLoading = true;
   isSubmitting = false;
@@ -81,8 +89,12 @@ export class StudyPlanComponent implements OnInit {
     this.errorMessage = '';
 
     try {
-      const response = await this.requestService.request('GET', '/study', {}, {}, true);
+      const [response, user] = await Promise.all([
+        this.requestService.request('GET', '/study', {}, {}, true),
+        this.requestService.request('GET', '/user', {}, {}, true)
+      ]);
       this.sessions = Array.isArray(response) ? response : [];
+      this.currentExamDate = user?.examEstimatedDate ?? null;
       this.hasPlan = this.sessions.length > 0;
 
       if (this.hasPlan) {
@@ -114,7 +126,7 @@ export class StudyPlanComponent implements OnInit {
 
   private preparePlanView(): void {
     const todayKey = this.dateKey(new Date());
-    this.isRestDay = new Date().getDay() === 0;
+    this.isRestDay = this.weekday(new Date()) === 0;
     const sessionForToday = this.sessions.find(
       session => this.dateKey(session.date) === todayKey
     );
@@ -131,15 +143,24 @@ export class StudyPlanComponent implements OnInit {
         session.id !== todayId &&
         session.status === 'PENDIENTE' &&
         this.dateKey(session.date) >= todayKey &&
-        new Date(session.date).getDay() !== 0
+        this.weekday(session.date) !== 0
       )
       .sort((a, b) => this.timestamp(a.date) - this.timestamp(b.date))
-      .slice(0, 7);
+      .slice(0, 5);
 
     this.historySessions = this.sessions
       .filter(session => session.status !== 'PENDIENTE')
-      .sort((a, b) => this.timestamp(b.date) - this.timestamp(a.date))
-      .slice(0, 5);
+      .sort((a, b) => this.timestamp(b.date) - this.timestamp(a.date));
+  }
+
+  get visibleHistorySessions(): StudySession[] {
+    return this.showAllHistory
+      ? this.historySessions
+      : this.historySessions.slice(0, 5);
+  }
+
+  toggleHistoryVisibility(): void {
+    this.showAllHistory = !this.showAllHistory;
   }
 
   onCommunityChange(): void {
@@ -160,6 +181,14 @@ export class StudyPlanComponent implements OnInit {
 
   toggleUpcomingSession(sessionId: number): void {
     this.expandedSessionId = this.expandedSessionId === sessionId ? null : sessionId;
+  }
+
+  toggleHistorySession(sessionId: number): void {
+    this.expandedSessionId = this.expandedSessionId === sessionId ? null : sessionId;
+  }
+
+  toggleTodayTopics(): void {
+    this.isTodayTopicsExpanded = !this.isTodayTopicsExpanded;
   }
 
   get canSubmit(): boolean {
@@ -298,7 +327,8 @@ export class StudyPlanComponent implements OnInit {
 
     return new Intl.DateTimeFormat('es-ES', {
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
+      timeZone: SPAIN_TIME_ZONE
     }).format(new Date(this.currentExamDate));
   }
 
@@ -310,40 +340,142 @@ export class StudyPlanComponent implements OnInit {
     return duration?.label ?? 'Sin estimación configurada';
   }
 
+  onSettingsDurationChange(value: string): void {
+    if (this.isUpdatingExamDate) {
+      return;
+    }
+
+    if (!value || value === this.confirmedSettingsDuration) {
+      this.settingsSelectedDuration = this.confirmedSettingsDuration;
+      return;
+    }
+
+    this.pendingExamDate = value;
+    this.showDateConfirmation = true;
+  }
+
+  closeDateConfirmation(): void {
+    if (this.isUpdatingExamDate) {
+      return;
+    }
+
+    this.settingsSelectedDuration = this.confirmedSettingsDuration;
+    this.pendingExamDate = '';
+    this.showDateConfirmation = false;
+  }
+
+  pendingExamDateLabel(): string {
+    if (!this.pendingExamDate) {
+      return '';
+    }
+
+    return new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: SPAIN_TIME_ZONE
+    }).format(new Date(Number(this.pendingExamDate)));
+  }
+
+  async confirmDateChange(): Promise<void> {
+    if (!this.pendingExamDate || this.isUpdatingExamDate) {
+      return;
+    }
+
+    const newExamDate = Number(this.pendingExamDate);
+    this.isUpdatingExamDate = true;
+    this.errorMessage = '';
+
+    try {
+      await this.requestService.request(
+        'PUT',
+        '/study',
+        { estimateExamDate: newExamDate },
+        {},
+        true
+      );
+
+      this.currentExamDate = newExamDate;
+      this.confirmedSettingsDuration = this.pendingExamDate;
+      this.settingsSelectedDuration = this.pendingExamDate;
+      this.pendingExamDate = '';
+      this.showDateConfirmation = false;
+      await this.loadPlan();
+    } catch (error: any) {
+      this.settingsSelectedDuration = this.confirmedSettingsDuration;
+      this.pendingExamDate = '';
+      this.showDateConfirmation = false;
+      this.errorMessage = this.getApiErrorMessage(
+        error,
+        'No se ha podido actualizar la fecha del examen.'
+      );
+    } finally {
+      this.isUpdatingExamDate = false;
+    }
+  }
+
+  remainingDaysLabel(): string {
+    if (!this.currentExamDate) {
+      return '';
+    }
+
+    const todayKey = this.dateKey(new Date());
+    const examKey = this.dateKey(this.currentExamDate);
+    const today = new Date(`${todayKey}T00:00:00Z`).getTime();
+    const examDate = new Date(`${examKey}T00:00:00Z`).getTime();
+    const days = Math.ceil((examDate - today) / (24 * 60 * 60 * 1000));
+
+    if (days === 0) {
+      return 'El examen es hoy';
+    }
+
+    if (days < 0) {
+      return 'La fecha del examen ya ha pasado';
+    }
+
+    const months = Math.floor(days / 30);
+    const remainingDays = days % 30;
+    const duration = [];
+
+    if (months > 0) {
+      duration.push(`${months} ${months === 1 ? 'mes' : 'meses'}`);
+    }
+
+    if (remainingDays > 0) {
+      duration.push(`${remainingDays} ${remainingDays === 1 ? 'día' : 'días'}`);
+    }
+
+    return `Quedan ${duration.join(' y ')} para el examen`;
+  }
+
   isCurrentDuration(duration: DurationOption): boolean {
-    return String(duration.value) === String(this.settingsSelectedDuration);
+    return String(duration.value) === String(this.confirmedSettingsDuration);
   }
 
   sessionTitle(session: StudySession): string {
-    if (session.type === 'SIMULACRO') {
-      return 'Simulacro semanal';
-    }
+    return session.topics.join('\n');
+  }
 
-    if (session.type === 'SPRINT') {
-      return 'Repaso intensivo del temario';
-    }
-
-    if (!session.topics?.length) {
-      return 'Sesión de estudio';
-    }
-
-    const visibleTopics = session.topics.slice(0, 2).join(' · ');
-    const remainingTopics = session.topics.length - 2;
-    return remainingTopics > 0
-      ? `${visibleTopics} + ${remainingTopics} más`
-      : visibleTopics;
+  sessionPreviewTitle(session: StudySession): string {
+    return session.topics.length > 1
+      ? `${session.topics[0]}…`
+      : session.topics[0];
   }
 
   sessionDateLabel(session: StudySession): string {
     return new Intl.DateTimeFormat('es-ES', {
       weekday: 'long',
       day: 'numeric',
-      month: 'long'
+      month: 'long',
+      timeZone: SPAIN_TIME_ZONE
     }).format(new Date(session.date));
   }
 
   sessionShortDay(session: StudySession): string {
-    return new Intl.DateTimeFormat('es-ES', { weekday: 'short' })
+    return new Intl.DateTimeFormat('es-ES', {
+      weekday: 'short',
+      timeZone: SPAIN_TIME_ZONE
+    })
       .format(new Date(session.date))
       .replace('.', '')
       .toUpperCase();
@@ -359,9 +491,28 @@ export class StudyPlanComponent implements OnInit {
     return session.status === 'NO_REALIZADA' ? 'No realizada' : 'Pendiente';
   }
 
-  private dateKey(value: string | Date): string {
-    const date = new Date(value);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  private dateKey(value: string | number | Date): string {
+    const parts = Object.fromEntries(
+      new Intl.DateTimeFormat('en-US', {
+        timeZone: SPAIN_TIME_ZONE,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+        .formatToParts(new Date(value))
+        .map(({ type, value: partValue }) => [type, partValue])
+    );
+
+    return `${parts['year']}-${parts['month']}-${parts['day']}`;
+  }
+
+  private weekday(value: string | Date): number {
+    const weekday = new Intl.DateTimeFormat('en-US', {
+      timeZone: SPAIN_TIME_ZONE,
+      weekday: 'short'
+    }).format(new Date(value));
+
+    return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(weekday);
   }
 
   private timestamp(value: string | Date): number {
@@ -380,6 +531,7 @@ export class StudyPlanComponent implements OnInit {
       this.currentPlan = user?.studyPlan ?? null;
       this.currentExamDate = user?.examEstimatedDate ?? null;
       this.settingsSelectedDuration = this.findClosestDurationValue(this.currentExamDate);
+      this.confirmedSettingsDuration = this.settingsSelectedDuration;
       this.configuration = configuration ?? {};
       this.communities = Object.keys(this.configuration).filter(Boolean);
     } catch (error: any) {
