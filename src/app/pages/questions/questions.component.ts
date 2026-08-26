@@ -231,6 +231,17 @@ export class QuestionsComponent implements OnInit {
         unansweredQuestions: response.not_answered
       };
       this.localStorageService.setItem('examSummary', summary);
+
+      if (this.studyPlanSessionId) {
+        const studyPlanReviews = this.localStorageService.getItem('studyPlanReviews') ?? {};
+        studyPlanReviews[String(this.studyPlanSessionId)] = {
+          correctedExamQuestions: response.quizzes,
+          userAnswer: this.userResponses,
+          examSummary: summary
+        };
+        this.localStorageService.setItem('studyPlanReviews', studyPlanReviews);
+      }
+
       // Redirigir al componente de chequeo de examen
       this.router.navigate(['/check-exam']);
       //eliminar del localStorage las preguntas del examen

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -27,6 +27,11 @@ interface StudyPlanSummary {
   type?: string;
 }
 
+interface HistoryWeek {
+  key: string;
+  sessions: StudySession[];
+}
+
 const SPAIN_TIME_ZONE = 'Europe/Madrid';
 
 @Component({
@@ -35,7 +40,7 @@ const SPAIN_TIME_ZONE = 'Europe/Madrid';
   imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
   templateUrl: './study-plan.component.html',
 })
-export class StudyPlanComponent implements OnInit {
+export class StudyPlanComponent implements OnInit, OnDestroy {
   configuration: Record<string, Record<string, string[]>> = {};
   communities: string[] = [];
   provinces: string[] = [];
@@ -52,12 +57,14 @@ export class StudyPlanComponent implements OnInit {
   todaySession: StudySession | null = null;
   upcomingSessions: StudySession[] = [];
   historySessions: StudySession[] = [];
-  showAllHistory = false;
+  historyWeeks: HistoryWeek[] = [];
+  historyPage = 0;
   expandedSessionId: number | null = null;
   hasPlan = false;
   isRestDay = false;
   isTodayTopicsExpanded = false;
   isStartingSession = false;
+  isReviewingSessionId: number | null = null;
   isDeletingPlan = false;
   showDeleteConfirmation = false;
   isUpdatingExamDate = false;
@@ -68,6 +75,9 @@ export class StudyPlanComponent implements OnInit {
   currentExamDate: string | number | null = null;
   settingsSelectedDuration = '';
   confirmedSettingsDuration = '';
+  countdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  countdownExpired = false;
+  private countdownTimer: ReturnType<typeof setInterval> | null = null;
 
   isLoading = true;
   isSubmitting = false;
@@ -82,6 +92,10 @@ export class StudyPlanComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadPlan();
+  }
+
+  ngOnDestroy(): void {
+    this.stopCountdown();
   }
 
   async loadPlan(): Promise<void> {
@@ -109,6 +123,7 @@ export class StudyPlanComponent implements OnInit {
       );
     } finally {
       this.isLoading = false;
+      this.startCountdown();
     }
   }
 
@@ -151,16 +166,40 @@ export class StudyPlanComponent implements OnInit {
     this.historySessions = this.sessions
       .filter(session => session.status !== 'PENDIENTE')
       .sort((a, b) => this.timestamp(b.date) - this.timestamp(a.date));
+    this.historyWeeks = this.groupHistoryByWeek(this.historySessions);
+    this.historyPage = 0;
+    this.expandedSessionId = null;
   }
 
   get visibleHistorySessions(): StudySession[] {
-    return this.showAllHistory
-      ? this.historySessions
-      : this.historySessions.slice(0, 5);
+    return this.historyWeeks[this.historyPage]?.sessions ?? [];
   }
 
-  toggleHistoryVisibility(): void {
-    this.showAllHistory = !this.showAllHistory;
+  get historyPageCount(): number {
+    return this.historyWeeks.length;
+  }
+
+  get currentHistoryWeekLabel(): string {
+    const currentWeek = this.historyWeeks[this.historyPage];
+    return currentWeek ? this.formatHistoryWeekLabel(currentWeek.key) : '';
+  }
+
+  previousHistoryPage(): void {
+    if (this.historyPage === 0) {
+      return;
+    }
+
+    this.historyPage -= 1;
+    this.expandedSessionId = null;
+  }
+
+  nextHistoryPage(): void {
+    if (this.historyPage >= this.historyPageCount - 1) {
+      return;
+    }
+
+    this.historyPage += 1;
+    this.expandedSessionId = null;
   }
 
   onCommunityChange(): void {
@@ -269,6 +308,36 @@ export class StudyPlanComponent implements OnInit {
       );
     } finally {
       this.isStartingSession = false;
+    }
+  }
+
+  async reviewStudySession(session: StudySession): Promise<void> {
+    if (session.status !== 'REALIZADA' || this.isReviewingSessionId !== null) {
+      return;
+    }
+
+    const studyPlanReviews = this.localStorageService.getItem('studyPlanReviews') ?? {};
+    const review = studyPlanReviews[String(session.id)];
+
+    if (!review) {
+      this.errorMessage =
+        'La revisión de esta sesión no está disponible en este navegador. Solo se guardan las revisiones realizadas después de activar esta opción.';
+      return;
+    }
+
+    this.isReviewingSessionId = session.id;
+    this.errorMessage = '';
+
+    try {
+      this.localStorageService.setItem('correctedExamQuestions', review.correctedExamQuestions);
+      this.localStorageService.setItem('userAnswer', review.userAnswer);
+      this.localStorageService.setItem('examSummary', review.examSummary);
+      this.localStorageService.setItem('examenName', {
+        examenName: `Plan de estudio - ${this.sessionPreviewTitle(session)}`
+      });
+      await this.router.navigate(['/check-exam']);
+    } finally {
+      this.isReviewingSessionId = null;
     }
   }
 
@@ -448,6 +517,56 @@ export class StudyPlanComponent implements OnInit {
     return `Quedan ${duration.join(' y ')} para el examen`;
   }
 
+  formatCountdownValue(value: number): string {
+    return String(value).padStart(2, '0');
+  }
+
+  private startCountdown(): void {
+    this.stopCountdown();
+    this.updateCountdown();
+
+    if (this.countdownExpired || !this.currentExamDate) {
+      return;
+    }
+
+    this.countdownTimer = setInterval(() => this.updateCountdown(), 1000);
+  }
+
+  private stopCountdown(): void {
+    if (this.countdownTimer !== null) {
+      clearInterval(this.countdownTimer);
+      this.countdownTimer = null;
+    }
+  }
+
+  private updateCountdown(): void {
+    if (!this.currentExamDate) {
+      this.countdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      this.countdownExpired = false;
+      return;
+    }
+
+    const examKey = this.dateKey(this.currentExamDate);
+    const examDate = new Date(`${examKey}T23:59:59`).getTime();
+    const remainingMilliseconds = examDate - Date.now();
+
+    if (remainingMilliseconds <= 0) {
+      this.countdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      this.countdownExpired = true;
+      this.stopCountdown();
+      return;
+    }
+
+    const totalSeconds = Math.floor(remainingMilliseconds / 1000);
+    this.countdown = {
+      days: Math.floor(totalSeconds / 86400),
+      hours: Math.floor((totalSeconds % 86400) / 3600),
+      minutes: Math.floor((totalSeconds % 3600) / 60),
+      seconds: totalSeconds % 60
+    };
+    this.countdownExpired = false;
+  }
+
   isCurrentDuration(duration: DurationOption): boolean {
     return String(duration.value) === String(this.confirmedSettingsDuration);
   }
@@ -460,6 +579,15 @@ export class StudyPlanComponent implements OnInit {
     return session.topics.length > 1
       ? `${session.topics[0]}…`
       : session.topics[0];
+  }
+
+  topicPrefix(topic: string): string {
+    return topic.match(/^TEMA\s+\d+:/i)?.[0] ?? '';
+  }
+
+  topicName(topic: string): string {
+    const prefix = this.topicPrefix(topic);
+    return prefix ? topic.slice(prefix.length).trim() : topic;
   }
 
   sessionDateLabel(session: StudySession): string {
@@ -491,6 +619,22 @@ export class StudyPlanComponent implements OnInit {
     return session.status === 'NO_REALIZADA' ? 'No realizada' : 'Pendiente';
   }
 
+  historyStatusClass(session: StudySession): string {
+    if (session.percentage === null) {
+      return 'study-plan-history-status-dot-neutral';
+    }
+
+    if (session.percentage < 50) {
+      return 'study-plan-history-status-dot-low';
+    }
+
+    if (session.percentage < 80) {
+      return 'study-plan-history-status-dot-medium';
+    }
+
+    return 'study-plan-history-status-dot-high';
+  }
+
   private dateKey(value: string | number | Date): string {
     const parts = Object.fromEntries(
       new Intl.DateTimeFormat('en-US', {
@@ -517,6 +661,48 @@ export class StudyPlanComponent implements OnInit {
 
   private timestamp(value: string | Date): number {
     return new Date(value).getTime();
+  }
+
+  private groupHistoryByWeek(sessions: StudySession[]): HistoryWeek[] {
+    const sessionsByWeek = new Map<string, StudySession[]>();
+
+    for (const session of sessions) {
+      const weekKey = this.weekStartKey(session.date);
+      const weekSessions = sessionsByWeek.get(weekKey) ?? [];
+      weekSessions.push(session);
+      sessionsByWeek.set(weekKey, weekSessions);
+    }
+
+    return Array.from(sessionsByWeek.entries())
+      .map(([key, weekSessions]) => ({
+        key,
+        sessions: weekSessions.sort(
+          (a, b) => this.timestamp(b.date) - this.timestamp(a.date),
+        ),
+      }))
+      .sort((a, b) => b.key.localeCompare(a.key));
+  }
+
+  private weekStartKey(value: string | Date): string {
+    const [year, month, day] = this.dateKey(value).split('-').map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    const daysFromMonday = (date.getUTCDay() + 6) % 7;
+
+    date.setUTCDate(date.getUTCDate() - daysFromMonday);
+    return date.toISOString().slice(0, 10);
+  }
+
+  private formatHistoryWeekLabel(weekStartKey: string): string {
+    const weekStart = new Date(`${weekStartKey}T12:00:00Z`);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setUTCDate(weekEnd.getUTCDate() + 6);
+    const format = new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      timeZone: 'UTC',
+    });
+
+    return `Semana del ${format.format(weekStart)} al ${format.format(weekEnd)}`;
   }
 
   private async loadSettings(): Promise<void> {

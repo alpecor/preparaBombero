@@ -1,0 +1,39 @@
+.check-exam-score-list {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.check-exam-score-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: .35rem;
+  color: #111827;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.check-exam-score-list li::before {
+  flex: 0 0 auto;
+  color: #111827;
+  content: '•';
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.check-exam-score-list li strong {
+  flex: 0 0 auto;
+  margin-left: .1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .check-exam-score-list {
+    width: 100%;
+  }
+}

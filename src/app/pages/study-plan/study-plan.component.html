@@ -3,14 +3,41 @@
 
   <main>
     @if (!showSettings) {
-      <section class="study-plan-hero">
+      <section class="study-plan-hero" [class.study-plan-hero-with-plan]="hasPlan">
         <div class="study-plan-hero-content">
           @if (!hasPlan) {
             <h1>Configura tu plan</h1>
-            <p>Cuéntanos a qué te presentas y cuánto tiempo tienes</p>
+            <p>Cuéntanos a qué te presentas y cuánto tiempo tienes; nosotros nos encargamos del resto.</p>
           } @else {
             <h1>Tu plan de estudio personalizado</h1>
-            <p class="study-plan-hero-countdown">{{ remainingDaysLabel() }}</p>
+            @if (countdownExpired) {
+              <p class="study-plan-hero-countdown-expired">La fecha del examen ya ha pasado</p>
+            } @else if (currentExamDate) {
+              <div class="study-plan-hero-countdown" aria-label="Tiempo restante para el examen">
+                <span class="study-plan-countdown-label">Tiempo restante hasta el examen</span>
+                <div class="study-plan-countdown-units">
+                  <div class="study-plan-countdown-unit">
+                    <strong>{{ formatCountdownValue(countdown.days) }}</strong>
+                    <span>días</span>
+                  </div>
+                  <div class="study-plan-countdown-separator">:</div>
+                  <div class="study-plan-countdown-unit">
+                    <strong>{{ formatCountdownValue(countdown.hours) }}</strong>
+                    <span>horas</span>
+                  </div>
+                  <div class="study-plan-countdown-separator">:</div>
+                  <div class="study-plan-countdown-unit">
+                    <strong>{{ formatCountdownValue(countdown.minutes) }}</strong>
+                    <span>minutos</span>
+                  </div>
+                  <div class="study-plan-countdown-separator">:</div>
+                  <div class="study-plan-countdown-unit">
+                    <strong>{{ formatCountdownValue(countdown.seconds) }}</strong>
+                    <span>segundos</span>
+                  </div>
+                </div>
+              </div>
+            }
           }
         </div>
       </section>
@@ -29,7 +56,10 @@
               <i class="fa-solid fa-arrow-left"></i>
               Volver
             </button>
-            <h2>Ajustes del plan</h2>
+            <h2>
+              <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+              Ajustes del plan
+            </h2>
           </div>
 
           <section class="study-plan-settings-card">
@@ -139,15 +169,17 @@
                 </div>
 
                 <div class="study-plan-today-title-row">
-                  <h3>
-                    {{ isTodayTopicsExpanded ? sessionTitle(todaySession) : sessionPreviewTitle(todaySession) }}
-                  </h3>
+                  @if (isTodayTopicsExpanded && todaySession.topics.length > 1) {
+                    <span class="study-plan-today-topics-heading">Temas del examen</span>
+                  } @else {
+                    <h3>{{ sessionPreviewTitle(todaySession) }}</h3>
+                  }
                   @if (todaySession.topics.length > 1) {
                     <button
                       type="button"
                       class="study-plan-today-title-toggle"
                       [attr.aria-expanded]="isTodayTopicsExpanded"
-                      aria-label="Mostrar temas de la sesión"
+                      [attr.aria-label]="isTodayTopicsExpanded ? 'Ocultar temas de la sesión' : 'Mostrar temas de la sesión'"
                       (click)="toggleTodayTopics()">
                       <i
                         class="fa-solid"
@@ -156,6 +188,24 @@
                     </button>
                   }
                 </div>
+
+                @if (isTodayTopicsExpanded && todaySession.topics.length > 1) {
+                  <div class="study-plan-today-topic-list">
+                      <ul>
+                        @for (topic of todaySession.topics; track $index) {
+                        <li>
+                          @if (topicPrefix(topic)) {
+                            <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                            <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
+                          } @else {
+                            <span class="study-plan-topic-name">{{ topic }}</span>
+                          }
+                        </li>
+                        }
+                      </ul>
+                  </div>
+                }
+
                 <p class="study-plan-topic-meta">
                   25 preguntas temáticas · 5 territoriales
                 </p>
@@ -179,10 +229,20 @@
                       Empezar examen de hoy
                     }
                   </button>
-                } @else {
+                } @else if (todaySession.status === 'REALIZADA') {
                   <div class="study-plan-completed-banner">
-                    <i class="fa-solid fa-circle-check"></i>
-                    {{ sessionStatusLabel(todaySession) }}
+                    <div class="study-plan-completed-copy">
+                      <i class="fa-solid fa-circle-check"></i>
+                      <span>Sesión de hoy ya realizada</span>
+                    </div>
+                    @if (todaySession.percentage !== null) {
+                      <strong>{{ todaySession.percentage }}% acierto</strong>
+                    }
+                  </div>
+                } @else {
+                  <div class="study-plan-completed-banner study-plan-missed-banner">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span>Sesión de hoy no realizada</span>
                   </div>
                 }
               </section>
@@ -229,7 +289,14 @@
                           @if (session.topics.length > 0) {
                             <ul>
                               @for (topic of session.topics; track $index) {
-                                <li>{{ topic }}</li>
+                                <li>
+                                  @if (topicPrefix(topic)) {
+                                    <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                                    <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
+                                  } @else {
+                                    <span class="study-plan-topic-name">{{ topic }}</span>
+                                  }
+                                </li>
                               }
                             </ul>
                           } @else {
@@ -248,11 +315,25 @@
 
           @if (historySessions.length > 0) {
             <section class="study-plan-history-card">
-              <div class="study-plan-list-heading study-plan-history-heading">
-                <div class="study-plan-list-heading-copy">
-                  <span>Historial reciente</span>
+                <div class="study-plan-list-heading study-plan-history-heading">
+                  <div class="study-plan-list-heading-copy">
+                    <span>Sesiones ya realizadas</span>
+                    @if (currentHistoryWeekLabel) {
+                      <small>{{ currentHistoryWeekLabel }}</small>
+                    }
+                  </div>
+                  <span
+                    class="study-plan-history-heading-meta"
+                    [attr.aria-label]="historySessions.length + (historySessions.length === 1 ? ' sesión registrada' : ' sesiones registradas')">
+                    <span class="study-plan-history-heading-meta-icon" aria-hidden="true">
+                      <i class="fa-solid fa-clock-rotate-left"></i>
+                    </span>
+                    <span class="study-plan-history-heading-meta-copy">
+                      <strong>{{ historySessions.length }}</strong>
+                      <span>{{ historySessions.length === 1 ? 'sesión registrada' : 'sesiones registradas' }}</span>
+                    </span>
+                  </span>
                 </div>
-              </div>
               @for (session of visibleHistorySessions; track session.id) {
                 <div class="study-plan-history-item">
                   <button
@@ -266,10 +347,35 @@
                       <i class="fa-regular fa-calendar" aria-hidden="true"></i>
                       {{ sessionDateLabel(session) }}
                     </span>
-                    <strong>{{ sessionPreviewTitle(session) }}</strong>
+                    <span class="study-plan-history-summary">
+                      <span class="study-plan-history-summary-icon" aria-hidden="true">
+                        <i class="fa-solid fa-book-open"></i>
+                      </span>
+                      <span class="study-plan-history-summary-copy">
+                        <span class="study-plan-history-summary-label">Temario de la sesión</span>
+                        @if (session.topics.length > 0) {
+                          <span class="study-plan-history-summary-topic">
+                            @if (topicPrefix(session.topics[0])) {
+                              <span class="study-plan-history-summary-code">{{ topicPrefix(session.topics[0]) }}</span>
+                            }
+                            <span>{{ topicName(session.topics[0]) }}</span>
+                          </span>
+                          @if (session.topics.length > 1) {
+                            <span class="study-plan-history-summary-more">
+                              +{{ session.topics.length - 1 }} más
+                            </span>
+                          }
+                        } @else {
+                          <span class="study-plan-history-summary-topic">Temario no disponible</span>
+                        }
+                      </span>
+                    </span>
                     <span class="study-plan-history-status">
                       <span class="study-plan-history-status-label">
-                        <i class="study-plan-history-status-dot" aria-hidden="true"></i>
+                        <i
+                          class="study-plan-history-status-dot"
+                          [ngClass]="historyStatusClass(session)"
+                          aria-hidden="true"></i>
                         {{ sessionStatusLabel(session) }}
                       </span>
                       <i
@@ -287,23 +393,63 @@
                       @if (session.topics.length > 0) {
                         <ul>
                           @for (topic of session.topics; track $index) {
-                            <li>{{ topic }}</li>
+                            <li>
+                              @if (topicPrefix(topic)) {
+                                <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                                <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
+                              } @else {
+                                <span class="study-plan-topic-name">{{ topic }}</span>
+                              }
+                            </li>
                           }
                         </ul>
                       } @else {
                         <p>No hay temas disponibles para esta sesión.</p>
                       }
+                      @if (session.status === 'REALIZADA') {
+                        <div class="study-plan-review-action">
+                          <button
+                            type="button"
+                            class="study-plan-review-button"
+                            [disabled]="isReviewingSessionId === session.id"
+                            (click)="reviewStudySession(session)">
+                            @if (isReviewingSessionId === session.id) {
+                              <i class="fa-solid fa-spinner fa-spin"></i>
+                              Cargando revisión...
+                            } @else {
+                              <i class="fa-solid fa-magnifying-glass-chart"></i>
+                              Revisar examen
+                            }
+                          </button>
+                        </div>
+                      }
                     </div>
                   }
                 </div>
               }
-              @if (historySessions.length > 5) {
-                <button
-                  type="button"
-                  class="study-plan-history-more-button"
-                  (click)="toggleHistoryVisibility()">
-                  {{ showAllHistory ? 'Ver menos' : 'Ver más' }}
-                </button>
+              @if (historyPageCount > 1) {
+                <nav class="study-plan-history-pagination" aria-label="Paginación del historial">
+                  <button
+                    type="button"
+                    class="study-plan-history-page-button"
+                    [disabled]="historyPage === 0"
+                    aria-label="Ver la semana más reciente"
+                    (click)="previousHistoryPage()">
+                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                  </button>
+                  <span class="study-plan-history-page-indicator">
+                    <span>Semana {{ historyPage + 1 }} de {{ historyPageCount }}</span>
+                    <strong>{{ currentHistoryWeekLabel }}</strong>
+                  </span>
+                  <button
+                    type="button"
+                    class="study-plan-history-page-button"
+                    [disabled]="historyPage === historyPageCount - 1"
+                    aria-label="Ver la semana anterior"
+                    (click)="nextHistoryPage()">
+                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                  </button>
+                </nav>
               }
             </section>
           }
