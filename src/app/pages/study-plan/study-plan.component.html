@@ -57,7 +57,6 @@
               Volver
             </button>
             <h2>
-              <i class="fa-solid fa-sliders" aria-hidden="true"></i>
               Ajustes del plan
             </h2>
           </div>
@@ -348,17 +347,11 @@
                       {{ sessionDateLabel(session) }}
                     </span>
                     <span class="study-plan-history-summary">
-                      <span class="study-plan-history-summary-icon" aria-hidden="true">
-                        <i class="fa-solid fa-book-open"></i>
-                      </span>
                       <span class="study-plan-history-summary-copy">
                         <span class="study-plan-history-summary-label">Temario de la sesión</span>
                         @if (session.topics.length > 0) {
                           <span class="study-plan-history-summary-topic">
-                            @if (topicPrefix(session.topics[0])) {
-                              <span class="study-plan-history-summary-code">{{ topicPrefix(session.topics[0]) }}</span>
-                            }
-                            <span>{{ topicName(session.topics[0]) }}</span>
+                            <span>{{ topicPrefix(session.topics[0]) }} {{ topicName(session.topics[0]) }}</span>
                           </span>
                           @if (session.topics.length > 1) {
                             <span class="study-plan-history-summary-more">

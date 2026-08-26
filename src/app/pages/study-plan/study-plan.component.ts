@@ -316,29 +316,48 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const studyPlanReviews = this.localStorageService.getItem('studyPlanReviews') ?? {};
-    const review = studyPlanReviews[String(session.id)];
-
-    if (!review) {
-      this.errorMessage =
-        'La revisión de esta sesión no está disponible en este navegador. Solo se guardan las revisiones realizadas después de activar esta opción.';
-      return;
-    }
-
     this.isReviewingSessionId = session.id;
     this.errorMessage = '';
 
     try {
-      this.localStorageService.setItem('correctedExamQuestions', review.correctedExamQuestions);
-      this.localStorageService.setItem('userAnswer', review.userAnswer);
-      this.localStorageService.setItem('examSummary', review.examSummary);
-      this.localStorageService.setItem('examenName', {
-        examenName: `Plan de estudio - ${this.sessionPreviewTitle(session)}`
-      });
+      const quizzes = await this.requestService.request(
+        'GET',
+        `/study/${session.id}`,
+        {},
+        {},
+        true
+      );
+
+      if (!Array.isArray(quizzes) || quizzes.length === 0) {
+        throw new Error('Esta sesión no tiene preguntas disponibles.');
+      }
+
+      const correctedExamQuestions = this.createStudySessionReview(quizzes);
+      this.localStorageService.setItem('correctedExamQuestions', correctedExamQuestions);
       await this.router.navigate(['/check-exam']);
+    } catch (error: any) {
+      this.errorMessage = this.getApiErrorMessage(
+        error,
+        'No se ha podido cargar la revisión de esta sesión.'
+      );
     } finally {
       this.isReviewingSessionId = null;
     }
+  }
+
+  private createStudySessionReview(quizzes: any[]) {
+    return quizzes.map((question: any) => {
+      const optionSelected = question.optionSelected ?? null;
+      return {
+        ...question,
+        optionSelected,
+        status: optionSelected === null
+          ? 'not_answered'
+          : optionSelected === question.result
+            ? 'success'
+            : 'fail'
+      };
+    });
   }
 
   async modifyStudyPlan(): Promise<void> {

@@ -221,26 +221,15 @@ export class QuestionsComponent implements OnInit {
       }
       // Hacer la petición POST al backend para corregir el examen
       const response = await this.requestService.request('POST', '/quiz/check', payload, {}, true);
-      // Guardar las preguntas corregidas y las respuestas del usuario en el localStorage
-      this.localStorageService.setItem('correctedExamQuestions', response.quizzes);
-      this.localStorageService.setItem('userAnswer', this.userResponses);
-      // Guardar el resumen del resultado en el localStorage
-      const summary = {
-        correctAnswers: response.success,
-        incorrectAnswers: response.fail,
-        unansweredQuestions: response.not_answered
-      };
-      this.localStorageService.setItem('examSummary', summary);
-
-      if (this.studyPlanSessionId) {
-        const studyPlanReviews = this.localStorageService.getItem('studyPlanReviews') ?? {};
-        studyPlanReviews[String(this.studyPlanSessionId)] = {
-          correctedExamQuestions: response.quizzes,
-          userAnswer: this.userResponses,
-          examSummary: summary
-        };
-        this.localStorageService.setItem('studyPlanReviews', studyPlanReviews);
-      }
+      // Cada pregunta contiene su respuesta elegida y la correcta para que
+      // CheckExamComponent pueda calcular el resumen sin estado adicional.
+      const correctedExamQuestions = response.quizzes.map((question: any) => ({
+        ...question,
+        optionSelected: this.userResponses.find(
+          answer => answer.quizId === question.id
+        )?.optionSelected ?? null
+      }));
+      this.localStorageService.setItem('correctedExamQuestions', correctedExamQuestions);
 
       // Redirigir al componente de chequeo de examen
       this.router.navigate(['/check-exam']);

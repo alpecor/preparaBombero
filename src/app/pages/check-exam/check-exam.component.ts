@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -15,12 +15,11 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './check-exam.component.html',
   styleUrl: './check-exam.component.css'
 })
-export class CheckExamComponent {
+export class CheckExamComponent implements OnDestroy {
 
   constructor(private localStorageService: LocalStorageService, private requestService:RequestService) { }
 
   correctedExamQuestions: any[] = []; //aquí se almacenarán las preguntas corregidas
-  userAnswers: any[] = []; //aquí se almacenarán las respuestas seleccionadas por el usuario
   examSummary: { correctAnswers: number; incorrectAnswers: number; unansweredQuestions: number } | null = null; // Resumen del examen
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
@@ -46,12 +45,8 @@ export class CheckExamComponent {
 
   //************************* FUNCION ngOnInit ****************************//
   async ngOnInit(): Promise<void> {
-    // Obtener las preguntas corregidas y las respuestas del usuario desde el localStorage
-    this.correctedExamQuestions = this.localStorageService.getItem('correctedExamQuestions') ?? [];
-    this.userAnswers = this.localStorageService.getItem('userAnswer') ?? [];
-
-    // Obtener resultado del examen desde el localStorage
-    this.examSummary = this.localStorageService.getItem('examSummary') ?? { correctAnswers: 0, incorrectAnswers: 0, unansweredQuestions: 0 };
+    // Las preguntas incluyen la respuesta elegida y la correcta.
+    const questions = this.localStorageService.getItem('correctedExamQuestions') ?? [];
 
     //saber si el user esta subscrito para acceder a funcionalidad de preguntas guardadas
     try {
@@ -61,18 +56,30 @@ export class CheckExamComponent {
       this.isSubscribed = false;
     }
 
-    // Combinar las respuestas del usuario con las preguntas corregidas
-    this.correctedExamQuestions = this.correctedExamQuestions.map((question: any) => {
-      const userAnswer = this.userAnswers.find((answer: any) => answer.quizId === question.id);
+    this.correctedExamQuestions = questions.map((question: any) => {
+      const userAnswer = question.optionSelected ?? null;
+      const status = userAnswer === null
+        ? 'not_answered'
+        : userAnswer === question.result
+          ? 'success'
+          : 'fail';
+
       return {
         ...question,
-        userAnswer: userAnswer ? userAnswer.optionSelected : null , // Añade la respuesta del usuario a la pregunta corregida
+        userAnswer,
+        status,
         showJustification: false // Nueva propiedad para controlar la visibilidad del motivo
       };
     });
 
+    this.examSummary = this.calculateSummary();
+
     // Calcular las diferentes notas
     this.calculateScores();
+  }
+
+  ngOnDestroy(): void {
+    this.localStorageService.removeItem('correctedExamQuestions');
   }
 
 
@@ -97,6 +104,25 @@ export class CheckExamComponent {
   //************************* FUNCION PARA MOSTRAR JUSTIFICACION DE PREGUNTA ****************************//
   toggleJustification(question: any): void {
     question.showJustification = !question.showJustification;
+  }
+
+
+  //************************* FUNCION PARA CALCULAR NOTAS DEL EXAMEN ****************************//
+  calculateSummary(): { correctAnswers: number; incorrectAnswers: number; unansweredQuestions: number } {
+    return this.correctedExamQuestions.reduce(
+      (summary, question) => {
+        if (question.status === 'success') {
+          summary.correctAnswers += 1;
+        } else if (question.status === 'fail') {
+          summary.incorrectAnswers += 1;
+        } else {
+          summary.unansweredQuestions += 1;
+        }
+
+        return summary;
+      },
+      { correctAnswers: 0, incorrectAnswers: 0, unansweredQuestions: 0 }
+    );
   }
 
 
