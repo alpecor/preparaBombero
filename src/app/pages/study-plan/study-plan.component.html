@@ -171,7 +171,24 @@
                   @if (isTodayTopicsExpanded && todaySession.topics.length > 1) {
                     <span class="study-plan-today-topics-heading">Temas del examen</span>
                   } @else {
-                    <h3>{{ sessionPreviewTitle(todaySession) }}</h3>
+                    <span class="study-plan-today-summary">
+                      <span class="study-plan-today-summary-copy">
+                        <span class="study-plan-today-summary-label">Temario de hoy</span>
+                        @if (todaySession.topics.length > 0) {
+                          <span class="study-plan-today-summary-topic">
+                            <span class="study-plan-today-summary-code">{{ topicPrefix(todaySession.topics[0]) }}</span>
+                            <span>{{ topicName(todaySession.topics[0]) }}</span>
+                          </span>
+                          @if (todaySession.topics.length > 1) {
+                            <span class="study-plan-today-summary-more">
+                              +{{ todaySession.topics.length - 1 }} más
+                            </span>
+                          }
+                        } @else {
+                          <span class="study-plan-today-summary-topic">Temario no disponible</span>
+                        }
+                      </span>
+                    </span>
                   }
                   @if (todaySession.topics.length > 1) {
                     <button
@@ -193,12 +210,8 @@
                       <ul>
                         @for (topic of todaySession.topics; track $index) {
                         <li>
-                          @if (topicPrefix(topic)) {
-                            <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
-                            <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
-                          } @else {
-                            <span class="study-plan-topic-name">{{ topic }}</span>
-                          }
+                          <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                          <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
                         </li>
                         }
                       </ul>
@@ -229,7 +242,9 @@
                     }
                   </button>
                 } @else if (todaySession.status === 'REALIZADA') {
-                  <div class="study-plan-completed-banner">
+                  <div
+                    class="study-plan-completed-banner"
+                    [ngClass]="todayResultClass(todaySession)">
                     <div class="study-plan-completed-copy">
                       <i class="fa-solid fa-circle-check"></i>
                       <span>Sesión de hoy ya realizada</span>
@@ -289,12 +304,8 @@
                             <ul>
                               @for (topic of session.topics; track $index) {
                                 <li>
-                                  @if (topicPrefix(topic)) {
-                                    <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
-                                    <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
-                                  } @else {
-                                    <span class="study-plan-topic-name">{{ topic }}</span>
-                                  }
+                                  <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                                  <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
                                 </li>
                               }
                             </ul>
@@ -351,7 +362,8 @@
                         <span class="study-plan-history-summary-label">Temario de la sesión</span>
                         @if (session.topics.length > 0) {
                           <span class="study-plan-history-summary-topic">
-                            <span>{{ topicPrefix(session.topics[0]) }} {{ topicName(session.topics[0]) }}</span>
+                            <span class="study-plan-history-summary-code">{{ topicPrefix(session.topics[0]) }}</span>
+                            <span>{{ topicName(session.topics[0]) }}</span>
                           </span>
                           @if (session.topics.length > 1) {
                             <span class="study-plan-history-summary-more">
@@ -385,15 +397,11 @@
                       <span>Temas del examen</span>
                       @if (session.topics.length > 0) {
                         <ul>
-                          @for (topic of session.topics; track $index) {
-                            <li>
-                              @if (topicPrefix(topic)) {
+                            @for (topic of session.topics; track $index) {
+                              <li>
                                 <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
                                 <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
-                              } @else {
-                                <span class="study-plan-topic-name">{{ topic }}</span>
-                              }
-                            </li>
+                              </li>
                           }
                         </ul>
                       } @else {

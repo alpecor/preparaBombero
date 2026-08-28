@@ -591,22 +591,30 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   }
 
   sessionTitle(session: StudySession): string {
-    return session.topics.join('\n');
+    return session.topics.map(topic => this.formatTopic(topic)).join('\n');
   }
 
   sessionPreviewTitle(session: StudySession): string {
-    return session.topics.length > 1
-      ? `${session.topics[0]}…`
-      : session.topics[0];
+    if (session.topics.length === 0) {
+      return 'Temario no disponible';
+    }
+
+    const firstTopic = this.formatTopic(session.topics[0]);
+    return session.topics.length > 1 ? `${firstTopic}…` : firstTopic;
   }
 
   topicPrefix(topic: string): string {
-    return topic.match(/^TEMA\s+\d+:/i)?.[0] ?? '';
+    return topic.trim().match(/^TEMA(?:\s+\d+)?\s*:/i)?.[0] ?? 'TEMA:';
   }
 
   topicName(topic: string): string {
-    const prefix = this.topicPrefix(topic);
-    return prefix ? topic.slice(prefix.length).trim() : topic;
+    const value = topic.trim();
+    const prefix = value.match(/^TEMA(?:\s+\d+)?\s*:/i)?.[0];
+    return prefix ? value.slice(prefix.length).trim() : value;
+  }
+
+  formatTopic(topic: string): string {
+    return `${this.topicPrefix(topic)} ${this.topicName(topic)}`.trim();
   }
 
   sessionDateLabel(session: StudySession): string {
@@ -636,6 +644,16 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
     }
 
     return session.status === 'NO_REALIZADA' ? 'No realizada' : 'Pendiente';
+  }
+
+  todayResultClass(session: StudySession): string {
+    if (session.percentage === null || session.percentage >= 80) {
+      return 'study-plan-completed-result-high';
+    }
+
+    return session.percentage < 50
+      ? 'study-plan-completed-result-low'
+      : 'study-plan-completed-result-medium';
   }
 
   historyStatusClass(session: StudySession): string {
