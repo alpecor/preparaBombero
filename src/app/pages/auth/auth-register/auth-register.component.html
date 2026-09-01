@@ -1,46 +1,110 @@
-
-
-<div class="min-h-screen flex items-center justify-center">
-  <div class="bg-formColor rounded-2xl  flex flex-col md:flex-row ">
-    <div class="md:w-1/2 md:block hidden hidden-md image-container">
-      <img ngSrc="formulario.png" alt="Bombero en incendio" width="750" height="815" class="rounded-3xl" priority="">
-    </div>
-    <div class="w-full md:w-1/2 p-3.5 flex flex-col justify-center items-center">
-      <div class="flex items-center justify-center mb-6">
-        <img ngSrc="logo.png" alt="Prepara Bombero" width="125" height="116" [routerLink]="['']" style="cursor: pointer;">
+<div class="auth-page auth-register-page">
+  <div class="auth-shell">
+    <section class="auth-visual-panel" aria-label="Motivación para preparar la oposición">
+      <img
+        ngSrc="auth-register-firefighter-hero.png"
+        alt="Bombero preparado durante un entrenamiento"
+        width="1024"
+        height="1536"
+        class="auth-visual-image"
+        priority="">
+      <div class="auth-visual-overlay"></div>
+      <div class="auth-visual-content">
+        <span class="auth-visual-kicker">
+          <i class="fa-solid fa-fire-flame-curved"></i>
+          Empieza tu camino
+        </span>
+        <h2>Tu plaza no es un sueño lejano.<br><strong>Es un objetivo.</strong></h2>
+        <p>Organiza tu estudio, mide tu progreso y convierte cada sesión en un paso más hacia el uniforme.</p>
+        <div class="auth-visual-proof">
+          <span><i class="fa-solid fa-calendar-check"></i> Plan personalizado</span>
+          <span><i class="fa-solid fa-bolt"></i> Entrena con método</span>
+        </div>
       </div>
-      @if(status){
-        <div class="error-container p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-          @for(item of status; track $index){
-            {{item}}<br>
-          }
+    </section>
+
+    <section class="auth-form-panel">
+      <div class="auth-form-inner">
+        <a class="auth-brand-link" [routerLink]="['/']" aria-label="Ir a la página de inicio">
+          <img ngSrc="logo.png" alt="Prepara Bombero" width="125" height="116" class="auth-logo">
+        </a>
+
+        <div class="auth-form-heading">
+          <span class="auth-section-kicker">Empieza hoy</span>
+          <h1>Crea tu cuenta</h1>
+          <p>Da el primer paso y empieza a preparar tu oposición con un plan hecho para ti.</p>
         </div>
-      }
-      <form class="w-full flex flex-col items-center">
-        <div class="mb-4 flex justify-center w-full">
-          <input [(ngModel)]="name" name="name"  type="text" class="form-input mt-1 input-width border-gray-400 rounded-lg" placeholder="Nombre" />
-        </div>
-        <div class="mb-4 flex justify-center w-full">
-          <input [(ngModel)]="surname" name="surname"  type="text" class="form-input mt-1 input-width border-gray-400 rounded-lg" placeholder="Apellido" />
-        </div>
-        <div class="mb-4 flex justify-center w-full">
-          <input [(ngModel)]="email" name="email" type="email" class="form-input mt-1 input-width border-gray-400 rounded-lg" placeholder="Email" />
-        </div>
-        <div class="mb-4 flex justify-center w-full">
-          <input [(ngModel)]="password" name="password" type="password" class="form-input mt-1 input-width border border-gray-400 rounded-lg" placeholder="Password" />
-        </div>
-        <div class="mb-4 flex justify-center w-full">
-          <input [(ngModel)]="repeatPassword" name="repeatPassword" type="password" class="form-input mt-1 input-width border border-gray-400 rounded-lg" placeholder="Introduce de nuevo la contraseña" />
-        </div>
-        <div class="w-full flex justify-center mt-4">
-          <button type="submit" class="input-width bg-primaryColor text-white py-2.5 rounded-lg hover:bg-yellow-600" (click)="register()">
-            Registrarse
+
+        @if(status){
+          <div class="auth-alert" role="alert">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <div>
+              @for(item of status; track $index){
+                <span>{{item}}</span>
+              }
+            </div>
+          </div>
+        }
+
+        <form class="auth-form" (ngSubmit)="register()" novalidate>
+          <div class="auth-field-row">
+            <div class="auth-field">
+              <label for="register-name">Nombre</label>
+              <div class="auth-input-shell">
+                <i class="fa-regular fa-user"></i>
+                <input [(ngModel)]="name" id="register-name" name="name" type="text" autocomplete="given-name" placeholder="Tu nombre">
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label for="register-surname">Apellido</label>
+              <div class="auth-input-shell">
+                <i class="fa-regular fa-user"></i>
+                <input [(ngModel)]="surname" id="register-surname" name="surname" type="text" autocomplete="family-name" placeholder="Tu apellido">
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="register-email">Correo electrónico</label>
+            <div class="auth-input-shell">
+              <i class="fa-regular fa-envelope"></i>
+              <input [(ngModel)]="email" id="register-email" name="email" type="email" autocomplete="email" placeholder="tu@email.com">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="register-password">Contraseña</label>
+            <div class="auth-input-shell">
+              <i class="fa-solid fa-lock"></i>
+              <input [(ngModel)]="password" id="register-password" name="password" type="password" autocomplete="new-password" placeholder="Crea una contraseña">
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="register-repeat-password">Repite la contraseña</label>
+            <div class="auth-input-shell">
+              <i class="fa-solid fa-lock"></i>
+              <input [(ngModel)]="repeatPassword" id="register-repeat-password" name="repeatPassword" type="password" autocomplete="new-password" placeholder="Repite tu contraseña">
+            </div>
+          </div>
+
+          <button type="submit" class="auth-submit-button">
+            Crear mi cuenta
+            <i class="fa-solid fa-arrow-right"></i>
           </button>
+        </form>
+
+        <p class="auth-form-switch">
+          ¿Ya tienes una cuenta?
+          <a [routerLink]="['/login']">Inicia sesión</a>
+        </p>
+
+        <div class="auth-form-note">
+          <i class="fa-solid fa-flag-checkered"></i>
+          <span>Tu preparación empieza con una decisión: dar el primer paso.</span>
         </div>
-      </form>
-      <p class="mt-4 text-center">
-        Si tienes una cuenta, <a href="#" class="text-blue-500" [routerLink]="['/login']" style="cursor: pointer;">inicia sesión</a>
-      </p>
-    </div>
+      </div>
+    </section>
   </div>
 </div>

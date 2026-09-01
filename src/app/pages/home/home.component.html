@@ -1,139 +1,363 @@
-<!-- Toast -->
-<div *ngIf="showToast"
-     class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
-     [ngClass]="{
-       'bg-primaryColor text-white': toastType === 'success',
-       'bg-red-100 text-red-800': toastType === 'error'
-     }">
-  <i class="fa-solid"
-     [ngClass]="{
-       'fa-check-circle': toastType === 'success',
-       'fa-circle-xmark': toastType === 'error'
-     }"></i>
-  <span>{{ toastMessage }}</span>
-</div>
-
-<!-- Para el footer -->
-<div class="flex flex-col h-screen">
-  <!--------------- Añadir header aquí ---------------->
+<div class="home-page">
   <app-header />
 
-  <!--------------- Eslogan ---------------->
-  <div class="mx-auto py-4">
-    LA ÚNICA PLATAFORMA DONDE TODAS LAS PREGUNTAS SON DE EXÁMENES OFICIALES POR SOLO 24,95€/MES
-  </div>
+  <main>
+    @if (isAuthenticated) {
+      <section class="home-welcome-section">
+        <div class="home-content home-welcome-grid">
+          <div class="home-welcome-copy">
+            <span class="home-access-status" [class.home-access-status-free]="!isSubscribed">
+              <i class="fa-solid" [ngClass]="isSubscribed ? 'fa-circle-check' : 'fa-lock'"></i>
+              {{ isSubscribed ? 'Acceso Premium activo' : 'Modo gratuito activo' }}
+            </span>
+            <span class="home-eyebrow">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+              Tu preparación empieza aquí
+            </span>
+            <h1>
+              Hola{{ userDisplayName ? ', ' + userDisplayName : '' }}.<br>
+              <span>¿Qué quieres hacer hoy?</span>
+            </h1>
+            <p>
+              Practica con preguntas oficiales, repasa tus errores y avanza con un plan adaptado a tu oposición.
+            </p>
 
-  <!--------------- Div de botones y temas ---------------->
-  <div class="container mx-auto">
-    <div class="space-y-6">
+            <div class="home-primary-actions">
+              <button type="button" class="home-primary-action" (click)="openQuestionConfigModal('exam')">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Comenzar examen
+              </button>
+              <button type="button" class="home-secondary-action" (click)="openQuestionConfigModal('review')">
+                <i class="fa-solid fa-rotate"></i>
+                Repasar preguntas
+              </button>
+            </div>
 
-      <!--------------- Botones de Examen y Repaso ---------------->
-      <div class="flex justify-center">
-        <div class="space-x-8">
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="openQuestionConfigModal('exam')"
-            >
-            Examen
-          </button>
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="openQuestionConfigModal('review')"
-            >
-            Repaso
-          </button>
+            <div class="home-action-feedback-slot" aria-live="polite">
+              @if (showToast) {
+                <div
+                  class="home-action-feedback"
+                  [class.home-action-feedback-success]="toastType === 'success'"
+                  [class.home-action-feedback-error]="toastType === 'error'"
+                  role="alert">
+                  <i class="fa-solid"
+                     [ngClass]="toastType === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+                  <span>{{ toastMessage }}</span>
+                </div>
+              }
+            </div>
+
+          </div>
+
+          <div class="home-welcome-art" aria-hidden="true">
+            <div class="home-welcome-art-ring home-welcome-art-ring-outer"></div>
+            <div class="home-welcome-art-ring home-welcome-art-ring-inner"></div>
+            <div class="home-welcome-art-card home-welcome-art-card-top">
+              <i class="fa-solid fa-circle-check"></i>
+              <span>Entrena cada día</span>
+            </div>
+            <div class="home-welcome-art-card home-welcome-art-card-main">
+              <i class="fa-solid fa-book-open"></i>
+              <strong>{{ totalAvailableQuestions | number:'1.0-0' }}</strong>
+              <span>preguntas oficiales</span>
+            </div>
+            <div class="home-welcome-art-card home-welcome-art-card-bottom">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>Mejora tu resultado</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Boton deselección -->
-      <div class="max-w-4xl mx-auto w-full ">
-        <div class="mt-6">
-          <button class="inline-flex items-center gap-2 text-sm font-medium border rounded-lg px-4 py-2
-                  text-primaryColor border-primaryColor bg-transparent
-                  hover:bg-primaryColor hover:text-white transition"
-            (click)="deselectAllTopics()">
-            Desmarcar todos los temas
+      <div class="home-content home-dashboard-content">
+        <section class="home-metrics-grid" aria-label="Resumen de tu preparación">
+          <article class="home-metric-card home-metric-card-accent">
+            <span class="home-metric-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <div>
+              <span class="home-metric-label">Banco de preguntas</span>
+              <strong>{{ totalAvailableQuestions | number:'1.0-0' }}</strong>
+              <small>preguntas disponibles</small>
+            </div>
+          </article>
+
+          <article class="home-metric-card">
+            <span class="home-metric-icon home-metric-icon-blue"><i class="fa-solid fa-list-check"></i></span>
+            <div>
+              <span class="home-metric-label">Temario</span>
+              <strong>{{ totalAvailableTopics }}</strong>
+              <small>temas para preparar</small>
+            </div>
+          </article>
+
+          <button type="button" class="home-metric-card home-metric-card-link" (click)="scrollToTopics()">
+            <span class="home-metric-icon home-metric-icon-green"><i class="fa-solid fa-circle-check"></i></span>
+            <div>
+              <span class="home-metric-label">Tu selección</span>
+              <strong>{{ selectedTopicsCount }}</strong>
+              <small>temas seleccionados</small>
+            </div>
           </button>
-        </div>
-      </div>
 
-
-      @if (pdfPreviewUrl) {
-        <section class="max-w-4xl mx-auto w-full">
-          <h2 class="text-xl font-bold mt-8">Vista previa del PDF</h2>
-          <iframe
-            [src]="pdfPreviewUrl"
-            class="pdf-preview mt-2"
-            title="Vista previa del PDF"
-          ></iframe>
+          <button type="button" class="home-metric-card home-metric-card-link" (click)="goToStudyPlan()">
+            <span class="home-metric-icon home-metric-icon-purple"><i class="fa-solid fa-calendar-check"></i></span>
+            <div>
+              <span class="home-metric-label">Plan de estudio</span>
+              <strong>{{ hasStudyPlan ? 'Activo' : '—' }}</strong>
+              <small>{{ hasStudyPlan ? 'sigue tu calendario' : 'configúralo cuando quieras' }}</small>
+            </div>
+          </button>
         </section>
-      }
 
+        <section class="home-focus-grid">
+          <article class="home-plan-card">
+            <div class="home-card-eyebrow">
+              <i class="fa-solid fa-calendar-days"></i>
+              Organización
+            </div>
+            <h2>{{ hasStudyPlan ? 'Continúa con tu plan de estudio' : 'Crea tu plan de estudio' }}</h2>
+            <p>
+              {{ hasStudyPlan
+                ? 'Consulta la sesión de hoy y mantén el ritmo hasta el día del examen.'
+                : 'Organiza tus sesiones y deja que nosotros nos encarguemos del resto.' }}
+            </p>
+            <a class="home-card-link" routerLink="/plan-estudio">
+              {{ hasStudyPlan ? 'Ir a mi plan' : 'Configurar mi plan' }}
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <div class="home-plan-card-decoration" aria-hidden="true">
+              <i class="fa-solid fa-calendar-check"></i>
+            </div>
+          </article>
 
-      <!------------------------ Temas -------------------------->
-      <div>
-        @for(item of objectKeys(topics); track $index){
-          <h2 class="text-xl font-bold mt-8">{{item}}</h2>
-          <div class="mt-2 ml-4">
-            @for (topic of topics[item]; track $index) {
-              <div class="flex flex-col">
-                <div class="flex justify-between items-center py-2 border-b border-gray-300">
-                  <div class="flex items-center">
-                    <button (click)="topic.expanded = !topic.expanded" class="mr-2 focus:outline-none">
-                      {{ topic.expanded ? "+" : "-" }}
-                    </button>
-                    <input
-                      [checked]="topic.selected"
-                      (change)="selectedTopic(topic.id, $event, item)"
-                      type="checkbox"
-                      class="form-checkbox h-5 w-5 text-yellow-500"
-                    />
-                    <span class="ml-2 mr-14">{{ topic.title }}</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span class="mr-4">{{ topic.quizCount }}</span>
-                    <span class="inline-flex w-8 justify-center">
-                      <i (click)="openQuestionConfigModal('exam', topic)"
-                        title="Hacer examen"
-                        class="fa-solid fa-pen-to-square fa-lg"
-                        style="cursor: pointer">
-                      </i>
-                    </span>
-                    <span class="inline-flex w-8 justify-center">
-                      <i (click)="openQuestionConfigModal('review', topic)"
-                        title="Hacer repaso"
-                        class="fa-solid fa-file-pen fa-lg"
-                        style="cursor: pointer">
-                      </i>
-                    </span>
-                    <span class="inline-flex w-8 justify-center">
-                      @if (topic.url) {
-                        <button
-                          (click)="showPdfPreview(topic.url)"
-                          title="Ver PDF"
-                          type="button">
-                          <i class="fa-solid fa-file-pdf fa-lg"></i>
-                        </button>
-                      }
-                    </span>
-                  </div>
-                </div>
-                <div [hidden]="topic.expanded">
-                  <app-topics
-                    [topics]="topic.topics"
-                    [margin]="3"
-                    [isSubscribed]="isSubscribed"
-                    (pdfPreview)="showPdfPreview($event)"
-                  />
-                </div>
+          <article class="home-selection-card">
+            <div>
+              <div class="home-card-eyebrow home-card-eyebrow-dark">
+                <i class="fa-solid fa-sliders"></i>
+                Selección rápida
               </div>
+              <h2>Prepara un examen a tu medida</h2>
+              <p>Elige los temas que quieres practicar y decide cuántas preguntas necesitas.</p>
+            </div>
+            <div class="home-selection-footer">
+              <span><strong>{{ selectedTopicsCount }}</strong> temas seleccionados</span>
+              <button type="button" class="home-outline-action" (click)="scrollToTopics()">
+                Elegir temario
+                <i class="fa-solid fa-arrow-down"></i>
+              </button>
+            </div>
+          </article>
+        </section>
+
+      </div>
+    } @else {
+      <section class="home-guest-hero-section">
+        <div class="home-content home-guest-hero-grid">
+          <div class="home-guest-hero-copy">
+            <span class="home-eyebrow">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+              Tu preparación empieza aquí
+            </span>
+            <h1>
+              Prepárate para tu oposición<br>
+              <span>con un plan pensado para ti.</span>
+            </h1>
+            <p>
+              Selecciona tu temario, practica con preguntas oficiales y sigue una preparación organizada hasta la fecha de tu examen.
+            </p>
+
+            <div class="home-primary-actions">
+              <a class="home-primary-action home-guest-primary-action" routerLink="/register">
+                <i class="fa-solid fa-user-plus"></i>
+                Crear mi cuenta gratis
+              </a>
+              <a class="home-secondary-action home-guest-secondary-action" routerLink="/login">
+                Ya tengo cuenta
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+
+            <div class="home-guest-trust-points">
+              <span><i class="fa-solid fa-circle-check"></i> Registro gratuito</span>
+              <span><i class="fa-solid fa-circle-check"></i> Preguntas oficiales</span>
+              <span><i class="fa-solid fa-circle-check"></i> Plan de estudio personalizado</span>
+            </div>
+          </div>
+
+          <div class="home-guest-hero-showcase" aria-hidden="true">
+            <span class="home-guest-showcase-badge">
+              <i class="fa-solid fa-shield-halved"></i>
+              Preparación organizada
+            </span>
+            <div class="home-guest-showcase-card">
+              <span class="home-guest-showcase-label">Tu camino al examen</span>
+              <strong>Un paso cada día</strong>
+              <div class="home-guest-showcase-progress"><span></span></div>
+              <small><i class="fa-solid fa-calendar-check"></i> Temario · sesiones · simulacros</small>
+            </div>
+            <span class="home-guest-showcase-note">
+              <i class="fa-solid fa-bolt"></i>
+              Entrena con método, no a ciegas
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-guest-benefits-section">
+        <div class="home-content">
+          <div class="home-guest-section-heading">
+            <span class="home-section-kicker">Todo lo que necesitas para avanzar</span>
+            <h2>Convierte tu preparación en un camino claro</h2>
+            <p>Prepara tu oposición con herramientas pensadas para que sepas qué estudiar, cuándo hacerlo y cómo estás progresando.</p>
+          </div>
+
+          <div class="home-guest-benefits-grid">
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-gold"><i class="fa-solid fa-list-check"></i></span>
+              <h3>Elige tu temario</h3>
+              <p>Selecciona los temas de tu convocatoria y crea exámenes totalmente a tu medida.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-blue"><i class="fa-solid fa-calendar-days"></i></span>
+              <h3>Plan personalizado</h3>
+              <p>Indica la fecha de tu examen y recibe una ruta de estudio adaptada a tu tiempo.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-orange"><i class="fa-solid fa-bolt"></i></span>
+              <h3>Entrena con método</h3>
+              <p>Sesiones diarias, modo sprint y un simulacro cada sábado con lo estudiado durante la semana.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-green"><i class="fa-solid fa-chart-line"></i></span>
+              <h3>Aprende de tus resultados</h3>
+              <p>Revisa los exámenes de tus sesiones, detecta tus fallos y comprueba tu evolución.</p>
+            </article>
+          </div>
+
+          <section class="home-guest-cta">
+            <div>
+              <span class="home-guest-cta-kicker">Empieza hoy</span>
+              <h2>Tu plaza se prepara con constancia</h2>
+              <p>Regístrate gratis y empieza a organizar tu preparación con todas las herramientas en un mismo lugar.</p>
+            </div>
+            <a class="home-primary-action home-guest-cta-action" routerLink="/register">
+              Empezar gratis
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </section>
+        </div>
+      </section>
+    }
+
+    @if (pdfPreviewUrl) {
+      <div class="home-content home-topic-content home-pdf-content">
+        <section class="home-pdf-card">
+          <div class="home-section-heading home-pdf-heading">
+            <div>
+              <span class="home-section-kicker">Documento oficial</span>
+              <h2>Vista previa del PDF</h2>
+            </div>
+            <button type="button" class="home-close-pdf" (click)="closePdfPreview()" aria-label="Cerrar vista previa">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <iframe [src]="pdfPreviewUrl" class="pdf-preview" title="Vista previa del PDF"></iframe>
+        </section>
+      </div>
+    }
+
+    <div class="home-content home-topic-content">
+      <section class="home-topics-section" id="home-topics">
+        <div class="home-section-heading">
+          <div>
+            <span class="home-section-kicker">Biblioteca oficial</span>
+            <h2>Explora el temario</h2>
+            @if (isAuthenticated) {
+              <p>Selecciona los temas que quieres incluir en tus próximos exámenes y repasos.</p>
+            } @else {
+              <p>Consulta el contenido oficial de las oposiciones y descubre todo lo que puedes preparar.</p>
             }
           </div>
-        }
-      </div>
+          <button type="button" class="home-clear-selection" (click)="deselectAllTopics()">
+            <i class="fa-solid fa-eraser"></i>
+            Limpiar selección
+          </button>
+        </div>
 
+        <div class="home-topic-categories">
+          @for(item of objectKeys(topics); track item){
+            <details class="home-topic-category">
+              <summary>
+                <span class="home-category-icon">
+                  <i class="fa-solid" [ngClass]="categoryIcon(item)"></i>
+                </span>
+                <span class="home-category-copy">
+                  <strong>{{ item }}</strong>
+                  <small>{{ categoryTopicCount(item) }} temas · {{ categoryQuestionCount(item) | number:'1.0-0' }} preguntas</small>
+                </span>
+                <span class="home-category-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+              </summary>
+
+              <div class="home-category-topics">
+                @for (topic of topics[item]; track topic.id) {
+                  <div class="home-topic-item">
+                    <div class="home-topic-row">
+                      <div class="home-topic-main">
+                        @if (topic.topics?.length) {
+                          <button
+                            type="button"
+                            class="home-topic-expand"
+                            (click)="topic.expanded = !topic.expanded; $event.stopPropagation()"
+                            [attr.aria-label]="topic.expanded ? 'Ocultar subtemas' : 'Mostrar subtemas'"
+                            [title]="topic.expanded ? 'Ocultar subtemas' : 'Mostrar subtemas'">
+                            <i class="fa-solid" [ngClass]="topic.expanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+                          </button>
+                        } @else {
+                          <span class="home-topic-expand-placeholder"></span>
+                        }
+                        <input
+                          [checked]="topic.selected"
+                          (change)="selectedTopic(topic.id, $event, item)"
+                          type="checkbox"
+                          class="home-topic-checkbox"
+                        />
+                        <span class="home-topic-title">{{ topic.title }}</span>
+                      </div>
+
+                      <div class="home-topic-tools">
+                        <span class="home-topic-question-count">{{ topic.quizCount | number:'1.0-0' }} <small>preg.</small></span>
+                        <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('exam', topic)" title="Hacer examen" aria-label="Hacer examen">
+                          <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('review', topic)" title="Hacer repaso" aria-label="Hacer repaso">
+                          <i class="fa-solid fa-rotate"></i>
+                        </button>
+                        @if (topic.url) {
+                          <button type="button" class="home-topic-tool" (click)="showPdfPreview(topic.url)" title="Ver PDF" aria-label="Ver PDF">
+                            <i class="fa-solid fa-file-pdf"></i>
+                          </button>
+                        }
+                      </div>
+                    </div>
+
+                    @if (topic.topics?.length) {
+                      <div class="home-topic-children" [hidden]="!topic.expanded">
+                        <app-topics
+                          [topics]="topic.topics"
+                          [margin]="3"
+                          [isSubscribed]="isSubscribed"
+                          (pdfPreview)="showPdfPreview($event)"
+                        />
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </details>
+          }
+        </div>
+      </section>
     </div>
-  </div>
+  </main>
 
   <!--------------- Añadir modal aquí ---------------->
   <div id="multicuentas" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">

@@ -10,8 +10,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
   selector: 'app-examanes-cards',
   standalone: true,
   imports: [HeaderComponent, FooterComponent, CommonModule, RouterModule],
-  templateUrl: './examenes-cards.component.html',
-  styleUrl: './examenes-cards.component.css'
+  templateUrl: './examenes-cards.component.html'
 })
 export class ExamenesCardsComponent {
 
@@ -28,6 +27,7 @@ export class ExamenesCardsComponent {
   showToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'error';
+  isLoading = true;
 
 
   //************************* CONSTRUCTOR ****************************//
@@ -51,7 +51,6 @@ export class ExamenesCardsComponent {
     //obtener las comunidades
     try {
       // Obtener los datos del servidor
-      console.log(this.community, this.city);
       if (!this.community) {
         this.pdfData = await this.requestService.request('GET', `/pdf?sort=community`, {}, {}, true);
       }else if (this.community && this.city){
@@ -75,7 +74,69 @@ export class ExamenesCardsComponent {
 
     } catch (error) {
       console.error('Error fetching PDF data:', error);
+    } finally {
+      this.isLoading = false;
     }
+  }
+
+  getPageKicker(): string {
+    if (this.community && this.city) {
+      return 'Convocatorias disponibles';
+    }
+
+    if (this.community) {
+      return 'Elige tu provincia';
+    }
+
+    return 'Biblioteca oficial';
+  }
+
+  getPageTitle(): string {
+    if (this.community && this.city) {
+      return `Exámenes de ${this.city}`;
+    }
+
+    if (this.community) {
+      return `Provincias de ${this.community}`;
+    }
+
+    return 'Encuentra tu próximo examen';
+  }
+
+  getPageDescription(): string {
+    if (this.community && this.city) {
+      return 'Selecciona una convocatoria y empieza a practicar con preguntas oficiales.';
+    }
+
+    if (this.community) {
+      return 'Selecciona una provincia para consultar sus convocatorias disponibles.';
+    }
+
+    return 'Explora las convocatorias por comunidad autónoma y encuentra el temario que necesitas.';
+  }
+
+  getCurrentCount(): number {
+    if (this.community && this.city) {
+      return this.selectedExams.length;
+    }
+
+    if (this.community) {
+      return this.selectedCities.length;
+    }
+
+    return this.communities.length;
+  }
+
+  getCurrentCountLabel(): string {
+    if (this.community && this.city) {
+      return this.selectedExams.length === 1 ? 'examen disponible' : 'exámenes disponibles';
+    }
+
+    if (this.community) {
+      return this.selectedCities.length === 1 ? 'provincia disponible' : 'provincias disponibles';
+    }
+
+    return this.communities.length === 1 ? 'comunidad disponible' : 'comunidades disponibles';
   }
 
 

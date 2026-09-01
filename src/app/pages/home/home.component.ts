@@ -14,17 +14,23 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   selector: 'app-home',
   standalone: true,
   imports: [HeaderComponent,FooterComponent,CommonModule, FormsModule, NgOptimizedImage, RouterLink, topicsComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
 
   //************************* VARIABLES ****************************//
   questions:string[] = []; //definir array donde guardaremos las preguntas
-  not_auth: boolean = !this.authService.isNotAuth();
+  isAuthenticated = !this.authService.isNotAuth();
   isSubscribed = false;
   topics: any = {};
   pdfPreviewUrl: SafeResourceUrl | null = null;
+  userDisplayName = '';
+  hasStudyPlan = false;
+  totalAvailableQuestions = 0;
+  totalAvailableTopics = 0;
+  totalTopicGroups = 0;
+  selectedTopicsCount = 0;
+
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
@@ -53,22 +59,28 @@ export class HomeComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  closePdfPreview() {
+    this.pdfPreviewUrl = null;
+  }
+
 
   //************************* ngOnInit ****************************//
   async ngOnInit(): Promise<void> {
      // Recalcular auth por si cambió
-    this.not_auth = !this.authService.isNotAuth();
+    this.isAuthenticated = !this.authService.isNotAuth();
     // Solo mostrar modal si el usuario está logueado
-    if (this.not_auth && !localStorage.getItem('modalShown')) {
+    if (this.isAuthenticated && !localStorage.getItem('modalShown')) {
       this.openModalTest();                  // Abre el modal solo tras login
       localStorage.setItem('modalShown', 'true');
     }
 
     try {
       // pedimos info del user para saber si esta o no subscrito
-      if (this.not_auth) {
+      if (this.isAuthenticated) {
         const user = await this.requestService.request('GET', `/user`,{},{}, true);
         this.isSubscribed = user.subscribed;
+        this.userDisplayName = user.name?.trim() ?? '';
+        this.hasStudyPlan = Boolean(user.studyPlan);
       }
       // Solicita los temas desde el servidor
       this.topics = await this.requestService.request('GET', `/topic`,{},{}, true);
@@ -88,6 +100,8 @@ export class HomeComponent implements OnInit {
           return x;
         });
       });
+      this.collapseTopicTrees();
+      this.refreshHomeMetrics();
     }catch(error: any){
       this.router.navigate(['/error']);
     }
@@ -195,6 +209,7 @@ export class HomeComponent implements OnInit {
     // Actualizar la variable topics
     updateTopicSelection(this.topics[key], topicId, isChecked);
     this.localStorageService.setItem("topicsSelected", topicSelected);
+    this.refreshHomeMetrics();
   }
 
 
@@ -210,6 +225,68 @@ export class HomeComponent implements OnInit {
     };
     Object.keys(this.topics || {}).forEach(group => clear(this.topics[group] || []));
     this.localStorageService.setItem('topicsSelected', []);
+    this.refreshHomeMetrics();
+  }
+
+  scrollToTopics() {
+    document.getElementById('home-topics')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  goToStudyPlan() {
+    this.router.navigate(['/plan-estudio']);
+  }
+
+  categoryIcon(category: string): string {
+    const normalizedCategory = category.toLowerCase();
+
+    if (normalizedCategory.includes('legis')) {
+      return 'fa-scale-balanced';
+    }
+
+    if (normalizedCategory.includes('territ')) {
+      return 'fa-location-dot';
+    }
+
+    return 'fa-fire-flame-curved';
+  }
+
+  categoryTopicCount(category: string): number {
+    return Array.isArray(this.topics?.[category]) ? this.topics[category].length : 0;
+  }
+
+  categoryQuestionCount(category: string): number {
+    return (this.topics?.[category] ?? [])
+      .reduce((total: number, topic: any) => total + Number(topic.quizCount || 0), 0);
+  }
+
+  private refreshHomeMetrics() {
+    const groups = Object.keys(this.topics || {});
+    const selectedTopics = this.localStorageService.getItem('topicsSelected') ?? [];
+    const selectedIds = new Set(selectedTopics.map((topic: any) => Number(topic.id)));
+
+    this.totalTopicGroups = groups.length;
+    this.totalAvailableTopics = groups.reduce(
+      (total, group) => total + this.categoryTopicCount(group),
+      0
+    );
+    this.totalAvailableQuestions = groups.reduce(
+      (total, group) => total + this.categoryQuestionCount(group),
+      0
+    );
+    this.selectedTopicsCount = selectedIds.size;
+  }
+
+  private collapseTopicTrees() {
+    const collapse = (items: any[]) => {
+      items?.forEach(topic => {
+        topic.expanded = false;
+        if (Array.isArray(topic.topics) && topic.topics.length > 0) {
+          collapse(topic.topics);
+        }
+      });
+    };
+
+    Object.keys(this.topics || {}).forEach(group => collapse(this.topics[group] || []));
   }
 
 

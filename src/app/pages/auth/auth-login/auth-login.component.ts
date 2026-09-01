@@ -9,8 +9,7 @@ import { RequestService } from '../../../services/request.service';
   selector: 'app-login',
   standalone: true,
   imports: [NgOptimizedImage, RouterLink, NgStyle, FormsModule, CommonModule],
-  templateUrl: './auth-login.component.html',
-  styleUrl: './auth-login.component.css'
+  templateUrl: './auth-login.component.html'
 })
 export default class AuthLoginComponent {
   constructor(private router: Router, private requestService: RequestService) {}

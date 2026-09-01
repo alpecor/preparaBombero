@@ -10,8 +10,7 @@ import { RequestService } from '../../services/request.service';
   selector: 'app-header',
   standalone: true,
   imports: [NgOptimizedImage, RouterLink, CommonModule, RouterLinkActive],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit {
 
@@ -25,6 +24,7 @@ export class HeaderComponent implements OnInit {
   showSavedToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  isMobileMenuOpen = false;
 
 
   async ngOnInit(): Promise<void> {
@@ -41,6 +41,7 @@ export class HeaderComponent implements OnInit {
 
   // Método para el click de preguntas guardadas si estas subscrito o no
   onSavedClick(): void {
+    this.closeMobileMenu();
     if (!this.isSubscribed) {
       this.showToast(
         'Funcionalidad PREMIUM: debes estar susbcrito para acceder a Preguntas guardadas.',
@@ -53,6 +54,7 @@ export class HeaderComponent implements OnInit {
 
   // Método para el click de icono examanes si estas registrado o no
   onExamsClick(): void {
+    this.closeMobileMenu();
     // Si NO está autenticado, mostramos aviso y no navegamos
     if (this.isNotAuth) {
       this.showToast('Debes estar registrado para acceder a la carpeta "Exámenes. Una vez registrado, podrás realizar exámenes OFICIALES".', 'error');
@@ -70,6 +72,18 @@ export class HeaderComponent implements OnInit {
     setTimeout(() => (this.showSavedToast = false), 3500);
   }
 
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
+  isRouteActive(path: string): boolean {
+    return this.router.url === path || this.router.url.startsWith(`${path}/`);
+  }
+
 
    // Método para cargar la información desde el servicio
    async loadInfo(): Promise<void> {
@@ -79,6 +93,7 @@ export class HeaderComponent implements OnInit {
 
 
   logout(){
+    this.closeMobileMenu();
     localStorage.removeItem('access_token');
     localStorage.removeItem('modalShown'); //para el aviso multicuenta
     localStorage.removeItem('userAnswer');

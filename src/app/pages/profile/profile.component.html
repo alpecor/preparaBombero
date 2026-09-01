@@ -1,70 +1,229 @@
-<div class="flex flex-col h-screen">
-  <!-- ****************************** AÑADIR HEADER AQUÍ **********************************-->
+<div class="profile-page">
   <app-header />
 
-  <!-- ****************************** CONTENIDO PRINCIPAL AQUÍ **********************************-->
-  <div class="flex gap-x-30 mx-16">
-
-    <div class="w-1/3 bg-white rounded-lg px-20">
-
-      <!-- Imagen centrada -->
-      <div class="flex justify-center mb-8">
-        <img ngSrc="formulario.png" alt="Bombero en incendio" width="717" height="886" class="rounded-full" priority="">
+  <main class="profile-main">
+    <div class="profile-container">
+      <div class="profile-page-intro">
+        <div>
+          <span class="profile-kicker">
+            <i class="fa-solid fa-user-shield"></i>
+            Cuenta personal
+          </span>
+          <h1>Mi perfil</h1>
+          <p>Gestiona tus datos, tu suscripción y revisa cómo estás avanzando.</p>
+        </div>
+        <a class="profile-back-link" routerLink="/">
+          <i class="fa-solid fa-arrow-left"></i>
+          Volver al inicio
+        </a>
       </div>
 
-      <!-- Formulario -->
-      <form class="w-full px-10">
-        <div class="mb-6">
-          <input type="text" [value]="user.name" placeholder="Nombre" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
-        </div>
-        <div class="mb-6">
-          <input type="text" [value]="user.surname" placeholder="Apellido" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
-        </div>
-        <div class="mb-6">
-          <input type="email" [value]="user.email" placeholder="Email" disabled class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400">
-        </div>
-
-        <!-- Toggle de suscripción -->
-        <div class="flex items-center space-x-2">
-          @if (user.subscribed && user.cancellation_pending == false) {
-            <label class="inline-flex items-center cursor-pointer">
-              <input (click)="unsubscribed()" type="checkbox" checked class="sr-only peer">
-              <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-400"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900">Cancelar suscripción</span>
-            </label>
-          } @else if (user.subscribed) {
-            <span class="ml-3 text-sm font-medium text-gray-900">Tu subscripción será CANCELADA en el próximo ciclo de pago.</span>
-          } @else {
-            <label class="inline-flex items-center cursor-pointer">
-              <input (click)="subscribed()" type="checkbox" class="sr-only peer">
-              <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-400"></div>
-              <span class="ml-3 text-sm font-medium text-gray-900">Subscríbete</span>
-            </label>
-          }
-        </div>
-      </form>
-    </div>
-
-    <!-- Estadísticas -->
-    <div class="w-2/3 pl-10">
-      <h2 class="text-xl font-semibold mb-4">Estadísticas (últimos 6 tests):</h2>
-      <div class="grid grid-cols-2 gap-4">
-        @for (chartOption of chartOptions; track $index) {
-          <div id="chart">
-            <apx-chart
-              [series]="chartOption.series"
-              [chart]="chartOption.chart"
-              [labels]="chartOption.labels"
-              [responsive]="chartOption.responsive"
-            ></apx-chart>
+      <div class="profile-layout">
+        <section class="profile-account-card">
+          <div class="profile-account-heading">
+            <div class="profile-avatar">
+              <img ngSrc="formulario.png" alt="Perfil de bombero" width="160" height="160" priority>
+            </div>
+            <div class="profile-identity">
+              <span class="profile-card-kicker">Tu cuenta</span>
+              <h2>{{ user.name }} {{ user.surname }}</h2>
+              <p>{{ user.email }}</p>
+              <span class="profile-member-badge">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+                Preparando tu oposición
+              </span>
+            </div>
           </div>
-        } @empty {
-          <span class="text-gray-900">No hay estadisticas para mostrar, realiza al menos un test.</span>
-        }
+
+          <div class="profile-divider"></div>
+
+          <div class="profile-details">
+            <div class="profile-detail-row">
+              <span class="profile-detail-icon"><i class="fa-solid fa-user"></i></span>
+              <div>
+                <span>Nombre completo</span>
+                <strong>{{ user.name }} {{ user.surname }}</strong>
+              </div>
+            </div>
+            <div class="profile-detail-row">
+              <span class="profile-detail-icon profile-detail-icon-blue"><i class="fa-solid fa-envelope"></i></span>
+              <div>
+                <span>Correo electrónico</span>
+                <strong>{{ user.email }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-subscription-block">
+            <div class="profile-subscription-heading">
+              <div>
+                <span class="profile-card-kicker">Acceso</span>
+                <h3>Tu suscripción</h3>
+              </div>
+              @if (user.subscribed && user.cancellation_pending == false) {
+                <span class="profile-status-badge profile-status-badge-active">Activa</span>
+              } @else if (user.subscribed) {
+                <span class="profile-status-badge profile-status-badge-pending">Pendiente</span>
+              } @else {
+                <span class="profile-status-badge profile-status-badge-free">Gratuita</span>
+              }
+            </div>
+
+            @if (user.subscribed && user.cancellation_pending == false) {
+              <div class="profile-subscription-status profile-subscription-status-active">
+                <span class="profile-subscription-icon"><i class="fa-solid fa-circle-check"></i></span>
+                <div>
+                  <strong>Premium activo</strong>
+                  <p>Tienes acceso a todas las herramientas de preparación.</p>
+                </div>
+              </div>
+              <button type="button" class="profile-subscription-action profile-subscription-action-cancel" (click)="unsubscribed()" [disabled]="isSubscriptionUpdating">
+                @if (isSubscriptionUpdating) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Cancelando...
+                } @else {
+                  Cancelar suscripción
+                }
+              </button>
+            } @else if (user.subscribed) {
+              <div class="profile-subscription-status profile-subscription-status-pending">
+                <span class="profile-subscription-icon"><i class="fa-solid fa-clock"></i></span>
+                <div>
+                  <strong>Cancelación programada</strong>
+                  <p>Tu suscripción seguirá activa hasta el próximo ciclo de pago.</p>
+                </div>
+              </div>
+            } @else {
+              <div class="profile-subscription-status profile-subscription-status-free">
+                <span class="profile-subscription-icon"><i class="fa-solid fa-lock"></i></span>
+                <div>
+                  <strong>Modo gratuito</strong>
+                  <p>Activa Premium para sacar el máximo partido a tu preparación.</p>
+                </div>
+              </div>
+              <button type="button" class="profile-subscription-action profile-subscription-action-upgrade" (click)="subscribed()" [disabled]="isSubscriptionUpdating">
+                @if (isSubscriptionUpdating) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  Cargando...
+                } @else {
+                  Activar Premium
+                  <i class="fa-solid fa-arrow-right"></i>
+                }
+              </button>
+            }
+
+            @if (subscriptionError) {
+              <p class="profile-subscription-error" role="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ subscriptionError }}
+              </p>
+            }
+          </div>
+
+          <div class="profile-privacy-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            Tus datos y tu progreso se guardan de forma segura.
+          </div>
+        </section>
+
+        <section class="profile-stats-card">
+          <div class="profile-section-heading">
+            <div>
+              <span class="profile-kicker">Tu rendimiento</span>
+              <h2>Últimos exámenes</h2>
+              <p>Revisa tus resultados más recientes y detecta dónde seguir mejorando.</p>
+            </div>
+            <span class="profile-tests-badge">
+              <i class="fa-solid fa-chart-line"></i>
+              {{ recentStats.length }} registros
+            </span>
+          </div>
+
+          @if (recentStats.length > 0) {
+            <div class="profile-summary-grid">
+              <div class="profile-summary-item profile-summary-item-gold">
+                <span class="profile-summary-icon"><i class="fa-solid fa-bullseye"></i></span>
+                <div>
+                  <span>Media de aciertos</span>
+                  <strong>{{ averageScore | number:'1.0-0' }}%</strong>
+                </div>
+              </div>
+              <div class="profile-summary-item profile-summary-item-green">
+                <span class="profile-summary-icon"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                <div>
+                  <span>Mejor resultado</span>
+                  <strong>{{ bestScore | number:'1.0-0' }}%</strong>
+                </div>
+              </div>
+              <div class="profile-summary-item profile-summary-item-blue">
+                <span class="profile-summary-icon"><i class="fa-solid fa-list-check"></i></span>
+                <div>
+                  <span>Preguntas realizadas</span>
+                  <strong>{{ totalQuestions | number:'1.0-0' }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-tests-grid">
+              @for (stat of recentStats; track $index) {
+                <article class="profile-test-card" [ngClass]="getScoreClass(stat)">
+                  <div class="profile-test-heading">
+                    <div>
+                      <span class="profile-test-label">{{ $index === 0 ? 'Último examen' : 'Examen ' + ($index + 1) }}</span>
+                      <small>{{ stat.created_at | date:'dd/MM/yyyy' }}</small>
+                    </div>
+                    <strong class="profile-test-score">{{ getStatScore(stat) | number:'1.0-0' }}%</strong>
+                  </div>
+
+                  <div class="profile-test-content">
+                    <div class="profile-test-chart">
+                      <apx-chart
+                        [series]="chartOptions[$index].series"
+                        [chart]="chartOptions[$index].chart"
+                        [labels]="chartOptions[$index].labels"
+                        [colors]="chartOptions[$index].colors"
+                        [dataLabels]="chartOptions[$index].dataLabels"
+                        [legend]="chartOptions[$index].legend"
+                        [stroke]="chartOptions[$index].stroke"
+                        [plotOptions]="chartOptions[$index].plotOptions"
+                        [responsive]="chartOptions[$index].responsive"
+                      ></apx-chart>
+                      <span>{{ getScoreLabel(stat) }}</span>
+                    </div>
+
+                    <div class="profile-test-breakdown">
+                      <div>
+                        <span><i class="profile-dot profile-dot-correct"></i>Correctas</span>
+                        <strong>{{ stat.success }}</strong>
+                      </div>
+                      <div>
+                        <span><i class="profile-dot profile-dot-failed"></i>Falladas</span>
+                        <strong>{{ stat.fail }}</strong>
+                      </div>
+                      <div>
+                        <span><i class="profile-dot profile-dot-unanswered"></i>Sin responder</span>
+                        <strong>{{ stat.not_answered }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else {
+            <div class="profile-empty-state">
+              <span class="profile-empty-icon"><i class="fa-solid fa-chart-simple"></i></span>
+              <h3>Aún no tienes resultados</h3>
+              <p>Cuando completes tu primer examen, aquí podrás consultar tus aciertos, fallos y evolución.</p>
+              <a routerLink="/" class="profile-empty-action">
+                Ir al temario
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+          }
+        </section>
       </div>
     </div>
-  </div>
+  </main>
 
-  <!-- ****************************** AÑADIR FOOTER AQUÍ **********************************-->
   <app-footer />
 </div>

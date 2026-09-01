@@ -8,8 +8,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-register',
   standalone: true,
   imports: [RouterLink,NgOptimizedImage, FormsModule],
-  templateUrl: './auth-register.component.html',
-  styleUrl: './auth-register.component.css'
+  templateUrl: './auth-register.component.html'
 })
 export class AuthRegisterComponent {
   constructor(private router: Router, private requestService: RequestService) {}

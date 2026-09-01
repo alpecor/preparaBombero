@@ -1,0 +1,439 @@
+.exams-page {
+  min-height: 100vh;
+  background: #f7f8fa;
+  color: #172033;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.exams-page a,
+.exams-page button {
+  font-family: inherit;
+}
+
+.exams-main {
+  min-height: calc(100vh - 10rem);
+  padding: 2.3rem 0 4rem;
+}
+
+.exams-container {
+  width: min(1180px, calc(100% - 3rem));
+  margin: 0 auto;
+}
+
+.exams-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-bottom: 1rem;
+  color: #94a3b8;
+  font-size: .68rem;
+}
+
+.exams-breadcrumbs a {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  color: #718096;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.exams-breadcrumbs a:hover {
+  color: #a56800;
+}
+
+.exams-breadcrumbs > i {
+  color: #cbd5e1;
+  font-size: .55rem;
+}
+
+.exams-breadcrumbs span {
+  color: #a56800;
+  font-weight: 700;
+}
+
+.exams-heading-panel {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 10.5rem;
+  overflow: hidden;
+  border: 1px solid #f0d99f;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(100deg, rgba(255, 248, 232, .98), rgba(255, 252, 246, .91)),
+    radial-gradient(circle at 90% 20%, rgba(222, 154, 23, .17), transparent 38%);
+  box-shadow: 0 .6rem 1.5rem rgba(148, 103, 24, .07);
+  padding: 1.7rem 2rem;
+}
+
+.exams-heading-copy {
+  max-width: 45rem;
+}
+
+.exams-kicker,
+.exams-section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .42rem;
+  color: #a56800;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.exams-kicker i {
+  color: #de9a17;
+}
+
+.exams-heading-copy h1 {
+  margin: .5rem 0 .4rem;
+  color: #172033;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.65rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.exams-heading-copy p {
+  max-width: 38rem;
+  margin: 0;
+  color: #6d7b8d;
+  font-size: .86rem;
+  line-height: 1.6;
+}
+
+.exams-count-badge {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  flex: 0 0 auto;
+  border: 1px solid #e8c982;
+  border-radius: .8rem;
+  background: rgba(255, 255, 255, .76);
+  padding: .7rem .9rem;
+}
+
+.exams-count-badge strong {
+  color: #b97805;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.exams-count-badge span {
+  max-width: 5rem;
+  color: #80601f;
+  font-size: .66rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.exams-results-section {
+  margin-top: 1.65rem;
+}
+
+.exams-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.exams-section-heading h2 {
+  margin: .35rem 0 0;
+  color: #172033;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.exams-section-note {
+  color: #94a3b8;
+  font-size: .7rem;
+}
+
+.exams-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .9rem;
+}
+
+.exam-explorer-card {
+  position: relative;
+  display: flex;
+  min-height: 8.8rem;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #e1e7ee;
+  border-radius: .9rem;
+  background: #fff3dc;
+  box-shadow: 0 .45rem 1.2rem rgba(30, 41, 59, .04);
+  cursor: pointer;
+  justify-content: center;
+  padding: .9rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background .2s, border-color .2s, box-shadow .2s, transform .2s;
+}
+
+.exam-explorer-card::after {
+  position: absolute;
+  right: -2.2rem;
+  bottom: -2.4rem;
+  width: 7rem;
+  height: 7rem;
+  border: 1px solid rgba(222, 154, 23, .12);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.exam-explorer-card:hover,
+.exam-explorer-card:focus-visible {
+  border-color: #e4c681;
+  background: #ffedc5;
+  box-shadow: 0 .75rem 1.5rem rgba(148, 103, 24, .12);
+  outline: none;
+  transform: translateY(-.2rem);
+}
+
+.exam-explorer-card:focus-visible {
+  box-shadow: 0 0 0 .2rem rgba(222, 154, 23, .2), 0 .75rem 1.5rem rgba(148, 103, 24, .12);
+}
+
+.exam-explorer-card-button {
+  width: 100%;
+}
+
+.exam-explorer-card-topline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: .55rem;
+}
+
+.exam-explorer-icon {
+  display: grid;
+  place-items: center;
+  width: 2.45rem;
+  height: 2.45rem;
+  flex: 0 0 2.45rem;
+  border-radius: .7rem;
+  background: #fff2d6;
+  color: #c98508;
+  font-size: .9rem;
+}
+
+.exam-explorer-icon-blue {
+  background: #eef5ff;
+  color: #3d75b9;
+}
+
+.exam-explorer-icon-orange {
+  background: #fff0e5;
+  color: #d4742b;
+}
+
+.exam-explorer-card-type {
+  overflow: hidden;
+  color: #94a3b8;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.exam-explorer-arrow {
+  margin-left: auto;
+  color: #cbd5e1;
+  font-size: .72rem;
+  transition: color .2s, transform .2s;
+}
+
+.exam-explorer-card:hover .exam-explorer-arrow,
+.exam-explorer-card:focus-visible .exam-explorer-arrow {
+  color: #c98508;
+  transform: translate(.1rem, -.1rem);
+}
+
+.exam-explorer-card h3 {
+  position: relative;
+  z-index: 1;
+  display: -webkit-box;
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  color: #172033;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .96rem;
+  font-weight: 800;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.exam-explorer-card-action {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .75rem;
+  color: #9a6505;
+  font-size: .7rem;
+  font-weight: 800;
+}
+
+.exam-explorer-card-action i {
+  transition: transform .2s;
+}
+
+.exam-explorer-card:hover .exam-explorer-card-action i,
+.exam-explorer-card:focus-visible .exam-explorer-card-action i {
+  transform: translateX(.2rem);
+}
+
+.exams-back-action {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin-top: 1.3rem;
+  color: #936004;
+  font-size: .75rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.exams-back-action:hover {
+  color: #704800;
+}
+
+.exams-loading-state,
+.exams-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 15rem;
+  margin-top: 1.65rem;
+  border: 1px solid #e1e7ee;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 .45rem 1.2rem rgba(30, 41, 59, .04);
+}
+
+.exams-loading-state {
+  gap: .55rem;
+  color: #a56800;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.exams-loading-state i {
+  color: #de9a17;
+}
+
+.exams-empty-state {
+  flex-direction: column;
+  padding: 2rem;
+  text-align: center;
+}
+
+.exams-empty-state > i {
+  color: #de9a17;
+  font-size: 1.7rem;
+}
+
+.exams-empty-state h3 {
+  margin: .85rem 0 .3rem;
+  color: #172033;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.exams-empty-state p {
+  margin: 0;
+  color: #718096;
+  font-size: .75rem;
+}
+
+@media (max-width: 1000px) {
+  .exams-cards-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .exams-main {
+    padding-top: 1.6rem;
+  }
+
+  .exams-container {
+    width: min(100% - 2rem, 38rem);
+  }
+
+  .exams-heading-panel {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.15rem;
+    padding: 1.35rem;
+  }
+
+  .exams-count-badge {
+    align-self: flex-start;
+  }
+
+  .exams-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exams-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .exams-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-explorer-card {
+    min-height: 9.5rem;
+  }
+}
+
+/* Ajuste final de las tarjetas: prevalece sobre cualquier estilo heredado. */
+.exams-page .exam-explorer-card {
+  align-items: center !important;
+  background: #fff3dc !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.exams-page .exam-explorer-card:hover,
+.exams-page .exam-explorer-card:focus-visible {
+  background: #ffedc5 !important;
+}
+
+.exams-page .exam-explorer-card h3 {
+  margin: 0 !important;
+  text-align: center !important;
+}
+
+.exams-page .exam-explorer-card-action {
+  margin-top: .75rem !important;
+  text-align: center !important;
+}
