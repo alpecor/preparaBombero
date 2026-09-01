@@ -127,10 +127,6 @@
   padding-top: 1.5rem;
 }
 
-.study-plan-settings-page {
-  background: linear-gradient(180deg, #ffffff 0%, #fffaf1 100%);
-}
-
 .study-plan-card {
   background: white;
   border: 1px solid #e2e8f0;
@@ -962,7 +958,6 @@
 .study-plan-history-heading {
   min-height: 4.5rem;
   border-bottom-color: #eef0f3;
-  background: linear-gradient(135deg, #fffdf8 0%, #ffffff 72%);
   padding: 1.1rem 1.45rem;
 }
 
@@ -1328,7 +1323,6 @@
   border: 1px solid #d8890c;
   border-radius: .65rem;
   background: #e39b17;
-  box-shadow: 0 .35rem .8rem rgba(227, 155, 23, .2);
   color: white;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
@@ -1342,14 +1336,9 @@
 .study-plan-back-button:focus-visible {
   border-color: #b45309;
   background: #d8890c;
-  box-shadow: 0 .45rem 1rem rgba(180, 83, 9, .24);
   color: white;
   outline: none;
   transform: translateY(-1px);
-}
-
-.study-plan-back-button:focus-visible {
-  box-shadow: 0 0 0 .2rem rgba(227, 155, 23, .22), 0 .45rem 1rem rgba(180, 83, 9, .24);
 }
 
 .study-plan-settings-topbar h2 {
@@ -1379,7 +1368,6 @@
   border: 1px solid #e5e7eb;
   border-radius: 1rem;
   background: white;
-  box-shadow: 0 .8rem 2rem rgba(148, 103, 24, .08);
   padding: clamp(1.25rem, 3vw, 2rem);
 }
 

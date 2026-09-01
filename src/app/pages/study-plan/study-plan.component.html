@@ -56,9 +56,6 @@
               <i class="fa-solid fa-arrow-left"></i>
               Volver
             </button>
-            <h2>
-              Ajustes del plan
-            </h2>
           </div>
 
           <section class="study-plan-settings-card">
@@ -176,7 +173,7 @@
                         <span class="study-plan-today-summary-label">Temario de hoy</span>
                         @if (todaySession.topics.length > 0) {
                           <span class="study-plan-today-summary-topic">
-                            <span class="study-plan-today-summary-code">{{ topicPrefix(todaySession.topics[0]) }}</span>
+                            <strong class="study-plan-topic-prefix">{{ topicPrefix(todaySession.topics[0])}}</strong>
                             <span>{{ topicName(todaySession.topics[0]) }}</span>
                           </span>
                           @if (todaySession.topics.length > 1) {
@@ -332,17 +329,6 @@
                       <small>{{ currentHistoryWeekLabel }}</small>
                     }
                   </div>
-                  <span
-                    class="study-plan-history-heading-meta"
-                    [attr.aria-label]="historySessions.length + (historySessions.length === 1 ? ' sesión registrada' : ' sesiones registradas')">
-                    <span class="study-plan-history-heading-meta-icon" aria-hidden="true">
-                      <i class="fa-solid fa-clock-rotate-left"></i>
-                    </span>
-                    <span class="study-plan-history-heading-meta-copy">
-                      <strong>{{ historySessions.length }}</strong>
-                      <span>{{ historySessions.length === 1 ? 'sesión registrada' : 'sesiones registradas' }}</span>
-                    </span>
-                  </span>
                 </div>
               @for (session of visibleHistorySessions; track session.id) {
                 <div class="study-plan-history-item">
@@ -362,7 +348,7 @@
                         <span class="study-plan-history-summary-label">Temario de la sesión</span>
                         @if (session.topics.length > 0) {
                           <span class="study-plan-history-summary-topic">
-                            <span class="study-plan-history-summary-code">{{ topicPrefix(session.topics[0]) }}</span>
+                            <strong class="study-plan-topic-prefix">{{ topicPrefix(session.topics[0]) }}</strong>
                             <span>{{ topicName(session.topics[0]) }}</span>
                           </span>
                           @if (session.topics.length > 1) {
@@ -400,7 +386,7 @@
                             @for (topic of session.topics; track $index) {
                               <li>
                                 <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
-                                <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
+                                <span class="study-plan-topic-name"> {{ topicName(topic) }}</span>
                               </li>
                           }
                         </ul>
