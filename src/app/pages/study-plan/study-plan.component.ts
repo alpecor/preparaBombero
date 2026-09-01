@@ -17,6 +17,7 @@ interface StudySession {
   date: string;
   type: 'NORMAL' | 'SIMULACRO' | 'SPRINT' | string;
   percentage: number | null;
+  questionCount: number;
   topics: string[];
   status: 'PENDIENTE' | 'REALIZADA' | 'NO_REALIZADA' | string;
 }
@@ -615,6 +616,10 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
 
   formatTopic(topic: string): string {
     return `${this.topicPrefix(topic)} ${this.topicName(topic)}`.trim();
+  }
+
+  thematicQuestionCount(session: StudySession): number {
+    return Math.max(0, session.questionCount - 5);
   }
 
   sessionDateLabel(session: StudySession): string {

@@ -216,12 +216,12 @@
                 }
 
                 <p class="study-plan-topic-meta">
-                  25 preguntas temáticas · 5 territoriales
+                  {{ thematicQuestionCount(todaySession) }} preguntas temáticas · 5 territoriales
                 </p>
 
                 <div class="study-plan-question-pill">
                   <i class="fa-regular fa-rectangle-list"></i>
-                  30 preguntas
+                  {{ todaySession.questionCount }} preguntas
                 </div>
 
                 @if (todaySession.status === 'PENDIENTE') {
@@ -284,7 +284,7 @@
                         <span class="study-plan-session-day">{{ sessionShortDay(session) }}</span>
                         <strong>{{ sessionPreviewTitle(session) }}</strong>
                         <span class="study-plan-session-count">
-                          {{ session.type === 'SIMULACRO' ? 'Simulacro' : '30 preg.' }}
+                          {{ session.type === 'SIMULACRO' ? 'Simulacro' : session.questionCount + ' preg.' }}
                           <i
                             class="fa-solid"
                             [ngClass]="expandedSessionId === session.id ? 'fa-chevron-up' : 'fa-chevron-down'"
