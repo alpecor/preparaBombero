@@ -1,201 +1,311 @@
-<!-------------------------------------- HEADER -------------------------------------->
-<app-header />
+<div class="check-exam-page min-h-screen bg-[#f7f8fa] text-[#172033]">
+  <app-header />
 
- <!-------------------------------------- TOAST MENSAJE --------------------------------------> 
-<div
-  *ngIf="showSavedToast"
-  class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
-  [ngClass]="{
-    'bg-primaryColor text-white': toastType === 'success',
-    'bg-red-100 text-red-800': toastType === 'error'
-  }"
->
-  <i class="fa-solid"
-    [ngClass]="{
-      'fa-check-circle': toastType === 'success',
-      'fa-circle-xmark': toastType === 'error'
-    }"
-  ></i>
-  <span>{{ toastMessage }}</span>
-</div>
-
-<!-------------------------------------- AÑADIR RESULTADO DEL EXAMEN Y NOTA AQUÍ --------------------------------------> 
-  <div class="mx-auto p-4 flex justify-center space-x-8">
-
-    <!-------------------------------------- PRIMER BLOQUE -------------------------------------->
-    <div class="p-4 text-center border rounded-xl bg-gray-100">
-      <h2 class="text-lg font-semibold mb-4">El RESULTADO de tu examen es el siguiente:</h2>
-      <ul>
-        <span>Preguntas <strong>totales</strong>:</span>
-        <span class="ml-1 font-bold">{{ correctedExamQuestions.length }}</span>
-      </ul>
-      <ul>
-        <span>Preguntas <strong>acertadas</strong>:</span>
-        <span class="ml-1 font-bold">{{ examSummary?.correctAnswers }}</span>
-      </ul>
-      <ul>
-        <span>Preguntas <strong>falladas</strong>:</span>
-        <span class="ml-1 font-bold">{{ examSummary?.incorrectAnswers }}</span>
-      </ul>
-      <ul>
-        <span>Preguntas <strong>no respondidas</strong>:</span>
-        <span class="ml-1 font-bold">{{ examSummary?.unansweredQuestions }}</span>
-      </ul>
+  @if (showSavedToast) {
+    <div
+      class="check-exam-toast fixed right-5 top-5 z-[1100] flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold shadow-lg"
+      [class.check-exam-toast-success]="toastType === 'success'"
+      [class.check-exam-toast-error]="toastType === 'error'"
+      role="status"
+      aria-live="polite">
+      <i class="fa-solid" [ngClass]="toastType === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+      <span>{{ toastMessage }}</span>
     </div>
+  }
 
-    <!-------------------------------------- SEGUNDO BLOQUE -------------------------------------->
-    @if (isSubscribed) {
-      <div class="p-4 text-center border rounded-xl bg-gray-100">
-        <h2 class="text-lg font-semibold mb-4">Tu NOTA sería la siguiente en los siguientes casos:</h2>
-        <ul class="check-exam-score-list">
-          <li>
-            <span>Si no restan preguntas mal contestadas, tu nota sería:</span>
-            <strong>{{ scores.noPenalty.toFixed(2) }}</strong>
-          </li>
-          <li>
-            <span>Si cada 2 mal, resta 1 bien, tu nota sería:</span>
-            <strong>{{ scores.penaltyTwo.toFixed(2) }}</strong>
-          </li>
-          <li>
-            <span>Si cada 3 mal, resta 1 bien, tu nota sería:</span>
-            <strong>{{ scores.penaltyThree.toFixed(2) }}</strong>
-          </li>
-          <li>
-            <span>Si cada 4 mal, resta 1 bien, tu nota sería:</span>
-            <strong>{{ scores.penaltyFour.toFixed(2) }}</strong>
-          </li>
-        </ul>
-      </div>
-    }
-    @if (!isSubscribed) {
-      <div class="p-4 text-center rounded-xl dark:bg-gray-800 dark:text-red-400 bg-red-50">
-        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-          <span class="font-medium">Para obtener detalles sobre tu nota, debes estas subscrito, es una funcionalidad PREMIUM</span>
+  <main>
+    <section class="check-exam-hero relative overflow-hidden border-b border-[#ead8ae] bg-gradient-to-br from-[#fff8e8] via-[#fffaf2] to-white">
+      <div class="check-exam-container relative z-10 mx-auto w-[calc(100%-3rem)] max-w-[1080px] py-12">
+        <span class="check-exam-kicker inline-flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">
+          <i class="fa-solid fa-flag-checkered text-[#de9a17]"></i>
+          Examen completado
+        </span>
+        <h1 class="mt-2 font-extrabold leading-tight text-[#172033]">Este es el resultado de tu examen</h1>
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">
+          Revisa tus respuestas, consulta las explicaciones y descubre en qué puedes seguir mejorando.
+        </p>
+
+        <div class="check-exam-summary-grid mt-8 grid items-stretch gap-4 lg:grid-cols-2">
+          <div class="check-exam-score-stack flex flex-col gap-4">
+            <article class="check-exam-score-highlight rounded-2xl border border-[#e8c982] bg-gradient-to-br from-[#fff2d2] to-[#fffaf0] p-5 shadow-sm">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-[.66rem] font-extrabold uppercase tracking-[.1em] text-[#a56800]">Nota sin penalización</span>
+                  <p class="mt-1 text-xs leading-relaxed text-[#80601f]">Tu puntuación sobre 10</p>
+                </div>
+                <span class="grid h-10 w-10 place-items-center rounded-xl bg-white/80 text-[#c98508]">
+                  <i class="fa-solid fa-trophy"></i>
+                </span>
+              </div>
+              @if (isSubscribed) {
+                <div class="mt-5 flex items-baseline gap-2">
+                  <strong class="font-extrabold leading-none text-[#172033]">{{ scores.noPenalty.toFixed(2) }}</strong>
+                  <span class="text-sm font-bold text-[#a56800]">/ 10</span>
+                </div>
+                <span class="mt-2 block text-[.7rem] text-[#80601f]">Consulta también los escenarios con penalización.</span>
+              } @else {
+                <strong class="mt-5 block font-extrabold leading-none text-[#172033]">Premium</strong>
+                <span class="mt-2 block text-[.7rem] leading-relaxed text-[#80601f]">Activa Premium para consultar tu nota y sus diferentes escenarios.</span>
+              }
+            </article>
+
+            @if (isSubscribed) {
+              <article class="check-exam-score-card flex-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                  <div>
+                    <span class="check-exam-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Escenarios de puntuación</span>
+                    <h2 class="mt-1 font-extrabold text-[#172033]">Cómo quedaría tu nota</h2>
+                  </div>
+                  <span class="text-xs leading-relaxed text-slate-500 sm:text-right">Según el sistema de penalización aplicado</span>
+                </div>
+                <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                  <div class="check-exam-score-option rounded-xl border border-[#e8c982] bg-[#fffaf0] p-4">
+                    <span class="text-[.68rem] font-bold text-[#80601f]">Sin penalización</span>
+                    <strong class="mt-2 block font-extrabold text-[#172033]">{{ scores.noPenalty.toFixed(2) }} <small>/ 10</small></strong>
+                  </div>
+                  <div class="check-exam-score-option rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <span class="text-[.68rem] font-bold text-slate-500">Cada 2 fallos resta 1 acierto</span>
+                    <strong class="mt-2 block font-extrabold text-[#172033]">{{ scores.penaltyTwo.toFixed(2) }} <small>/ 10</small></strong>
+                  </div>
+                  <div class="check-exam-score-option rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <span class="text-[.68rem] font-bold text-slate-500">Cada 3 fallos resta 1 acierto</span>
+                    <strong class="mt-2 block font-extrabold text-[#172033]">{{ scores.penaltyThree.toFixed(2) }} <small>/ 10</small></strong>
+                  </div>
+                  <div class="check-exam-score-option rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <span class="text-[.68rem] font-bold text-slate-500">Cada 4 fallos resta 1 acierto</span>
+                    <strong class="mt-2 block font-extrabold text-[#172033]">{{ scores.penaltyFour.toFixed(2) }} <small>/ 10</small></strong>
+                  </div>
+                </div>
+              </article>
+            } @else {
+              <section class="check-exam-premium-callout flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[#e8c982] bg-[#fffaf0] p-5 sm:flex-row sm:items-center">
+                <div class="flex items-start gap-3">
+                  <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]"><i class="fa-solid fa-lock"></i></span>
+                  <div>
+                    <h2 class="font-extrabold text-[#172033]">Descubre tu nota completa con Premium</h2>
+                    <p class="mt-1 text-xs leading-relaxed text-[#80601f]">Accede a la puntuación y a todos los escenarios de penalización.</p>
+                  </div>
+                </div>
+                <a class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:bg-[#c98508]" routerLink="/profile">
+                  Ver Premium
+                  <i class="fa-solid fa-arrow-right"></i>
+                </a>
+              </section>
+            }
+          </div>
+
+          <article class="check-exam-results-card flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:h-full">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <span class="text-[.66rem] font-extrabold uppercase tracking-[.1em] text-[#a56800]">Resumen de respuestas</span>
+                <h2 class="mt-1 font-extrabold text-[#172033]">Tu rendimiento</h2>
+              </div>
+              <span class="text-xs font-bold text-slate-400">{{ correctedExamQuestions.length }} preguntas</span>
+            </div>
+            <div class="mt-5 grid flex-1 grid-cols-2 gap-3">
+              <div class="check-exam-stat flex flex-col items-center justify-center gap-2 rounded-xl border border-[#d9f0e1] bg-[#f0fbf3] p-4 text-center">
+                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#d9f3e1] text-[#2f8b56]"><i class="fa-solid fa-check"></i></span>
+                <div>
+                  <strong class="block text-lg font-extrabold text-[#172033]">{{ examSummary?.correctAnswers }}</strong>
+                  <span class="text-[.68rem] text-slate-500">Acertadas</span>
+                </div>
+              </div>
+              <div class="check-exam-stat flex flex-col items-center justify-center gap-2 rounded-xl border border-[#f3d8d3] bg-[#fff5f3] p-4 text-center">
+                <span class="check-exam-stat-icon-fail grid h-9 w-9 shrink-0 place-items-center rounded-lg"><i class="fa-solid fa-xmark"></i></span>
+                <div>
+                  <strong class="block text-lg font-extrabold text-[#172033]">{{ examSummary?.incorrectAnswers }}</strong>
+                  <span class="text-[.68rem] text-slate-500">Falladas</span>
+                </div>
+              </div>
+              <div class="check-exam-stat flex flex-col items-center justify-center gap-2 rounded-xl border border-[#f5e2bd] bg-[#fff9ed] p-4 text-center">
+                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#ffedc2] text-[#b97805]"><i class="fa-solid fa-minus"></i></span>
+                <div>
+                  <strong class="block text-lg font-extrabold text-[#172033]">{{ examSummary?.unansweredQuestions }}</strong>
+                  <span class="text-[.68rem] text-slate-500">Sin responder</span>
+                </div>
+              </div>
+              <div class="check-exam-stat flex flex-col items-center justify-center gap-2 rounded-xl border border-[#dbe8f8] bg-[#eef5ff] p-4 text-center">
+                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#dbeafe] text-[#2f6fb5]"><i class="fa-solid fa-list-ol"></i></span>
+                <div>
+                  <strong class="block text-lg font-extrabold text-[#172033]">{{ correctedExamQuestions.length }}</strong>
+                  <span class="text-[.68rem] text-slate-500">Totales</span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 rounded-xl border border-slate-200 bg-[#fbfcfe] p-4">
+              <div class="flex items-center justify-between gap-3">
+                <span class="text-[.68rem] font-extrabold uppercase tracking-[.08em] text-slate-500">Distribución de respuestas</span>
+                <span class="text-[.68rem] font-bold text-slate-400">Vista rápida</span>
+              </div>
+              <div
+                class="mt-3 flex h-2 overflow-hidden rounded-full bg-slate-200"
+                role="img"
+                aria-label="Distribución de respuestas del examen">
+                <span class="bg-[#63bd83] transition-all" [style.width.%]="correctPercentage"></span>
+                <span class="bg-[#dc7567] transition-all" [style.width.%]="incorrectPercentage"></span>
+                <span class="bg-[#e4ae43] transition-all" [style.width.%]="unansweredPercentage"></span>
+              </div>
+              <div class="mt-3 grid grid-cols-3 gap-2 text-[.63rem] text-slate-500">
+                <span><i class="mr-1 text-[#3c9660] fa-solid fa-circle"></i>{{ examSummary?.correctAnswers }} acertadas</span>
+                <span><i class="mr-1 text-[#c45b4b] fa-solid fa-circle"></i>{{ examSummary?.incorrectAnswers }} falladas</span>
+                <span><i class="mr-1 text-[#c98508] fa-solid fa-circle"></i>{{ examSummary?.unansweredQuestions }} sin responder</span>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
-    }
-  </div>
+    </section>
 
-<!-------------------------------------- AÑADIR CORRECCIÓN AQUÍ -------------------------------------->
-<div class="flex justify-center p-4">
-  <div class="w-full max-w-3xl">
-    <div
-      *ngFor="let question of correctedExamQuestions; let i = index"
-      class="p-6 mb-12 border rounded-xl bg-gray-50 relative"
-    >
-
-      <!--------------------------------------TITULO -------------------------------------->
-      <h2
-        class="text-lg font-semibold mb-2"
-        [innerHTML]="i + 1 + ' . ' + question.title"
-      ></h2>
-
-      <!-------------------------------------- LINEA -------------------------------------->
-      <hr class="border-t border-gray-300 mb-4" />
-
-      <!-------------------------------------- ICONO MOTIVO -------------------------------------->
-      <i
-        class="fa-solid fa-circle-info absolute top-1 right-10 cursor-pointer text-xl text-primaryColor hover:text-yellow-600 transition"
-        title="Ver motivo"
-        (click)="toggleJustification(question)"
-      ></i>
-
-      <!-------------------------------------- ICONO REPORTAR -------------------------------------->
-      <i
-        class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-xl text-primaryColor hover:text-yellow-600 transition"
-        title="Reportar pregunta"
-        (click)="openModal(question.id)"
-      ></i>
-
-      <!-------------------------------------- RESPUESTAS -------------------------------------->
-      <ul class="list-none space-y-2">
-        <li
-          *ngFor="let respuesta of [question.option1, question.option2, question.option3, question.option4]"
-          [ngClass]="{
-            'text-green-400 font-bold': isCorrect(question, respuesta) || isUserSelectedAndCorrect(question, respuesta),
-            'text-red-400 font-semibold': isUserSelectedAndIncorrect(question, respuesta)
-          }"
-        >
-          @if (respuesta != '') {
-            <label class="flex items-center space-x-3">
-              <input
-                type="radio"
-                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [checked]="respuesta === question.userAnswer"
-                disabled
-              />
-              <span>{{ respuesta }}</span>
-            </label>
-          }
-        </li>
-      </ul>
-
-      <!-------------------------------------- ICONO DISQUETE -------------------------------------->
-      <i
-        class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
-        [ngClass]="{
-          'text-gray-400': !isQuestionSaved(question.id),
-          'text-primaryColor': isQuestionSaved(question.id)
-        }"
-        (click)="questionSaved(question.id)"
-        [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
-      ></i>
-
-      <!-------------------------------------- MOTIVO -------------------------------------->
-      @if (question.showJustification) {
-        @if (isSubscribed) {
-          @if (question.justification && question.justification.trim().length > 0) {
-            <div class="mt-4 p-4 bg-gray-200 rounded">
-              <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
-              <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
-            </div>
-          } @else {
-            <div class="mt-4 p-4 bg-yellow-50 text-yellow-900 rounded">
-              Esta pregunta todavía no tiene asociada el motivo de la respuesta correcta, seguimos trabajando en ello.
-            </div>
-          }
-        } @else {
-          <div class="mt-4 p-4 bg-red-50 text-red-800 rounded">
-            Para obtener detalles sobre el motivo de la respuesta correcta, debes estar subscrito, es una funcionalidad PREMIUM.
+    <section class="check-exam-content py-9 pb-16">
+      <div class="check-exam-container mx-auto w-[calc(100%-3rem)] max-w-[1080px]">
+        <div class="check-exam-section-heading mb-5 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <span class="check-exam-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Revisión del examen</span>
+            <h2 class="mt-1 font-extrabold text-[#172033]">Repasa cada pregunta</h2>
           </div>
-        }
-      }
-    </div>
-  </div>
-</div>
+          <span class="inline-flex items-center gap-2 text-left text-xs leading-relaxed text-slate-500 md:text-right">
+            <i class="fa-solid fa-circle-info text-[#b97805]"></i>
+            Consulta la explicación para entender cada respuesta.
+          </span>
+        </div>
 
-  <!-------------------------------------- MODAL DE REPORTE -------------------------------------->
+        <div class="check-exam-questions flex flex-col gap-4">
+          <article
+            *ngFor="let question of correctedExamQuestions; let i = index"
+            class="check-exam-question overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50 px-5 py-3">
+              <div class="flex items-center gap-3">
+                <div class="inline-flex items-baseline gap-2">
+                  <span class="text-[.66rem] font-extrabold uppercase tracking-[.1em] text-slate-500">Pregunta</span>
+                  <strong class="font-extrabold text-[#b97805]">{{ i + 1 | number:'2.0-0' }}</strong>
+                </div>
+                @if (question.status === 'success') {
+                  <span class="inline-flex items-center gap-2 rounded-full border border-[#bfe5cb] bg-[#edfaf2] px-3 py-1.5 text-xs font-extrabold text-[#3c9660]"><i class="fa-solid fa-circle-check"></i> Respuesta correcta</span>
+                } @else if (question.status === 'fail') {
+                  <span class="check-exam-status-fail inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-extrabold"><i class="fa-solid fa-circle-xmark"></i> Respuesta incorrecta</span>
+                } @else {
+                  <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs font-extrabold text-slate-500"><i class="fa-solid fa-minus"></i> Sin responder</span>
+                }
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  class="check-exam-action inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#e7d19e] bg-[#fffaf0] text-sm text-[#a56800] transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none"
+                  [attr.aria-expanded]="question.showJustification"
+                  [title]="question.showJustification ? 'Ocultar explicación' : 'Ver explicación'"
+                  (click)="toggleJustification(question)">
+                  <i class="fa-solid fa-circle-info"></i>
+                </button>
+                <button
+                  type="button"
+                  class="check-exam-action inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#f0d9a4] bg-[#fff9ed] text-sm text-[#de9a17] transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none"
+                  title="Reportar pregunta"
+                  aria-label="Reportar pregunta"
+                  (click)="openModal(question.id)">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                </button>
+                <button
+                  type="button"
+                  class="check-exam-action inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm text-slate-400 transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none"
+                  [class.check-exam-action-active]="isQuestionSaved(question.id)"
+                  [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
+                  [attr.aria-label]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
+                  (click)="questionSaved(question.id)">
+                  <i class="fa-regular fa-bookmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="px-5 pb-4 pt-5">
+              <h3 class="font-extrabold leading-relaxed text-[#263247]" [innerHTML]="i + 1 + '. ' + question.title"></h3>
+              <div class="my-4 h-px bg-slate-200"></div>
+
+              <ul class="flex flex-col gap-2">
+                <ng-container *ngFor="let respuesta of [question.option1, question.option2, question.option3, question.option4]">
+                  @if (respuesta != '') {
+                    <li
+                      class="flex items-start gap-3 rounded-xl border px-3 py-3 text-sm leading-relaxed"
+                      [ngClass]="{
+                        'check-exam-answer-correct border-[#9bd8b0] bg-[#f0fbf3] text-[#2f7a4b]': isCorrect(question, respuesta),
+                        'check-exam-answer-user-correct': isUserSelectedAndCorrect(question, respuesta),
+                        'check-exam-answer-user-incorrect border-[#efb2a8] bg-[#fff5f3] text-[#b34e42]': isUserSelectedAndIncorrect(question, respuesta),
+                        'border-slate-200 bg-white text-slate-600': !isCorrect(question, respuesta) && !isUserSelectedAndIncorrect(question, respuesta)
+                      }">
+                      <input
+                        type="radio"
+                        class="mt-1 h-4 w-4 shrink-0 accent-[#de9a17]"
+                        [checked]="respuesta === question.userAnswer"
+                        disabled />
+                      <span class="min-w-0 flex-1">{{ respuesta }}</span>
+                      @if (isCorrect(question, respuesta)) {
+                        <span class="hidden shrink-0 text-[.65rem] font-extrabold text-[#3c9660] sm:inline">Correcta</span>
+                      } @else if (isUserSelectedAndIncorrect(question, respuesta)) {
+                        <span class="hidden shrink-0 text-[.65rem] font-extrabold text-[#c45b4b] sm:inline">Tu respuesta</span>
+                      }
+                    </li>
+                  }
+                </ng-container>
+              </ul>
+
+              @if (question.showJustification) {
+                @if (isSubscribed) {
+                  @if (question.justification && question.justification.trim().length > 0) {
+                    <div class="check-exam-justification mt-5 rounded-xl border border-[#dce4ed] bg-slate-50 p-4">
+                      <div class="flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.1em] text-[#a56800]">
+                        <i class="fa-solid fa-lightbulb text-[#de9a17]"></i>
+                        Explicación de la respuesta
+                      </div>
+                      <div class="mt-3 text-sm leading-relaxed text-slate-600">
+                        <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="mt-5 rounded-xl border border-[#efdba9] bg-[#fffaf0] p-4 text-sm leading-relaxed text-[#80601f]">
+                      Esta pregunta todavía no tiene asociada una explicación. Seguimos trabajando en ello.
+                    </div>
+                  }
+                } @else {
+                  <div class="mt-5 flex items-start gap-3 rounded-xl border border-[#e8c982] bg-[#fffaf0] p-4 text-sm leading-relaxed text-[#80601f]">
+                    <i class="fa-solid fa-lock mt-1 text-[#c98508]"></i>
+                    <span>Para consultar la explicación de la respuesta correcta necesitas una suscripción Premium.</span>
+                  </div>
+                }
+              }
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <div
-  id="reportModal"
-  class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-  >
-  <div class="bg-white p-8 rounded-lg">
-    <h2 class="text-xl mb-4 font-bold">
-      Indique el motivo de reportar esta pregunta.
-    </h2>
-    <textarea
-      id="reportReason"
-      class="w-full p-2 border border-gray-300 rounded-lg mb-4"
-      rows="4"
-      placeholder="Motivo del reporte"
-    ></textarea>
-    <div class="flex justify-center mt-8">
-      <button
-        class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-        (click)="closeModal()"
-      >
-        Cancelar
-      </button>
-      <button
-        class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-        (click)="sendReport()"
-      >
-        Enviar
-      </button>
+    id="reportModal"
+    class="check-exam-modal hidden fixed inset-0 z-[1200] grid place-items-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="check-report-modal-title">
+    <div class="check-exam-modal-overlay absolute inset-0" (click)="closeModal()"></div>
+    <div class="check-exam-modal-card relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <span class="check-exam-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Ayúdanos a mejorar</span>
+      <h2 id="check-report-modal-title" class="mt-2 font-extrabold text-[#172033]">Reportar esta pregunta</h2>
+      <p class="mt-1 text-sm leading-relaxed text-slate-500">Cuéntanos qué problema has encontrado y lo revisaremos lo antes posible.</p>
+      <label class="mt-5 block text-xs font-extrabold text-slate-700" for="reportReason">Motivo del reporte</label>
+      <textarea
+        id="reportReason"
+        class="mt-2 block min-h-32 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10"
+        rows="5"
+        placeholder="Describe brevemente el error..."></textarea>
+      <div class="mt-5 flex justify-end gap-2 max-sm:flex-col-reverse">
+        <button type="button" class="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="sendReport()">
+          Enviar reporte
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
     </div>
   </div>
+
+  <app-footer />
 </div>
-
-
-<!-------------------------------------- AÑADIR FOOTER AQUÍ -------------------------------------->
-<app-footer />

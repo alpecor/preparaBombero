@@ -21,6 +21,7 @@ export class QuestionsComponent implements OnInit {
 
   //************************* VARIABLES ****************************//
   examQuestion:any = this.localStorageService.getItem("examQuestions"); //aquí se guardan las preguntas del examen
+  examenName: string = this.localStorageService.getItem('examenName')?.examenName ?? 'Examen de preparación';
   idReportedQuestion: number | null = null; //aquí se guardan las preguntas reportadas
   reportedQuestion: string[] = [];
   userResponses: { quizId: number, optionSelected: string }[] = []; // Array para almacenar las respuestas del usuario

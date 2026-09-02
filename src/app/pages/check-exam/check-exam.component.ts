@@ -141,6 +141,23 @@ export class CheckExamComponent implements OnDestroy {
       this.scores.penaltyFour = Math.max(0, ((correctAnswers - Math.floor(incorrectAnswers / 4)) / totalQuestions) * 10);
     }
   }
+
+  get correctPercentage(): number {
+    return this.getSummaryPercentage(this.examSummary?.correctAnswers ?? 0);
+  }
+
+  get incorrectPercentage(): number {
+    return this.getSummaryPercentage(this.examSummary?.incorrectAnswers ?? 0);
+  }
+
+  get unansweredPercentage(): number {
+    return this.getSummaryPercentage(this.examSummary?.unansweredQuestions ?? 0);
+  }
+
+  private getSummaryPercentage(value: number): number {
+    const totalQuestions = this.correctedExamQuestions.length;
+    return totalQuestions > 0 ? (value / totalQuestions) * 100 : 0;
+  }
   
 
   //************************* FUNCIONES PARA APERTURA, CIERRE y ENVIO DEL MODAL DE REPORTE ****************************//

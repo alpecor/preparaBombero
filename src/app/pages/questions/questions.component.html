@@ -1,169 +1,216 @@
-<!--------------- Añadir header aquí ------------>
-<app-header />
+<div class="questions-page min-h-screen bg-[#f7f8fa] text-[#172033]">
+  <app-header />
 
-<!-- Toast para mensaje de preguntas guardadas -->
-<div
-  *ngIf="showSavedToast"
-  class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
-  [ngClass]="{
-    'bg-primaryColor text-white': toastType === 'success',
-    'bg-red-100 text-red-800': toastType === 'error'
-  }"
->
-  <i class="fa-solid"
-    [ngClass]="{
-      'fa-check-circle': toastType === 'success',
-      'fa-circle-xmark': toastType === 'error'
-    }"
-  ></i>
-  <span>{{ toastMessage }}</span>
-</div>
-
-
-<!--------------- Añadir barra de progreso aquí ------------>
-<div class="flex justify-center">
-  <div class="progress-bar-container">
-    <div class="progress-bar" [style.width.%]="progress()">
-      {{ progressText() }}
-    </div>
-  </div>
-</div>
-
-<!--------------- Añadir preguntas del test aquí ------------>
-<div class="flex justify-center p-4">
-  <div class="w-full max-w-3xl">
-    <div *ngFor=" let question of examQuestion.slice(
-          page.first,
-          page.first + questionsPerPage
-        );
-        let i = index
-      "
-      class="p-6 mb-12 border rounded-xl bg-gray-50 relative"
-    >
-      <h2
-        class="text-lg font-semibold mb-2"
-        [innerHTML]="
-          page.page * questionsPerPage + i + 1 + '.' + question.title
-        ">
-      </h2>
-      
-      <hr class="border-t border-gray-300 mb-4" />
-    
-      <i class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-xl
-         text-primaryColor hover:text-yellow-600 transition"
-        (click)="openModal(question.id)"
-        title="Reportar pregunta">
-      </i>
-      
-      <ul class="list-none space-y-2">
-        <li *ngFor="let respuesta of question.respuestas">
-          @if (respuesta !="") {
-          <label class="space-x-3">
-            <input
-              type="radio"
-              name="question-{{ page.page * questionsPerPage + i }}"
-              class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-              [(ngModel)]="
-                userResponses[page.page * questionsPerPage + i].optionSelected
-              "
-              [value]="respuesta"
-              (change)="
-                onSelectAnswer(page.page * questionsPerPage + i, respuesta)
-              "
-            />
-            <span class="text-gray-700">{{ respuesta }}</span>
-          </label>
-          }
-        </li>
-      </ul>
-
-      <i class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
-        [ngClass]="{
-          'text-gray-400': !isQuestionSaved(question.id),
-          'text-primaryColor': isQuestionSaved(question.id)
-        }"
-        (click)="questionSaved(question.id)"
-        [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'">
-      </i>
-    </div>
-
-    <!-------------------- Modal de reporte ----------------->
+  @if (showSavedToast) {
     <div
-      id="reportModal"
-      class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-    >
-      <div class="bg-white p-8 rounded-lg">
-        <h2 class="text-xl mb-4 font-bold">
-          Indique el motivo de reportar esta pregunta.
-        </h2>
-        <textarea
-          id="reportReason"
-          class="w-full p-2 border border-gray-300 rounded-lg mb-4"
-          rows="4"
-          placeholder="Motivo del reporte"
-        ></textarea>
-        <div class="flex justify-center mt-8">
-          <button
-            class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-            (click)="closeModal()"
-          >
-            Cancelar
-          </button>
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-            (click)="sendReport()"
-          >
-            Enviar
-          </button>
+      class="questions-toast fixed right-5 top-5 z-[1100] flex max-w-[calc(100%-2rem)] items-center gap-2 rounded-xl border px-4 py-3 text-xs font-bold shadow-lg"
+      [class.questions-toast-success]="toastType === 'success'"
+      [class.questions-toast-error]="toastType === 'error'"
+      role="status"
+      aria-live="polite">
+      <i class="fa-solid" [ngClass]="toastType === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+      <span>{{ toastMessage }}</span>
+    </div>
+  }
+
+  <main>
+    <section class="questions-hero relative overflow-hidden border-b border-[#ead8ae] bg-gradient-to-br from-[#fff8e8] via-[#fffaf2] to-white">
+      <div class="questions-container mx-auto w-[calc(100%-3rem)] max-w-[1080px] py-12">
+        <div class="questions-hero-heading flex flex-col items-start justify-between gap-8 md:flex-row">
+          <div class="questions-hero-copy max-w-2xl">
+            <span class="questions-kicker inline-flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">
+              <i class="fa-solid fa-fire-flame-curved"></i>
+              Examen en curso
+            </span>
+            <h1 class="mt-2 font-extrabold leading-tight text-[#172033]">{{ examenName }}</h1>
+            <p class="max-w-xl text-sm leading-relaxed text-slate-500">Responde a las preguntas con calma. Puedes revisar tus respuestas antes de enviar el examen.</p>
+          </div>
+
+          <div class="questions-progress-summary flex min-w-[12.5rem] flex-col items-start gap-1 rounded-xl border border-[#ead8ae] bg-white/75 px-4 py-3 text-left shadow-sm md:items-end md:text-right">
+            <span class="questions-progress-summary-label inline-flex items-center gap-2 text-[.65rem] font-extrabold uppercase tracking-[.1em] text-[#a56800]">
+              <i class="fa-solid fa-chart-line"></i>
+              Tu progreso
+            </span>
+            <strong class="font-extrabold text-[#172033]">{{ progressText() }}</strong>
+            <span class="text-[.68rem] text-slate-500">preguntas en este examen</span>
+          </div>
+        </div>
+
+        <div class="questions-progress-block mt-8">
+          <div class="questions-progress-track h-2.5 overflow-hidden rounded-full border border-[#efdba9] bg-white/75" aria-hidden="true">
+            <div class="questions-progress-value h-full min-w-2.5 rounded-full bg-gradient-to-r from-[#c98508] to-[#e8aa2e]" [style.width.%]="progress()"></div>
+          </div>
+          <div class="questions-progress-meta mt-2 flex items-center justify-between text-[.68rem] text-slate-500">
+            <span>Progreso del examen</span>
+            <strong class="font-extrabold text-[#a56800]">{{ progress() | number:'1.0-0' }}%</strong>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-------------------- Paginación ---------------->
-
-    <div
-      class="pagination-container relative flex justify-center mt-6 space-x-2"
-    >
-      <p-paginator
-        (onPageChange)="onPageChange($event)"
-        [first]="0"
-        [rows]="questionsPerPage"
-        [totalRecords]="examQuestion.length"
-      />
-
-      @if (progress() == 100) {
-      <button
-        class="finish-button text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-        (click)="openModalTest()"
-      >
-        Terminar
-      </button>
-      }
-    </div>
-
-    <!-------------------- Modal de fin de test ----------------->
-    <div
-      id="finishTest"
-      class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-    >
-      <div class="bg-white p-8 rounded-lg">
-        <h2 class="text-xl mb-4 font-bold">
-          ¿Estás seguro que quieres enviar el examen?
-        </h2>
-        <div class="flex justify-center">
-          <button
-            class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-            (click)="closeModalTest()"
-          >
-            Cancelar
-          </button>
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-            (click)="sendTest()"
-          >
-            Enviar
-          </button>
+    <section class="questions-workspace py-9 pb-16">
+      <div class="questions-container mx-auto w-[calc(100%-3rem)] max-w-[1080px]">
+        <div class="questions-section-heading mb-5 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <span class="questions-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Responde a tu ritmo</span>
+            <h2 class="mt-1 font-extrabold text-[#172033]">Preguntas del examen</h2>
+          </div>
+          <span class="questions-help-note inline-flex items-center gap-2 text-left text-xs leading-relaxed text-slate-500 md:text-right">
+            <i class="fa-solid fa-circle-info"></i>
+            ¿Has encontrado un error? Puedes reportarlo desde cada pregunta.
+          </span>
         </div>
+
+        <div class="questions-list flex flex-col gap-4">
+          <article
+            *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
+            class="question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md">
+            <div class="question-card-header flex items-center justify-between gap-4 border-b border-slate-100 bg-slate-50 px-5 py-3">
+              <div class="question-number inline-flex items-baseline gap-2">
+                <span class="text-[.66rem] font-extrabold uppercase tracking-[.1em] text-slate-500">Pregunta</span>
+                <strong class="font-extrabold text-[#b97805]">{{ page.page * questionsPerPage + i + 1 | number:'2.0-0' }}</strong>
+              </div>
+
+              <div class="question-card-actions flex items-center gap-2">
+                <button
+                  type="button"
+                  class="question-report-button inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#f0d9a4] bg-[#fff9ed] px-2.5 py-2 text-[.66rem] font-extrabold text-[#a56800] transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none"
+                  (click)="openModal(question.id)"
+                  title="Reportar pregunta"
+                  aria-label="Reportar pregunta">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span>Reportar</span>
+                </button>
+                <button
+                  type="button"
+                  class="question-save-button inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-400 transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none"
+                  [class.question-save-button-active]="isQuestionSaved(question.id)"
+                  (click)="questionSaved(question.id)"
+                  [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
+                  [attr.aria-label]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'">
+                  <i class="fa-regular fa-bookmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="question-card-body p-5 pb-3">
+              <h3 class="font-extrabold leading-relaxed text-[#263247]" [innerHTML]="page.page * questionsPerPage + i + 1 + '. ' + question.title"></h3>
+              <div class="question-divider my-4 h-px bg-slate-200"></div>
+
+              <fieldset class="question-options flex flex-col gap-2">
+                <legend class="sr-only">Opciones de respuesta</legend>
+                <ng-container *ngFor="let respuesta of question.respuestas">
+                  @if (respuesta != '') {
+                    <label
+                      class="question-option relative flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm leading-relaxed text-slate-600 transition hover:border-[#e3c477] hover:bg-[#fffaf0]"
+                      [class.question-option-selected]="userResponses[page.page * questionsPerPage + i].optionSelected === respuesta">
+                      <input
+                        type="radio"
+                        name="question-{{ page.page * questionsPerPage + i }}"
+                        [(ngModel)]="userResponses[page.page * questionsPerPage + i].optionSelected"
+                        [value]="respuesta"
+                        (change)="onSelectAnswer(page.page * questionsPerPage + i, respuesta)" />
+                      <span class="question-option-control" aria-hidden="true"></span>
+                      <span class="question-option-text">{{ respuesta }}</span>
+                    </label>
+                  }
+                </ng-container>
+              </fieldset>
+            </div>
+
+            <div class="question-card-footer flex min-h-11 items-center justify-between gap-4 border-t border-slate-100 px-5 py-2.5 text-[.67rem] text-slate-400 max-sm:flex-col max-sm:items-start">
+              <span>
+                <i class="fa-solid fa-hand-pointer"></i>
+                Selecciona una respuesta
+              </span>
+              @if (userResponses[page.page * questionsPerPage + i].optionSelected) {
+                <span class="question-answered-label font-extrabold text-[#3f8c5c]">
+                  <i class="fa-solid fa-circle-check"></i>
+                  Respondida
+                </span>
+              }
+            </div>
+          </article>
+        </div>
+
+        <div class="questions-navigation mt-6 flex items-center justify-between gap-6 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm max-md:flex-col max-md:items-start">
+          <div class="questions-navigation-copy flex min-w-44 flex-col gap-1">
+            <span class="questions-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Navegación</span>
+            <strong class="text-xs text-slate-700">Continúa con el siguiente bloque</strong>
+          </div>
+
+          <div class="questions-navigation-controls flex min-w-0 items-center justify-end gap-4 max-md:w-full max-md:justify-between max-sm:flex-col max-sm:items-stretch">
+            <p-paginator
+              (onPageChange)="onPageChange($event)"
+              [first]="page.first"
+              [rows]="questionsPerPage"
+              [totalRecords]="examQuestion.length" />
+
+            @if (progress() == 100) {
+              <button
+                type="button"
+                class="questions-finish-button inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border-0 bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none"
+                (click)="openModalTest()">
+                <span>Terminar examen</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div
+    id="reportModal"
+    class="questions-modal hidden fixed inset-0 z-[1200] grid place-items-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="report-modal-title">
+    <div class="questions-modal-overlay" (click)="closeModal()"></div>
+    <div class="questions-modal-card relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div class="questions-modal-icon questions-modal-icon-warning mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <span class="questions-modal-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Ayúdanos a mejorar</span>
+      <h2 id="report-modal-title" class="mt-2 font-extrabold text-[#172033]">Reportar esta pregunta</h2>
+      <p class="mt-1 text-sm leading-relaxed text-slate-500">Cuéntanos qué problema has encontrado y lo revisaremos lo antes posible.</p>
+      <label class="questions-modal-label mt-5 block text-xs font-extrabold text-slate-700" for="reportReason">Motivo del reporte</label>
+      <textarea
+        id="reportReason"
+        class="questions-modal-textarea mt-2 block min-h-32 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10"
+        rows="5"
+        placeholder="Describe brevemente el error..."></textarea>
+      <div class="questions-modal-actions mt-5 flex justify-end gap-2 max-sm:flex-col-reverse">
+        <button type="button" class="questions-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="questions-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="sendReport()">
+          Enviar reporte
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="finishTest"
+    class="questions-modal hidden fixed inset-0 z-[1200] grid place-items-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="finish-modal-title">
+    <div class="questions-modal-overlay" (click)="closeModalTest()"></div>
+    <div class="questions-modal-card questions-finish-modal-card relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div class="questions-modal-icon questions-modal-icon-success mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#edfaf2] text-[#3c9660]">
+        <i class="fa-solid fa-flag-checkered"></i>
+      </div>
+      <span class="questions-modal-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Último paso</span>
+      <h2 id="finish-modal-title" class="mt-2 font-extrabold text-[#172033]">¿Quieres enviar el examen?</h2>
+      <p class="mt-1 text-sm leading-relaxed text-slate-500">Comprueba tus respuestas antes de finalizar. Una vez enviado, podrás consultar tu resultado.</p>
+      <div class="questions-modal-actions mt-5 flex justify-end gap-2 max-sm:flex-col-reverse">
+        <button type="button" class="questions-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalTest()">Seguir revisando</button>
+        <button type="button" class="questions-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="sendTest()">
+          Enviar examen
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </div>
     </div>
   </div>

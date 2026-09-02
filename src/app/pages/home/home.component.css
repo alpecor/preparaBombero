@@ -55,6 +55,14 @@
   z-index: 1;
 }
 
+.home-welcome-kickers {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: .35rem;
+  margin-bottom: 1rem;
+}
+
 .home-eyebrow,
 .home-section-kicker,
 .home-card-eyebrow {
@@ -209,7 +217,7 @@
   display: inline-flex;
   align-items: center;
   gap: .4rem;
-  margin: 0 0 .9rem;
+  margin: 0;
   color: #3f8c5c;
   font-size: .72rem;
   font-weight: 700;

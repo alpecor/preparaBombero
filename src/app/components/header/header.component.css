@@ -118,6 +118,39 @@
   transform: translateY(-2px);
 }
 
+.site-social-links a.social-tiktok {
+  color: #111827;
+}
+
+.site-social-links a.social-instagram {
+  color: #d62976;
+}
+
+.site-social-links a.social-telegram {
+  color: #229ed9;
+}
+
+.site-social-links a.social-tiktok:hover,
+.site-social-links a.social-tiktok:focus-visible {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #111827;
+}
+
+.site-social-links a.social-instagram:hover,
+.site-social-links a.social-instagram:focus-visible {
+  border-color: #f2b8cd;
+  background: #fff4f8;
+  color: #d62976;
+}
+
+.site-social-links a.social-telegram:hover,
+.site-social-links a.social-telegram:focus-visible {
+  border-color: #a9d9ee;
+  background: #f0faff;
+  color: #229ed9;
+}
+
 .site-header-content {
   display: flex;
   align-items: center;

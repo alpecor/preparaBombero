@@ -6,14 +6,16 @@
       <section class="home-welcome-section">
         <div class="home-content home-welcome-grid">
           <div class="home-welcome-copy">
-            <span class="home-access-status" [class.home-access-status-free]="!isSubscribed">
-              <i class="fa-solid" [ngClass]="isSubscribed ? 'fa-circle-check' : 'fa-lock'"></i>
-              {{ isSubscribed ? 'Acceso Premium activo' : 'Modo gratuito activo' }}
-            </span>
-            <span class="home-eyebrow">
-              <i class="fa-solid fa-fire-flame-curved"></i>
-              Tu preparación empieza aquí
-            </span>
+            <div class="home-welcome-kickers">
+              <span class="home-access-status" [class.home-access-status-free]="!isSubscribed">
+                <i class="fa-solid" [ngClass]="isSubscribed ? 'fa-circle-check' : 'fa-lock'"></i>
+                {{ isSubscribed ? 'Acceso Premium activo' : 'Modo gratuito activo' }}
+              </span>
+              <span class="home-eyebrow">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+                Tu preparación empieza aquí
+              </span>
+            </div>
             <h1>
               Hola{{ userDisplayName ? ', ' + userDisplayName : '' }}.<br>
               <span>¿Qué quieres hacer hoy?</span>
