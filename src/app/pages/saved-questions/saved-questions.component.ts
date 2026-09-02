@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -22,8 +22,10 @@ export class SavedQuestionsComponent implements OnInit {
 
   //************************* VARIABLES ****************************//
   savedQuestions: any[] = [];
-  topics = new Set();
+  totalSavedQuestions = 0;
+  topics: Set<string> = new Set();
   topicSelected: string = '';
+  isTopicMenuOpen = false;
   //variables para mostrar mensaje de pregunta guardada
   showSavedToast = false;
   toastMessage = '';
@@ -43,11 +45,12 @@ export class SavedQuestionsComponent implements OnInit {
   //************************* FUNCION PARA OBTENER PREGUNTAS GUARDADAS ****************************//
   async loadSavedQuestions() {
     // Primero cargamos las preguntas reportadas
-    this.savedQuestions = await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
-    this.topics = new Set(this.savedQuestions.map( (x:any) => x.topicTitle));
-    if (this.topicSelected != ''){
-      this.savedQuestions = this.savedQuestions.filter( (x:any) => x.topicTitle == this.topicSelected); 
-    }
+    const allSavedQuestions = await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
+    this.totalSavedQuestions = allSavedQuestions.length;
+    this.topics = new Set(allSavedQuestions.map((x:any) => x.topicTitle).filter((topic: any) => Boolean(topic)));
+    this.savedQuestions = this.topicSelected !== ''
+      ? allSavedQuestions.filter((x:any) => x.topicTitle === this.topicSelected)
+      : allSavedQuestions;
     this.savedQuestions.map((x:any)=>x.isCorrected = false);
     this.savedQuestions.map((x:any)=>x.showJustification = false);
     this.savedQuestions.map((x:any)=>x.optionSelected = null);
@@ -55,6 +58,24 @@ export class SavedQuestionsComponent implements OnInit {
     // Reset de barajado cada vez que recargas/buscas
     this.originalOrder = null;
     this.isShuffled = false;
+    this.isTopicMenuOpen = false;
+  }
+
+
+  toggleTopicMenu(): void {
+    this.isTopicMenuOpen = !this.isTopicMenuOpen;
+  }
+
+
+  selectTopic(topic: string): void {
+    this.topicSelected = topic;
+    this.isTopicMenuOpen = false;
+  }
+
+
+  @HostListener('document:click')
+  closeTopicMenu(): void {
+    this.isTopicMenuOpen = false;
   }
 
 

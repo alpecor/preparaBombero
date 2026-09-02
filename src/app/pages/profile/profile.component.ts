@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
             type: "donut"
           },
           labels: ["Correctas", "Falladas", "No respondidas"],
-          colors: ['#2788d9', '#e97845', '#f2b233'],
+          colors: ['#63bd83', '#dc7567', '#f2b233'],
           dataLabels: {
             enabled: false
           },
