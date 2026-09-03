@@ -9,12 +9,12 @@ import { RequestService } from '../../../services/request.service';
   selector: 'app-exams-list',
   standalone: true,
   imports: [EditorModule, FormsModule, HeaderComponent, FooterComponent],
-  templateUrl: './exams-list.component.html',
-  styleUrl: './exams-list.component.css'
+  templateUrl: './exams-list.component.html'
 })
 export class ExamsListComponent implements OnInit{
   title: string = '';
   description: string = '';
+  showSaveConfirmation = false;
 
   constructor(private requestService: RequestService) {}
 
@@ -37,12 +37,20 @@ export class ExamsListComponent implements OnInit{
 
   async saveInfo(){
     try{
-      const data = await this.requestService.request('PUT', `/info`, {title: this.title, description: this.description}, {}, true);
-      alert('Se ha guardado la información correctamente');
-      location.reload();
+      await this.requestService.request('PUT', `/info`, {title: this.title, description: this.description}, {}, true);
+      this.showSaveConfirmation = true;
     }catch(error){
       console.error('Error actualizando la información:', error);
     };
+  }
+
+  dismissSaveConfirmation(): void {
+    this.showSaveConfirmation = false;
+  }
+
+  finishSaveConfirmation(): void {
+    this.showSaveConfirmation = false;
+    location.reload();
   }
 
 

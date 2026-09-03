@@ -20,8 +20,45 @@ export class TopicsListComponent implements OnInit{
   constructor(private router: Router, private requestService: RequestService, private http: HttpClient){}
 
   topics: any = {};
+  totalTopics = 0;
+  topicCategories = [
+    { key: 'Legislación', label: 'Legislación', icon: 'fa-scale-balanced', description: 'Leyes, reglamentos y marco normativo.' },
+    { key: 'Específico', label: 'Específico', icon: 'fa-fire-flame-curved', description: 'Normativa y contenidos específicos de la oposición.' },
+    { key: 'Otros', label: 'Otros', icon: 'fa-layer-group', description: 'Contenidos complementarios y de apoyo.' },
+  ];
+  selectedCategory: string | null = null;
+
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
+  }
+
+  selectCategory(category: string): void {
+    this.selectedCategory = category;
+  }
+
+  clearCategory(): void {
+    this.selectedCategory = null;
+  }
+
+  getTopicsForCategory(category: string | null): any[] {
+    if (!category) return [];
+
+    const normalizedCategory = this.normalizeCategory(category);
+    const sourceKey = this.objectKeys(this.topics).find(
+      key => this.normalizeCategory(key) === normalizedCategory
+    );
+
+    return sourceKey ? (this.topics[sourceKey] ?? []) : [];
+  }
+
+  private normalizeCategory(value: string): string {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  private countTopics(topicGroups: any): number {
+    return Object.values(topicGroups ?? {}).reduce((total: number, group: any) => {
+      return total + (group ?? []).length;
+    }, 0);
   }
 
   topicIdToAdd: number | null = null; // Almacena el índice del tema padre al subtema a añadir
@@ -31,6 +68,7 @@ export class TopicsListComponent implements OnInit{
   try{
     // se realiza peticíon para obtener los temas
     this.topics = await this.requestService.request('GET', `/topic`,{},{},true);
+    this.totalTopics = this.countTopics(this.topics);
     }catch(error: any){
       this.router.navigate(['/error']);
     }

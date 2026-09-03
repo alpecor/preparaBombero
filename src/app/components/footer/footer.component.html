@@ -1,46 +1,56 @@
-<footer class="bg-white">
-  <div class="mx-auto w-full max-w-screen-xl">
-    <div class="grid grid-cols-1 gap-8 px-4 py-6 lg:pt-8 md:grid-cols-3 text-center">
-      <div>
-        <h1 class="mb-6 text-xl font-bold text-gray-900 uppercase">PREPARA BOMBERO</h1>
-        <p class="text-gray-500 mt-2 text text-center">Prepárate para el futuro, supera el examen y enciende tu carrera como bombero.</p>
-        <div class="flex items-center text-gray-500 justify-center mt-5">
-            <i class="fa-solid fa-envelope fa-lg mr-2 text-yellow-500"></i>
-            <a title="Enviar correo" href="mailto:preparabombero2024@gmail.com">preparabombero2024&#64;gmail.com</a>
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer-glow" aria-hidden="true"></div>
+  <div class="site-footer-container">
+    <div class="site-footer-main">
+      <section class="site-footer-brand">
+        <a class="site-footer-brand-link" [routerLink]="['/']" aria-label="Ir a la página de inicio">
+          <span class="site-footer-brand-icon"><i class="fa-solid fa-shield-halved"></i></span>
+          <span>
+            <strong>PREPARA</strong>
+            <em>BOMBERO</em>
+          </span>
+        </a>
+        <p>La plataforma para preparar tu oposición con método, constancia y contenido oficial.</p>
+        <a class="site-footer-contact" title="Enviar correo" href="mailto:preparabombero2024@gmail.com">
+          <i class="fa-solid fa-envelope"></i>
+          preparabombero2024&#64;gmail.com
+        </a>
+      </section>
+
+      <nav class="site-footer-links" aria-label="Enlaces del pie de página">
+        <h2>Explora</h2>
+        <a [routerLink]="['/']">Inicio <i class="fa-solid fa-arrow-right"></i></a>
+        <a [routerLink]="['/examenes']">Exámenes <i class="fa-solid fa-arrow-right"></i></a>
+        <a [routerLink]="['/terminos-y-condiciones']">Términos y condiciones <i class="fa-solid fa-arrow-right"></i></a>
+        <a [routerLink]="['/politica-de-privacidad']">Política de privacidad <i class="fa-solid fa-arrow-right"></i></a>
+      </nav>
+
+      <section class="site-footer-community">
+        <span class="site-footer-section-kicker">Sigue avanzando</span>
+        <h2>Tu próxima sesión empieza aquí.</h2>
+        <p>Regístrate gratis y organiza tu preparación en un mismo lugar.</p>
+        <a class="site-footer-cta" [routerLink]="['/register']">
+          Crear cuenta gratis
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <div class="site-footer-socials" aria-label="Redes sociales">
+          <a title="TikTok" href="https://www.tiktok.com/@preparabombero" target="_blank" rel="noopener" aria-label="TikTok">
+            <i class="fab fa-tiktok"></i>
+          </a>
+          <a title="Instagram" href="https://www.instagram.com/preparabombero" target="_blank" rel="noopener" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a title="Telegram" href="https://t.me/+l1TvslhJrlNhYWI0" target="_blank" rel="noopener" aria-label="Telegram">
+            <i class="fab fa-telegram"></i>
+          </a>
         </div>
-      </div>
-      <div>
-          <h3 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Páginas</h3>
-          <ul class="text-gray-500">
-            <li class="text-gray-500 hover:text-gray-700">
-              <a [routerLink]="['/']" style="cursor: pointer">Home</a>
-            </li>
-            <li class="text-gray-500 hover:text-gray-700">
-              <a [routerLink]="['/terminos-y-condiciones']" style="cursor: pointer">Términos y Condiciones</a>
-            </li>
-            <li class="text-gray-500 hover:text-gray-700">
-              <a [routerLink]="['/politica-de-privacidad']" style="cursor: pointer">Política de Privacidad</a>
-            </li>
-            <li class="mt-10">
-              Realizada por Jesús Monda y Álvaro Pérez
-            </li>
-          </ul>
-      </div>
-      <div>
-        <h3 class="mb-6 text-sm font-semibold text-gray-900 uppercase">Síguenos</h3>
-        <div class="flex space-x-4 mt-2 justify-center">
-            <a title="Tiktok" href="https://www.tiktok.com/@preparabombero" class="text-black-500 hover:text-primaryColor">
-                <i class="fab fa-tiktok"></i>
-            </a>
-            <a title="Instagram" href="https://www.instagram.com/preparabombero" class="text-red-500 hover:text-primaryColor">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a title="Telegram" href="https://t.me/+l1TvslhJrlNhYWI0" class="text-blue-500 hover:text-primaryColor">
-              <i class="fab fa-telegram"></i>
-            </a>
-        </div>
-        <p class="text-gray-500 mt-5">© 2024 preparaBombero</p>
-      </div>
+      </section>
+    </div>
+
+    <div class="site-footer-bottom">
+      <span>© 2026 Prepara Bombero</span>
+      <span>Hecho para opositores que no se rinden</span>
+      <span>Desarrollada por Jesús Monda y Álvaro Pérez</span>
     </div>
   </div>
 </footer>

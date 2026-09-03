@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../components/header/header.component';
 import { FooterComponent } from '../../../components/footer/footer.component';
-import { HttpClient } from '@angular/common/http';
 import { RequestService } from '../../../services/request.service';
 
 
@@ -17,10 +16,13 @@ export class ReportQuestionsListComponent implements OnInit {
 
   questions: any[] = [];
   selectedReason: string = '';  // Almacena el motivo del reporte seleccionado
+  selectedReporter: { name?: string; surname?: string; email?: string } | null = null;
   questionToRemoveIndex: number | null = null; // Almacena el índice de la pregunta a eliminar
+  isLoading = true;
+  loadError = false;
 
 
-  constructor(private http: HttpClient, private requestService: RequestService) { }
+  constructor(private requestService: RequestService) { }
 
   ngOnInit(): void {
     this.loadReportedQuestions();
@@ -30,20 +32,30 @@ export class ReportQuestionsListComponent implements OnInit {
   //************************* PETICIÓN PARA OBTENER PREGUNTAS REPORTADAS ****************************//
 
   async loadReportedQuestions() {
-    // Primero cargamos las preguntas reportadas
-    const data = await this.requestService.request('GET', `/report`, {}, {}, true);
-    // Iteramos sobre cada pregunta reportada para añadir el título del tema (topic.title)
-    for (let question of data) {
-      // Hacemos una petición para obtener el título del tema según el topicId de la pregunta
-      let topicData = null;
-      if (question.quiz.topicId != null) {
-        topicData = await this.requestService.request('GET', `/topic/${question.quiz.topicId}`, {}, {}, true);
+    this.isLoading = true;
+    this.loadError = false;
+
+    try {
+      // Primero cargamos las preguntas reportadas
+      const data = await this.requestService.request('GET', `/report`, {}, {}, true);
+      // Iteramos sobre cada pregunta reportada para añadir el título del tema (topic.title)
+      for (let question of data) {
+        // Hacemos una petición para obtener el título del tema según el topicId de la pregunta
+        let topicData = null;
+        if (question.quiz.topicId != null) {
+          topicData = await this.requestService.request('GET', `/topic/${question.quiz.topicId}`, {}, {}, true);
+        }
+        // Añadimos el título del tema a la pregunta
+        question.quiz.topicTitle = topicData?.title ?? "Esta pregunta todavía no está asignada a ningún tema";
       }
-      // Añadimos el título del tema a la pregunta
-      question.quiz.topicTitle = topicData?.title ?? "Esta pregunta todavía no está asignada a ningún tema";
+      // Asignamos los datos modificados a la propiedad this.questions
+      this.questions = data;
+    } catch (error) {
+      console.log(error);
+      this.loadError = true;
+    } finally {
+      this.isLoading = false;
     }
-    // Asignamos los datos modificados a la propiedad this.questions
-    this.questions = data;
   }
 
 
@@ -83,8 +95,9 @@ export class ReportQuestionsListComponent implements OnInit {
 
   //************************* FUNCIÓN PARA VISUALIZACIÓN DE PREGUNTA REPORTADA ****************************//
 
-  openSeeModal(reason: string) {
+  openSeeModal(reason: string, reporter?: { name?: string; surname?: string; email?: string }) {
     this.selectedReason = reason;
+    this.selectedReporter = reporter ?? null;
     const modalSee = document.getElementById('seeQuestion');
     if (modalSee) {
       modalSee.classList.remove('hidden');
@@ -96,6 +109,8 @@ export class ReportQuestionsListComponent implements OnInit {
     if (modalSee) {
       modalSee.classList.add('hidden');
     }
+    this.selectedReason = '';
+    this.selectedReporter = null;
   }
 
 

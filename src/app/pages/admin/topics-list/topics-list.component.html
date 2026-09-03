@@ -1,156 +1,226 @@
-<!-- // TODO
-1. El titulo y los subtemas son input (puedes crear otro componente topics, llamado admin-topics por ejemplo)
-  Son input porque se puede editar los titulos, haciendo una petición a PUT /topic/<topicId> (al igual que hicimos con los temas en la home)
-2. Yo cambiaría los botones
-3. Hay que implementar el orden, lo hablamos. (PENDIENTE)
-4. Implementar el boton eliminar. petición a DELETE /topic/<topicId> (al poner el modal, debe salir un aviso de que se eliminanran todas las preguntas realcionadas)
-5. Implementar el boton añadir subtema y tema(esto con un modal). petición a POST /topic. Yo a crear el tema le he puesto type=primary y para crear el subtema, type=secondary.
-6. El icono de la papelera lo cambiaría por un -
-7. Añadir el boton que te lleve a la vista con todas las preguntas. /preguntas?topicId=10, creo que lo has llamado /admin/temario/10, pues tambien. Pero es una page nueva
--->
-
-<!-- Para el footer -->
-<div class="flex flex-col h-screen">
-
-<!-- ****************************** AÑADIR HEADER AQUÍ **********************************-->
+<div class="topics-admin-page min-h-screen bg-[#f7f8fa] text-[#172033]">
   <app-header />
 
-<!-- ****************************** RECORRER TEMARIO AQUÍ **********************************-->
+  <main>
+    <section class="topics-admin-main">
+      <div class="topics-admin-container">
+        <section class="topics-admin-hero-panel">
+          <div class="topics-admin-heading">
+            <div class="topics-admin-heading-copy">
+              <span class="inline-flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">
+                <i class="fa-solid fa-book-open text-[#de9a17]"></i>
+                Centro de administración
+              </span>
+              <h1 class="mt-2 font-extrabold leading-tight text-[#172033]">Temario de preparación</h1>
+              <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">
+                Organiza los bloques y subtemas que forman parte de la preparación de tu comunidad.
+              </p>
+            </div>
 
-  <div class="container mx-auto mt-8 max-w-3xl">
-    @for(item of objectKeys(topics); track $index){
-      <!--------------- Recorrer temario especifco ---------------->
-      <div class="mb-16">
-        <h1 class="text-xl font-bold mb-2">{{item}}</h1>
-        @for (topic of topics[item]; track $index) {
-          <div class="question-block mb-6 relative w-full ">
-            <ul class="ml-2">
-              <li class="mb-2">
-                <div class="flex items-center">
-                  <input (input)="editTitle($event, topic)" class="flex-grow p-2 bg-gray-200 rounded-md border border-gray-300" value="{{ topic.title }}">
-                  <div class="ml-4">
-                    <i (click)="openModalSubtopic(topic.id)" class="fa-solid fa-plus fa-lg" style="cursor: pointer"></i>
+            <div class="topics-admin-count-badge" aria-live="polite">
+              <span class="topics-admin-count-icon">
+                <i class="fa-solid fa-layer-group"></i>
+              </span>
+              <div>
+                <strong>{{ totalTopics }}</strong>
+                <span>temas en el temario</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="topics-admin-hero-footer">
+            <span class="topics-admin-helper inline-flex items-center gap-2 text-xs text-slate-500">
+              <i class="fa-solid fa-circle-info text-[#c98508]"></i>
+              Puedes editar los títulos directamente sobre cada tarjeta.
+            </span>
+            <button
+              type="button"
+              class="topics-admin-create-button inline-flex items-center justify-center gap-2 rounded-lg bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+              (click)="openModalCreateTopic()">
+              <i class="fa-solid fa-plus"></i>
+              Añadir tema
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="topics-admin-content pb-16 pt-7">
+      <div class="topics-admin-container">
+        @if (objectKeys(topics).length === 0) {
+          <div class="topics-admin-empty rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center shadow-sm">
+            <span class="topics-admin-empty-icon mx-auto grid h-14 w-14 place-items-center rounded-2xl text-xl">
+              <i class="fa-solid fa-book-open"></i>
+            </span>
+            <h2 class="mt-5 font-extrabold text-[#172033]">Todavía no hay temas</h2>
+            <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500">
+              Crea el primer bloque para empezar a construir el temario de preparación.
+            </p>
+            <button
+              type="button"
+              class="mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+              (click)="openModalCreateTopic()">
+              <i class="fa-solid fa-plus"></i>
+              Crear primer tema
+            </button>
+          </div>
+        } @else if (!selectedCategory) {
+          <div class="topics-category-selector rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
+            <div class="topics-selector-heading flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
+              <div>
+                <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Explora por bloques</span>
+                <h2 class="mt-1 font-extrabold text-[#172033]">¿Qué temario quieres gestionar?</h2>
+              </div>
+              <span class="text-xs text-slate-500">Selecciona una categoría para ver sus temas.</span>
+            </div>
+
+            <div class="topics-category-grid mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+              @for (category of topicCategories; track category.key) {
+                <button
+                  type="button"
+                  class="topics-category-choice group relative flex min-h-40 items-start gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-[#e8c982] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+                  (click)="selectCategory(category.key)"
+                  [attr.aria-label]="'Abrir temario de ' + category.label">
+                  <span class="topics-category-choice-icon grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]">
+                    <i class="fa-solid" [ngClass]="category.icon"></i>
+                  </span>
+                  <span class="topics-category-choice-copy flex min-w-0 flex-1 flex-col gap-1 pr-4">
+                    <span class="topics-category-choice-label text-sm font-extrabold text-[#172033]">{{ category.label }}</span>
+                    <span class="topics-category-choice-description text-xs leading-relaxed text-slate-500">{{ category.description }}</span>
+                    <span class="topics-category-choice-count mt-auto pt-3 text-[.68rem] font-extrabold text-[#a56800]">
+                      {{ getTopicsForCategory(category.key).length }} {{ getTopicsForCategory(category.key).length === 1 ? 'tema' : 'temas' }} principales
+                    </span>
+                  </span>
+                  <i class="topics-category-choice-arrow fa-solid fa-arrow-right absolute bottom-5 right-5 text-xs text-[#c98508] transition group-hover:translate-x-1"></i>
+                </button>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="topics-selected-header mb-5 flex items-center justify-between gap-4 max-md:flex-wrap">
+            <button
+              type="button"
+              class="topics-back-button inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold text-slate-600 transition hover:-translate-y-px hover:border-[#e8c982] hover:bg-[#fffaf0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+              (click)="clearCategory()">
+              <i class="fa-solid fa-arrow-left"></i>
+              Todos los bloques
+            </button>
+            <div class="topics-selected-heading flex-1 text-center max-md:order-3 max-md:w-full">
+              <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Bloque seleccionado</span>
+              <h2 class="mt-1 font-extrabold text-[#172033]">{{ selectedCategory }}</h2>
+            </div>
+            <span class="topics-category-count rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-500">
+              {{ getTopicsForCategory(selectedCategory).length }} {{ getTopicsForCategory(selectedCategory).length === 1 ? 'tema' : 'temas' }} principales
+            </span>
+          </div>
+
+          @if (getTopicsForCategory(selectedCategory).length === 0) {
+            <div class="topics-admin-empty rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center shadow-sm">
+              <span class="topics-admin-empty-icon mx-auto grid h-14 w-14 place-items-center rounded-2xl text-xl">
+                <i class="fa-solid fa-folder-open"></i>
+              </span>
+              <h2 class="mt-5 font-extrabold text-[#172033]">Este bloque aún está vacío</h2>
+              <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-500">Añade el primer tema para comenzar a organizar este apartado.</p>
+              <button type="button" class="mt-5 inline-flex items-center justify-center gap-2 rounded-lg bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30" (click)="openModalCreateTopic()">
+                <i class="fa-solid fa-plus"></i>
+                Añadir tema
+              </button>
+            </div>
+          } @else {
+            <div class="topics-admin-list flex flex-col gap-3">
+              @for (topic of getTopicsForCategory(selectedCategory); track topic.id) {
+                <div class="topic-node topic-node-primary">
+                  <div class="topic-node-main">
+                    <span class="topic-node-index">{{ $index + 1 | number:'2.0-0' }}</span>
+                    <div class="topic-node-copy">
+                      <span class="topic-node-label">Tema principal</span>
+                      <input type="text" [value]="topic.title" (input)="editTitle($event, topic)" [attr.aria-label]="'Editar título de ' + topic.title" class="topic-node-input" spellcheck="false" />
+                    </div>
                   </div>
-                  <div class="ml-2">
-                    <i (click)="openModalDeleteTopic(topic.id)" class="fa-solid fa-trash-can fa-lg" style="cursor: pointer"></i>
-                  </div>
-                  <div class="ml-2">
-                    <i class="fa-solid fa-arrow-right fa-lg" [routerLink]="['/admin/temario/'+ topic.id]" style="cursor: pointer"></i>
+
+                  <div class="topic-node-actions">
+                    <button type="button" class="topic-action topic-action-secondary" (click)="openModalSubtopic(topic.id)" title="Añadir subtema" aria-label="Añadir subtema"><i class="fa-solid fa-plus"></i></button>
+                    <button type="button" class="topic-action topic-action-danger" (click)="openModalDeleteTopic(topic.id)" title="Eliminar tema" aria-label="Eliminar tema"><i class="fa-solid fa-trash-can"></i></button>
+                    <a class="topic-action topic-action-primary" [routerLink]="['/admin/temario/' + topic.id]" title="Ver preguntas del tema" aria-label="Ver preguntas del tema"><i class="fa-solid fa-arrow-right"></i></a>
                   </div>
                 </div>
-              </li>
-            </ul>
-            <ul class="ml-2" style="margin-top: 1.4rem">
-              <app-admin-topics [topics]="topic.topics" [margin]="2" />
-            </ul>
-          </div>
+
+                @if (topic.topics?.length) {
+                  <div class="topic-children">
+                    <app-admin-topics [topics]="topic.topics" [margin]="0" />
+                  </div>
+                }
+              }
+            </div>
+          }
         }
       </div>
-    }
-  </div>
+    </section>
+  </main>
 
+  <div id="crearTema" class="topics-modal hidden fixed inset-0 z-[1200] grid place-items-center p-4" role="dialog" aria-modal="true" aria-labelledby="crear-tema-title">
+    <div class="topics-modal-overlay" (click)="closeModalCreateTopic()"></div>
+    <div class="topics-modal-card relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div class="topics-modal-icon mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]">
+        <i class="fa-solid fa-folder-plus"></i>
+      </div>
+      <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Nuevo bloque</span>
+      <h2 id="crear-tema-title" class="mt-2 font-extrabold text-[#172033]">Añadir tema</h2>
+      <p class="mt-1 text-sm leading-relaxed text-slate-500">Crea un tema principal y asígnalo a uno de los bloques del temario.</p>
 
-<!-- ****************************** BOTÓN FLOTANTE + **********************************-->
-
-  <button class="fixed bottom-10 right-12 text-white bg-primaryColor hover:bg-yellow-600 rounded-full w-12 h-12 shadow-lg flex items-center justify-center"
-    (click)="openModalCreateTopic()"
-    >
-    <i class="fa-solid fa-plus fa-2xl"></i>
-  </button>
-
-
-<!-- ****************************** AÑADIR MODAL CREACIÓN TEMA AQUÍ(+)**********************************-->
-  <div id="crearTema" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 w-96 rounded-lg">
-      <h2 class="text-xl mb-4 font-bold text-center">
-        Añadir tema
-      </h2>
-      <!--------------- Formulario de creación de tema ---------------->
-      <div class="mb-4">
-        <label for="temaName" class="block text-gray-700 font-bold mb-2">Tema</label>
-        <input type="text" id="title" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tema 10,...">
+      <div class="mt-5">
+        <label for="title" class="block text-xs font-extrabold text-slate-700">Nombre del tema</label>
+        <input type="text" id="title" class="topics-modal-input mt-2 block w-full rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none transition focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10" placeholder="Ej. Tema 10: Prevención de incendios" />
       </div>
 
-      <div class="mb-6">
-        <label for="selectBloque" class="block text-gray-700 font-bold mb-2">Selecciona Bloque</label>
-        <select id="categoryTitle" class="w-full p-2 border border-gray-300 rounded-md">
-            <option value="" disabled selected>Selecciona Bloque</option>
-            <option value="Específico">Específico</option>
-            <option value="Legislación">Legislación</option>
-            <option value="Otros">Otros</option>
+      <div class="mt-4">
+        <label for="categoryTitle" class="block text-xs font-extrabold text-slate-700">Bloque del temario</label>
+        <select id="categoryTitle" class="topics-modal-input mt-2 block w-full rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none transition focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10">
+          <option value="" disabled selected>Selecciona un bloque</option>
+          <option value="Específico">Específico</option>
+          <option value="Legislación">Legislación</option>
+          <option value="Otros">Otros</option>
         </select>
       </div>
 
-      <!--------------- Botones modal ---------------->
-      <div class="flex justify-center mt-4">
-        <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-          (click)="closeModalCreateTopic()">
-            Cancelar
-        </button>
-        <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-          (click)="createTopic()">
-            Crear
-        </button>
+      <div class="topics-modal-actions mt-6 flex justify-end gap-2 max-sm:flex-col-reverse">
+        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalCreateTopic()">Cancelar</button>
+        <button type="button" class="topics-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="createTopic()">Crear tema <i class="fa-solid fa-arrow-right"></i></button>
       </div>
     </div>
   </div>
 
-
-<!-- ****************************** MODAL CREACIÓN SUBTEMA **********************************-->
-
-<div id="crearSubtopic" class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 w-96 rounded-lg">
-      <h2 class="text-xl mb-4 font-bold text-center">
-        Añadir subtema
-      </h2>
-      <!--------------- Formulario de creación de  subtema ---------------->
-      <div class="mb-4">
-        <label for="temaName" class="block text-gray-700 font-bold mb-2">Subtema</label>
-        <input type="text" id="subtopicTitle" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Tema 10,...">
+  <div id="crearSubtopic" class="topics-modal hidden fixed inset-0 z-[1200] grid place-items-center p-4" role="dialog" aria-modal="true" aria-labelledby="crear-subtema-title">
+    <div class="topics-modal-overlay" (click)="closeModalSubtopic()"></div>
+    <div class="topics-modal-card relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div class="topics-modal-icon mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]"><i class="fa-solid fa-diagram-project"></i></div>
+      <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Ampliar temario</span>
+      <h2 id="crear-subtema-title" class="mt-2 font-extrabold text-[#172033]">Añadir subtema</h2>
+      <p class="mt-1 text-sm leading-relaxed text-slate-500">Añade un nuevo nivel de contenido dentro del tema seleccionado.</p>
+      <div class="mt-5">
+        <label for="subtopicTitle" class="block text-xs font-extrabold text-slate-700">Nombre del subtema</label>
+        <input type="text" id="subtopicTitle" class="topics-modal-input mt-2 block w-full rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none transition focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10" placeholder="Ej. Procedimientos de actuación" />
       </div>
-
-      <div class="flex justify-center mt-4">
-        <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-          (click)="closeModalSubtopic()">
-            Cancelar
-        </button>
-        <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-          (click)="createSubtopic()">
-            Crear
-        </button>
+      <div class="topics-modal-actions mt-6 flex justify-end gap-2 max-sm:flex-col-reverse">
+        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalSubtopic()">Cancelar</button>
+        <button type="button" class="topics-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="createSubtopic()">Crear subtema <i class="fa-solid fa-arrow-right"></i></button>
       </div>
     </div>
   </div>
 
-
-<!-- ****************************** MODAL ELIMINACIÓN TEMA **********************************-->
-
-  <div id="deleteTopic"
-    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-      <div class="bg-white p-8 rounded-lg">
-        <h2 class="text-xl mb-4 font-bold text-center">
-          ¿Estás seguro que quieres eliminar este tema?, <br>
-          se ELIMINARÁN TODOS los subtemas.
-        </h2>
-        <div class="flex justify-center mt-4">
-          <button class="text-gray-900 hover:bg-gray-300 border border-primaryColor focus:outline-none font-medium rounded-lg px-2 py-2 mr-8"
-            (click)="closeModalDeleteTopic()">
-              No, cancelar
-          </button>
-          <button class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2"
-            (click)="deleteTopic()">
-              Sí, eliminar
-          </button>
-        </div>
+  <div id="deleteTopic" class="topics-modal hidden fixed inset-0 z-[1200] grid place-items-center p-4" role="dialog" aria-modal="true" aria-labelledby="delete-topic-title">
+    <div class="topics-modal-overlay" (click)="closeModalDeleteTopic()"></div>
+    <div class="topics-modal-card relative z-10 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+      <div class="topics-modal-icon mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#fff0ed] text-[#c45b4b]"><i class="fa-solid fa-trash-can"></i></div>
+      <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#c45b4b]">Acción irreversible</span>
+      <h2 id="delete-topic-title" class="mt-2 font-extrabold text-[#172033]">¿Eliminar este tema?</h2>
+      <p class="mt-1 text-sm leading-relaxed text-slate-500">También se eliminarán todos sus subtemas y las preguntas relacionadas.</p>
+      <div class="topics-modal-actions mt-6 flex justify-end gap-2 max-sm:flex-col-reverse">
+        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalDeleteTopic()">Cancelar</button>
+        <button type="button" class="topics-modal-danger inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#c45b4b] bg-[#c45b4b] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#ad493b] focus-visible:outline-none max-sm:w-full" (click)="deleteTopic()">Sí, eliminar <i class="fa-solid fa-trash-can"></i></button>
       </div>
     </div>
-
-
-<!-- ****************************** AÑADIR FOOTER **********************************-->
+  </div>
 
   <app-footer />
-
-
-
-
 </div>

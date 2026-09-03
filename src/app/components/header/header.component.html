@@ -9,14 +9,42 @@
 
 @if (title) {
   <div class="site-promo-bar">
-    <a
+    <button
+      type="button"
       class="site-promo-inner"
-      [routerLink]="['/listado-de-examenes']"
-      (click)="closeMobileMenu()">
-      <span class="site-promo-tag">Novedades</span>
+      (click)="openAnnouncement()"
+      aria-haspopup="dialog"
+      aria-controls="announcement-dialog">
+      <span class="site-promo-tag"><i class="fa-solid fa-bullhorn"></i> Novedades</span>
+      <span class="site-promo-live"><i class="fa-solid fa-circle"></i> Actualización</span>
       <span class="site-promo-text">{{ title }}</span>
-      <i class="fa-solid fa-arrow-right"></i>
-    </a>
+      <span class="site-promo-more">Ver más <i class="fa-solid fa-arrow-right"></i></span>
+    </button>
+  </div>
+}
+
+@if (isAnnouncementOpen) {
+  <div
+    id="announcement-dialog"
+    class="site-info-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="announcement-title"
+    (click)="closeAnnouncement()">
+    <div class="site-info-modal-card" (click)="$event.stopPropagation()">
+      <div class="site-info-modal-header">
+        <span class="site-info-modal-icon"><i class="fa-solid fa-bullhorn"></i></span>
+        <button type="button" class="site-info-modal-close" (click)="closeAnnouncement()" aria-label="Cerrar novedades">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <span class="site-info-modal-kicker">Novedades de la plataforma</span>
+      <h2 id="announcement-title">{{ title }}</h2>
+      <div class="site-info-modal-content" [innerHTML]="description"></div>
+      <button type="button" class="site-info-modal-action" (click)="closeAnnouncement()">
+        Entendido <i class="fa-solid fa-check"></i>
+      </button>
+    </div>
   </div>
 }
 

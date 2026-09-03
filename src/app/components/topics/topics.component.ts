@@ -16,6 +16,7 @@ export class topicsComponent implements OnInit {
   @Input() topics:any;
   @Input() margin:number= -1;
   @Input() isSubscribed = false;
+  @Input() isAuthenticated = false;
   @Output() pdfPreview = new EventEmitter<string>();
 
   //variables para mostrar mensaje de pregunta guardada

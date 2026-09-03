@@ -1,32 +1,134 @@
-<!-- // TODO
-1. Hacer una petición PUT /info para enviar el contenido
-2. Al entrar en la vista tienes que hacer una petición a GET /info para obtener la info y ponerla en los input
--->
+<div class="info-admin-page min-h-screen bg-[#f7f8fa] text-[#172033]">
+  <app-header />
 
-<!-- Para el footer -->
-<div class="flex flex-col h-screen">
-  <!--------------- Añadir header aquí ---------------->
-  <app-header/>
+  <main class="info-admin-main">
+    <div class="info-admin-container">
+      <section class="info-admin-hero">
+        <div class="info-admin-hero-copy">
+          <span class="info-admin-kicker"><i class="fa-solid fa-bullhorn"></i> Panel de comunicación</span>
+          <h1>Información y novedades</h1>
+          <p>Prepara el mensaje que verán tus usuarios al entrar en la plataforma y mantenlos al día de cada mejora.</p>
+        </div>
+        <span class="info-admin-hero-icon" aria-hidden="true"><i class="fa-solid fa-newspaper"></i></span>
+      </section>
 
-  <!------------------ text area -------------------->
-  <div class="flex justify-center mb-8">
-    <div>
-      <textarea id="comments" [(ngModel)]="title" class="block text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 " placeholder="Actualmente contamos con..." style="width: 650px;"></textarea>
+      <div class="info-admin-grid">
+        <form class="info-editor-stack" (ngSubmit)="saveInfo()">
+          <section class="info-editor-card">
+            <div class="info-card-head">
+              <span class="info-step">01</span>
+              <div>
+                <span class="info-card-kicker">Mensaje destacado</span>
+                <h2>Novedad de portada</h2>
+              </div>
+            </div>
+            <p class="info-card-description">Este texto aparecerá en la franja superior de la web para llamar la atención sobre la actualización.</p>
+
+            <label for="comments" class="info-field-label">Titular de la novedad</label>
+            <textarea
+              id="comments"
+              name="title"
+              [(ngModel)]="title"
+              rows="3"
+              class="info-title-input"
+              placeholder="Ej. Nuevo plan de estudio personalizado disponible">
+            </textarea>
+            <div class="info-field-footer">
+              <span><i class="fa-solid fa-circle-info"></i> Sé breve y directo para que se lea de un vistazo.</span>
+              <span>{{ (title || '').length }} caracteres</span>
+            </div>
+          </section>
+
+          <section class="info-editor-card info-editor-card-rich">
+            <div class="info-card-head">
+              <span class="info-step">02</span>
+              <div>
+                <span class="info-card-kicker">Contenido ampliado</span>
+                <h2>Detalles de la actualización</h2>
+              </div>
+            </div>
+            <p class="info-card-description">Cuando el usuario pulse “Ver más”, podrá consultar aquí toda la información, enlaces y detalles de la novedad.</p>
+
+            <label for="description-editor" class="info-field-label">Descripción completa</label>
+            <p-editor
+              inputId="description-editor"
+              name="description"
+              class="info-rich-editor"
+              [(ngModel)]="description"
+              [style]="{ height: '300px', width: '100%' }">
+            </p-editor>
+          </section>
+
+          <div class="info-save-row">
+            <span><i class="fa-solid fa-cloud-arrow-up"></i> Los cambios se reflejarán en la próxima visita.</span>
+            <button type="submit" class="info-save-button">
+              <i class="fa-solid fa-check"></i>
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+
+        <aside class="info-preview-card">
+          <div class="info-preview-heading">
+            <div>
+              <span class="info-card-kicker">Vista previa</span>
+              <h2>Así lo verá el usuario</h2>
+            </div>
+            <span class="info-preview-live"><i class="fa-solid fa-circle"></i> En portada</span>
+          </div>
+
+          <div class="info-preview-window">
+            <div class="info-preview-browser-bar">
+              <span></span><span></span><span></span>
+              <small>preparabombero.es</small>
+            </div>
+            <div class="info-preview-ticker">
+              <span class="info-preview-tag"><i class="fa-solid fa-bullhorn"></i> Novedades</span>
+              <span class="info-preview-title">{{ title || 'Tu próxima novedad aparecerá aquí' }}</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+            <div class="info-preview-body">
+              <span class="info-preview-kicker">Novedades de la plataforma</span>
+              <h3>{{ title || 'Añade un titular para empezar' }}</h3>
+              @if (description) {
+                <div class="info-preview-content" [innerHTML]="description"></div>
+              } @else {
+                <p class="info-preview-placeholder">El contenido ampliado aparecerá al pulsar “Ver más”.</p>
+              }
+            </div>
+          </div>
+
+          <div class="info-preview-tip">
+            <i class="fa-solid fa-lightbulb"></i>
+            <span>Usa el titular para resumir la novedad y la descripción para explicar cómo puede aprovecharla el usuario.</span>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
+  </main>
 
-  <!------------------ editor de texto -------------------->
-  <div  class="flex justify-center mb-12" >
-    <p-editor [(ngModel)]="description" [style]="{ height: '300px' , width:'650px' }" />
-  </div>
+  @if (showSaveConfirmation) {
+    <div
+      class="site-info-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="info-save-title"
+      (click)="dismissSaveConfirmation()">
+      <div class="site-info-modal-card" (click)="$event.stopPropagation()">
+        <div class="site-info-modal-header">
+          <span class="site-info-modal-icon info-save-success-icon"><i class="fa-solid fa-check"></i></span>
+          <button type="button" class="site-info-modal-close" (click)="dismissSaveConfirmation()" aria-label="Cerrar confirmación">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <span class="site-info-modal-kicker">Guardado correctamente</span>
+        <h2 id="info-save-title">Los cambios se han guardado correctamente</h2>
+        <button type="button" class="site-info-modal-action" (click)="finishSaveConfirmation()">
+          Continuar <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  }
 
-  <!------------------ botón guardar -------------------->
-  <div class="flex justify-center mb-12 ">
-      <button (click)="saveInfo()" class="text-white bg-primaryColor hover:bg-yellow-600 focus:outline-none font-medium rounded-lg px-5 py-2.5">
-        Guardar
-      </button>
-  </div>
-
-  <!--------------- Añadir footer aquí ---------------->
-  <app-footer/>
+  <app-footer />
 </div>

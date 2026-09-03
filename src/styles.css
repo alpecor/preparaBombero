@@ -10,6 +10,8 @@
 @import "./app/pages/examenes-cards/examenes-cards.component.css";
 @import "./app/pages/auth/auth-login/auth-login.component.css";
 @import "./app/components/header/header.component.css";
+@import "./app/pages/admin/exams-list/exams-list.component.css";
+@import "./app/components/footer/footer.component.css";
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap");
 
 

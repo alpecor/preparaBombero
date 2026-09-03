@@ -1,30 +1,43 @@
 .site-promo-bar {
   position: relative;
   z-index: 10;
-  background: #172033;
+  overflow: hidden;
+  background: linear-gradient(90deg, #111827, #172033 55%, #1c273a);
   color: #fff;
 }
 
 .site-promo-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: .7rem;
+  justify-content: flex-start;
+  gap: .65rem;
   width: min(1380px, calc(100% - 2rem));
   min-height: 2.15rem;
   margin: 0 auto;
+  border: 0;
+  background: transparent;
   color: inherit;
+  cursor: pointer;
   font-size: .7rem;
+  padding: 0;
   text-decoration: none;
 }
 
-.site-promo-inner:hover .site-promo-text {
+.site-promo-inner:hover .site-promo-text,
+.site-promo-inner:focus-visible .site-promo-text {
   color: #ffd47a;
+}
+
+.site-promo-inner:focus-visible {
+  outline: 2px solid #ffd47a;
+  outline-offset: -3px;
 }
 
 .site-promo-tag {
   display: inline-flex;
   align-items: center;
+  flex: 0 0 auto;
+  gap: .35rem;
   border: 1px solid rgba(255, 212, 122, .45);
   border-radius: 999px;
   color: #ffd47a;
@@ -35,8 +48,26 @@
   text-transform: uppercase;
 }
 
+.site-promo-live {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: .3rem;
+  color: rgba(255, 255, 255, .56);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.site-promo-live i {
+  color: #f1ad2b;
+  font-size: .42rem;
+}
+
 .site-promo-text {
   overflow: hidden;
+  flex: 1 1 auto;
   max-width: 75rem;
   color: rgba(255, 255, 255, .88);
   text-overflow: ellipsis;
@@ -44,10 +75,147 @@
   white-space: nowrap;
 }
 
-.site-promo-inner > i {
+.site-promo-more {
   flex: 0 0 auto;
-  color: #f1ad2b;
+  color: #ffd47a;
+  font-size: .62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.site-promo-more i {
+  margin-left: .2rem;
+  font-size: .58rem;
+  transition: transform .2s ease;
+}
+
+.site-promo-inner:hover .site-promo-more i,
+.site-promo-inner:focus-visible .site-promo-more i {
+  transform: translateX(3px);
+}
+
+.site-info-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  background: rgba(17, 24, 39, .72);
+  padding: 1rem;
+}
+
+.site-info-modal-card {
+  width: min(100%, 38rem);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  border: 1px solid #e4e9ef;
+  border-radius: 1.15rem;
+  background: #fff;
+  box-shadow: 0 1.4rem 3rem rgba(17, 24, 39, .25);
+  padding: 1.6rem;
+}
+
+.site-info-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-info-modal-icon {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  place-items: center;
+  border-radius: .8rem;
+  background: #fff2d6;
+  color: #c98508;
+}
+
+.site-info-modal-close {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  place-items: center;
+  border: 1px solid #e2e8ef;
+  border-radius: .65rem;
+  background: #fff;
+  color: #718096;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.site-info-modal-close:hover,
+.site-info-modal-close:focus-visible {
+  border-color: #f0d59d;
+  background: #fff9ed;
+  color: #c98508;
+  outline: none;
+}
+
+.site-info-modal-kicker {
+  display: block;
+  margin-top: 1.4rem;
+  color: #a56800;
   font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.site-info-modal-card h2 {
+  margin: .5rem 0 0;
+  color: #172033;
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.15rem, 3vw, 1.55rem);
+  line-height: 1.25;
+}
+
+.site-info-modal-content {
+  margin-top: 1.2rem;
+  border: 1px solid #e4e9ef;
+  border-radius: .9rem;
+  background: #f8fafc;
+  color: #4b5b71;
+  font-size: .86rem;
+  line-height: 1.7;
+  padding: 1rem 1.1rem;
+}
+
+.site-info-modal-content p:first-child {
+  margin-top: 0;
+}
+
+.site-info-modal-content p:last-child {
+  margin-bottom: 0;
+}
+
+.site-info-modal-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  min-height: 2.55rem;
+  margin-top: 1.2rem;
+  border: 1px solid #de9a17;
+  border-radius: .65rem;
+  background: #de9a17;
+  box-shadow: 0 .35rem .8rem rgba(222, 154, 23, .18);
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .7rem;
+  font-weight: 800;
+  padding: .55rem .9rem;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.site-info-modal-action:hover,
+.site-info-modal-action:focus-visible {
+  border-color: #c98508;
+  background: #c98508;
+  outline: none;
+  transform: translateY(-1px);
 }
 
 .site-header {

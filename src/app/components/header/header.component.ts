@@ -16,6 +16,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(private router: Router, private authService: AuthService, private requestService: RequestService) {}
   title: string = "";
+  description: string = "";
+  isAnnouncementOpen = false;
   isAdmin: boolean = this.authService.isAdmin();
   isUser: boolean = this.authService.isUser();
   isNotAuth: boolean = this.authService.isNotAuth();
@@ -86,9 +88,24 @@ export class HeaderComponent implements OnInit {
 
 
    // Método para cargar la información desde el servicio
-   async loadInfo(): Promise<void> {
-    const data = await this.requestService.request('GET', `/info`, {}, {}, false);
-    this.title = data.title;
+  async loadInfo(): Promise<void> {
+    try {
+      const data = await this.requestService.request('GET', `/info`, {}, {}, false);
+      this.title = data.title ?? '';
+      this.description = data.description ?? '';
+    } catch {
+      this.title = '';
+      this.description = '';
+    }
+  }
+
+  openAnnouncement(): void {
+    this.isAnnouncementOpen = true;
+    this.closeMobileMenu();
+  }
+
+  closeAnnouncement(): void {
+    this.isAnnouncementOpen = false;
   }
 
 

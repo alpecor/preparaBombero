@@ -141,7 +141,7 @@
               <p>Elige los temas que quieres practicar y decide cuántas preguntas necesitas.</p>
             </div>
             <div class="home-selection-footer">
-              <span><strong>{{ selectedTopicsCount }}</strong> temas seleccionados</span>
+              <span><strong>{{ selectedTopicsCount }}</strong> temas y subtemas seleccionados</span>
               <button type="button" class="home-outline-action" (click)="scrollToTopics()">
                 Elegir temario
                 <i class="fa-solid fa-arrow-down"></i>
@@ -161,10 +161,10 @@
             </span>
             <h1>
               Prepárate para tu oposición<br>
-              <span>con un plan pensado para ti.</span>
+              <span>con todo lo necesario.</span>
             </h1>
             <p>
-              Selecciona tu temario, practica con preguntas oficiales y sigue una preparación organizada hasta la fecha de tu examen.
+              Regístrate gratis, practica con exámenes oficiales y organiza tu preparación con una plataforma creada para avanzar cada día.
             </p>
 
             <div class="home-primary-actions">
@@ -180,8 +180,8 @@
 
             <div class="home-guest-trust-points">
               <span><i class="fa-solid fa-circle-check"></i> Registro gratuito</span>
-              <span><i class="fa-solid fa-circle-check"></i> Preguntas oficiales</span>
-              <span><i class="fa-solid fa-circle-check"></i> Plan de estudio personalizado</span>
+              <span><i class="fa-solid fa-circle-check"></i> Exámenes oficiales</span>
+              <span><i class="fa-solid fa-circle-check"></i> Plan de estudio a tu medida</span>
             </div>
           </div>
 
@@ -192,13 +192,13 @@
             </span>
             <div class="home-guest-showcase-card">
               <span class="home-guest-showcase-label">Tu camino al examen</span>
-              <strong>Un paso cada día</strong>
+              <strong>Cada día, más cerca de tu plaza</strong>
               <div class="home-guest-showcase-progress"><span></span></div>
-              <small><i class="fa-solid fa-calendar-check"></i> Temario · sesiones · simulacros</small>
+              <small><i class="fa-solid fa-calendar-check"></i> Temario · exámenes · repasos</small>
             </div>
             <span class="home-guest-showcase-note">
-              <i class="fa-solid fa-bolt"></i>
-              Entrena con método, no a ciegas
+              <i class="fa-solid fa-tag"></i>
+              Convierte tu esfuerzo en resultados
             </span>
           </div>
         </div>
@@ -207,31 +207,56 @@
       <section class="home-guest-benefits-section">
         <div class="home-content">
           <div class="home-guest-section-heading">
-            <span class="home-section-kicker">Todo lo que necesitas para avanzar</span>
-            <h2>Convierte tu preparación en un camino claro</h2>
-            <p>Prepara tu oposición con herramientas pensadas para que sepas qué estudiar, cuándo hacerlo y cómo estás progresando.</p>
+            <span class="home-section-kicker">La plataforma en un vistazo</span>
+            <h2>Todo lo que necesitas para llegar preparado</h2>
+            <p>Una preparación guiada, con contenido oficial y una rutina clara para que sepas qué hacer cada día.</p>
           </div>
 
           <div class="home-guest-benefits-grid">
             <article class="home-guest-benefit-card">
               <span class="home-guest-benefit-icon home-guest-benefit-icon-gold"><i class="fa-solid fa-list-check"></i></span>
-              <h3>Elige tu temario</h3>
-              <p>Selecciona los temas de tu convocatoria y crea exámenes totalmente a tu medida.</p>
+              <h3>Registro gratuito</h3>
+              <p>Solo con registrarte gratis puedes acceder y realizar exámenes oficiales desde la plataforma.</p>
             </article>
             <article class="home-guest-benefit-card">
               <span class="home-guest-benefit-icon home-guest-benefit-icon-blue"><i class="fa-solid fa-calendar-days"></i></span>
-              <h3>Plan personalizado</h3>
-              <p>Indica la fecha de tu examen y recibe una ruta de estudio adaptada a tu tiempo.</p>
+              <h3>Plan de estudio para tu examen</h3>
+              <p>Indica la fecha de tu examen y la plataforma te crea un plan de estudio adaptado a tu tiempo.</p>
             </article>
             <article class="home-guest-benefit-card">
               <span class="home-guest-benefit-icon home-guest-benefit-icon-orange"><i class="fa-solid fa-bolt"></i></span>
-              <h3>Entrena con método</h3>
-              <p>Sesiones diarias, modo sprint y un simulacro cada sábado con lo estudiado durante la semana.</p>
+              <h3>Sesiones diarias</h3>
+              <p>Recibe una rutina de estudio clara para avanzar cada día sin perderte entre todos los contenidos.</p>
             </article>
             <article class="home-guest-benefit-card">
               <span class="home-guest-benefit-icon home-guest-benefit-icon-green"><i class="fa-solid fa-chart-line"></i></span>
-              <h3>Aprende de tus resultados</h3>
-              <p>Revisa los exámenes de tus sesiones, detecta tus fallos y comprueba tu evolución.</p>
+              <h3>Simulacros los sábados</h3>
+              <p>Comprueba lo aprendido durante la semana con un simulacro pensado para medir tu progreso.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-blue"><i class="fa-solid fa-bookmark"></i></span>
+              <h3>Guarda preguntas</h3>
+              <p>Marca las preguntas que quieras revisar más adelante y crea tu propio espacio de repaso.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-gold"><i class="fa-solid fa-layer-group"></i></span>
+              <h3>61 temas organizados</h3>
+              <p>Legislación, específico y otros bloques. Con Premium, accede a todo por 24,95 €/mes, sin permanencia.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-blue"><i class="fa-solid fa-sliders"></i></span>
+              <h3>Examen o repaso a tu medida</h3>
+              <p>Elige la parte del temario que quieras y decide si prefieres hacer un examen o repasar pregunta a pregunta.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-orange"><i class="fa-solid fa-lightbulb"></i></span>
+              <h3>Explicaciones para aprender</h3>
+              <p>Consulta la explicación de cada pregunta y entiende por qué una respuesta es correcta.</p>
+            </article>
+            <article class="home-guest-benefit-card">
+              <span class="home-guest-benefit-icon home-guest-benefit-icon-green"><i class="fa-solid fa-chart-line"></i></span>
+              <h3>Controla tu progreso</h3>
+              <p>Revisa tus resultados, descubre tus puntos fuertes y detecta los temas que necesitan más trabajo.</p>
             </article>
           </div>
 
@@ -279,10 +304,12 @@
               <p>Consulta el contenido oficial de las oposiciones y descubre todo lo que puedes preparar.</p>
             }
           </div>
-          <button type="button" class="home-clear-selection" (click)="deselectAllTopics()">
-            <i class="fa-solid fa-eraser"></i>
-            Limpiar selección
-          </button>
+          @if (isAuthenticated) {
+            <button type="button" class="home-clear-selection" (click)="deselectAllTopics()">
+              <i class="fa-solid fa-eraser"></i>
+              Limpiar selección
+            </button>
+          }
         </div>
 
         <div class="home-topic-categories">
@@ -316,27 +343,31 @@
                         } @else {
                           <span class="home-topic-expand-placeholder"></span>
                         }
-                        <input
-                          [checked]="topic.selected"
-                          (change)="selectedTopic(topic.id, $event, item)"
-                          type="checkbox"
-                          class="home-topic-checkbox"
-                        />
+                        @if (isAuthenticated) {
+                          <input
+                            [checked]="topic.selected"
+                            (change)="selectedTopic(topic.id, $event, item)"
+                            type="checkbox"
+                            class="home-topic-checkbox"
+                          />
+                        }
                         <span class="home-topic-title">{{ topic.title }}</span>
                       </div>
 
                       <div class="home-topic-tools">
                         <span class="home-topic-question-count">{{ topic.quizCount | number:'1.0-0' }} <small>preg.</small></span>
-                        <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('exam', topic)" title="Hacer examen" aria-label="Hacer examen">
-                          <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('review', topic)" title="Hacer repaso" aria-label="Hacer repaso">
-                          <i class="fa-solid fa-rotate"></i>
-                        </button>
-                        @if (topic.url) {
-                          <button type="button" class="home-topic-tool" (click)="showPdfPreview(topic.url)" title="Ver PDF" aria-label="Ver PDF">
-                            <i class="fa-solid fa-file-pdf"></i>
+                        @if (isAuthenticated) {
+                          <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('exam', topic)" title="Hacer examen" aria-label="Hacer examen">
+                            <i class="fa-solid fa-pen-to-square"></i>
                           </button>
+                          <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('review', topic)" title="Hacer repaso" aria-label="Hacer repaso">
+                            <i class="fa-solid fa-rotate"></i>
+                          </button>
+                          @if (topic.url) {
+                            <button type="button" class="home-topic-tool" (click)="showPdfPreview(topic.url)" title="Ver PDF" aria-label="Ver PDF">
+                              <i class="fa-solid fa-file-pdf"></i>
+                            </button>
+                          }
                         }
                       </div>
                     </div>
@@ -347,6 +378,7 @@
                           [topics]="topic.topics"
                           [margin]="3"
                           [isSubscribed]="isSubscribed"
+                          [isAuthenticated]="isAuthenticated"
                           (pdfPreview)="showPdfPreview($event)"
                         />
                       </div>
