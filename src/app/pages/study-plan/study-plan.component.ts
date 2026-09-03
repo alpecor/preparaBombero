@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -32,6 +32,8 @@ interface HistoryWeek {
   sessions: StudySession[];
 }
 
+type SetupDropdown = 'community' | 'province' | 'administration' | 'duration' | null;
+
 const SPAIN_TIME_ZONE = 'Europe/Madrid';
 
 @Component({
@@ -50,6 +52,7 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   selectedProvince = '';
   selectedAdministration = '';
   selectedDuration = '';
+  activeSetupDropdown: SetupDropdown = null;
 
   readonly durationOptions: DurationOption[] = this.createDurationOptions();
 
@@ -209,6 +212,58 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
       ? Object.keys(this.configuration[this.selectedCommunity] ?? {})
       : [];
     this.administrations = [];
+  }
+
+  toggleSetupDropdown(dropdown: Exclude<SetupDropdown, null>): void {
+    if (
+      (dropdown === 'province' && this.provinces.length === 0) ||
+      (dropdown === 'administration' && this.administrations.length === 0)
+    ) {
+      return;
+    }
+
+    this.activeSetupDropdown = this.activeSetupDropdown === dropdown ? null : dropdown;
+  }
+
+  selectCommunity(community: string): void {
+    this.selectedCommunity = community;
+    this.onCommunityChange();
+    this.activeSetupDropdown = null;
+  }
+
+  selectProvince(province: string): void {
+    this.selectedProvince = province;
+    this.onProvinceChange();
+    this.activeSetupDropdown = null;
+  }
+
+  selectAdministration(administration: string): void {
+    this.selectedAdministration = administration;
+    this.activeSetupDropdown = null;
+  }
+
+  selectDuration(duration: string): void {
+    this.selectedDuration = duration;
+    this.activeSetupDropdown = null;
+  }
+
+  durationValue(duration: DurationOption): string {
+    return String(duration.value);
+  }
+
+  selectedDurationLabel(): string {
+    return this.durationOptions.find(option => this.durationValue(option) === this.selectedDuration)?.label
+      ?? 'Selecciona el tiempo disponible';
+  }
+
+  @HostListener('document:click')
+  closeSetupDropdown(): void {
+    this.activeSetupDropdown = null;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeSetupDropdownOnEscape(): void {
+    this.activeSetupDropdown = null;
   }
 
   onProvinceChange(): void {

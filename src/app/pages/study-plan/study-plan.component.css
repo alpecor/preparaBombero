@@ -4,25 +4,51 @@
 
 .study-plan-page {
   min-height: 100vh;
-  color: #1f2937;
+  background: #f7f8fa;
+  color: #172033;
   font-family: 'Open Sans', sans-serif;
 }
 
 .study-plan-hero {
-  background: linear-gradient(135deg, #e39b17 0%, #f0aa1a 100%);
-  color: white;
-  padding: 3.5rem 1.5rem 4rem;
+  background: #f7f8fa;
+  color: #172033;
+  padding: 2.3rem 1.5rem 0;
 }
 
 .study-plan-hero-with-plan {
-  padding-top: 1.75rem;
-  padding-bottom: 1.75rem;
+  padding-top: 1.5rem;
 }
 
 .study-plan-hero-content {
   max-width: 1120px;
   margin: 0 auto;
+  border: 1px solid #f0d99f;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(100deg, rgba(255, 248, 232, .98), rgba(255, 252, 246, .91)),
+    radial-gradient(circle at 90% 20%, rgba(222, 154, 23, .17), transparent 38%);
+  box-shadow: 0 .6rem 1.5rem rgba(148, 103, 24, .07);
+  padding: 1.7rem 2rem;
+  text-align: left;
+}
+
+.study-plan-hero-with-plan .study-plan-hero-content {
   text-align: center;
+}
+
+.study-plan-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  color: #a56800;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.study-plan-hero-kicker i {
+  color: #de9a17;
 }
 
 .study-plan-eyebrow {
@@ -39,6 +65,7 @@
 
 .study-plan-hero h1 {
   margin: 0;
+  color: #172033;
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(2rem, 4vw, 3.2rem);
   font-weight: 800;
@@ -47,7 +74,7 @@
 
 .study-plan-hero p {
   margin: .8rem 0 0;
-  color: rgba(255, 255, 255, .92);
+  color: #6d7b8d;
   font-size: 1rem;
 }
 
@@ -60,7 +87,7 @@
 }
 
 .study-plan-countdown-label {
-  color: rgba(255, 255, 255, .88);
+  color: #a56800;
   font-size: .72rem;
   font-weight: 800;
   letter-spacing: .12em;
@@ -78,14 +105,14 @@
   align-items: center;
   flex-direction: column;
   min-width: 4.4rem;
-  border: 1px solid rgba(255, 255, 255, .28);
+  border: 1px solid #ead8ae;
   border-radius: .7rem;
-  background: rgba(255, 255, 255, .13);
+  background: rgba(255, 255, 255, .76);
   padding: .45rem .55rem .5rem;
 }
 
 .study-plan-countdown-unit strong {
-  color: white;
+  color: #172033;
   font-family: 'Montserrat', sans-serif;
   font-size: 1.45rem;
   font-weight: 800;
@@ -94,7 +121,7 @@
 
 .study-plan-countdown-unit span {
   margin-top: .3rem;
-  color: rgba(255, 255, 255, .82);
+  color: #6d7b8d;
   font-size: .62rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -102,7 +129,7 @@
 
 .study-plan-countdown-separator {
   margin-top: .7rem;
-  color: rgba(255, 255, 255, .72);
+  color: #c98508;
   font-family: 'Montserrat', sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
@@ -110,15 +137,15 @@
 
 .study-plan-hero-countdown-expired {
   margin-top: 1rem;
-  color: rgba(255, 255, 255, .92);
+  color: #a56800;
   font-size: .95rem;
   font-weight: 700;
 }
 
 .study-plan-content {
   max-width: 1120px;
-  margin: -2.5rem auto 0;
-  padding: 0 1.5rem 4rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4rem;
   position: relative;
 }
 
@@ -135,6 +162,7 @@
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 1.25rem;
+  box-shadow: 0 .65rem 1.7rem rgba(30, 41, 59, .06);
   padding: clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -143,11 +171,11 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 2.25rem;
+  margin-bottom: 2rem;
 }
 
 .study-plan-section-label {
-  color: var(--primary-color);
+  color: #a56800;
   font-size: .75rem;
   font-weight: 700;
   letter-spacing: .1em;
@@ -156,7 +184,7 @@
 
 .study-plan-card h2 {
   margin: .4rem 0 0;
-  color: #1f2937;
+  color: #172033;
   font-family: 'Montserrat', sans-serif;
   font-size: clamp(1.35rem, 2vw, 1.85rem);
   font-weight: 700;
@@ -168,10 +196,19 @@
   width: 3rem;
   height: 3rem;
   flex: 0 0 3rem;
+  border: 1px solid #f0d99f;
   border-radius: .85rem;
-  background: #fff5df;
-  color: var(--primary-color);
+  background: #fff2d2;
+  color: #c98508;
   font-size: 1.15rem;
+}
+
+.study-plan-card-subtitle {
+  max-width: 42rem;
+  margin: .65rem 0 0;
+  color: #6d7b8d;
+  font-size: .86rem;
+  line-height: 1.55;
 }
 
 .study-plan-form-grid {
@@ -183,7 +220,7 @@
 .study-plan-field label {
   display: block;
   margin-bottom: .55rem;
-  color: #4b5563;
+  color: #526174;
   font-size: .76rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
@@ -198,28 +235,101 @@
 .study-plan-select-wrap select {
   width: 100%;
   min-height: 3.15rem;
-  appearance: none;
+  appearance: none !important;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: none;
-  border: 1px solid #d1d5db;
+  background-image: none !important;
+  border: 1px solid #dbe3ec;
   border-radius: .7rem;
-  background: white;
-  color: #1f2937;
+  background: #f8fafc;
+  color: #172033;
   cursor: pointer;
   font-size: .95rem;
   outline: none;
+  padding: .75rem 2.75rem .75rem 1rem;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+}
+
+.study-plan-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  width: 100%;
+  min-height: 3.15rem;
+  border: 1px solid #dbe3ec;
+  border-radius: .7rem;
+  background: #f8fafc;
+  color: #172033;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: .95rem;
+  outline: none;
   padding: .75rem 1rem;
+  text-align: left;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+}
+
+.study-plan-select > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study-plan-select > i {
+  flex: 0 0 auto;
+  color: #718096;
+  font-size: .7rem;
+}
+
+.study-plan-select:hover:not(:disabled) {
+  border-color: #de9a17;
+  background: white;
+}
+
+.study-plan-select:focus-visible {
+  border-color: #c98508;
+  box-shadow: 0 0 0 .2rem rgba(222, 154, 23, .14);
+}
+
+.study-plan-select:disabled {
+  background: #f3f4f6;
+  color: #aeb6c2;
+  cursor: not-allowed;
+}
+
+.study-plan-select:disabled > i {
+  color: #b8c0cb;
+}
+
+.study-plan-custom-select-wrap::after {
+  display: none;
+}
+
+.study-plan-select-wrap::after {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  color: #718096;
+  content: '\f078';
+  font-family: 'Font Awesome 6 Free';
+  font-size: .7rem;
+  font-weight: 900;
+  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .study-plan-select-wrap select:hover:not(:disabled) {
-  border-color: var(--primary-color);
+  border-color: #de9a17;
+  background: white;
 }
 
 .study-plan-select-wrap:focus-within select,
 .study-plan-select-wrap select:focus,
 .study-plan-select-wrap select:focus-visible {
-  border-color: var(--primary-color) !important;
+  border-color: #c98508 !important;
+  box-shadow: 0 0 0 .2rem rgba(222, 154, 23, .14);
   outline: none !important;
 }
 
@@ -229,21 +339,81 @@
   cursor: not-allowed;
 }
 
+.study-plan-option-menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + .5rem);
+  right: 0;
+  left: 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  border: 1px solid #e1e7ef;
+  border-radius: .85rem;
+  background: white;
+  box-shadow: 0 .8rem 1.6rem rgba(30, 41, 59, .14);
+  padding: .35rem;
+}
+
+.study-plan-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  width: 100%;
+  min-height: 2.6rem;
+  border: 0;
+  border-radius: .6rem;
+  background: transparent;
+  color: #526174;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: .86rem;
+  padding: .65rem .75rem;
+  text-align: left;
+  transition: background .15s, color .15s;
+}
+
+.study-plan-option > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.study-plan-option:hover,
+.study-plan-option:focus-visible {
+  background: #fff8e8;
+  color: #172033;
+  outline: none;
+}
+
+.study-plan-option-active {
+  background: #fff8e8;
+  color: #a56800;
+  font-weight: 700;
+}
+
+.study-plan-option > i {
+  flex: 0 0 auto;
+  color: #c98508;
+  font-size: .75rem;
+}
+
 .study-plan-notice {
   display: flex;
   align-items: flex-start;
   gap: .8rem;
-  margin-top: 2rem;
-  border: 1px solid #f2d59f;
-  border-radius: .8rem;
-  background: #fff9ed;
-  color: #8a5b00;
+  margin-top: 1.75rem;
+  border: 1px solid #f0d99f;
+  border-radius: .85rem;
+  background: #fffaf0;
+  color: #80601f;
   padding: 1rem 1.1rem;
 }
 
 .study-plan-notice i {
   margin-top: .15rem;
-  color: var(--primary-color);
+  color: #c98508;
 }
 
 .study-plan-notice p {
@@ -279,25 +449,31 @@
   justify-content: center;
   gap: .6rem;
   width: 100%;
-  margin-top: 2rem;
-  border: 0;
-  border-radius: .7rem;
-  background: var(--primary-color);
+  margin-top: 1.75rem;
+  border: 1px solid #d48b0d;
+  border-radius: .75rem;
+  background: #de9a17;
+  box-shadow: 0 .35rem .8rem rgba(222, 154, 23, .2);
   color: white;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   font-size: .95rem;
   font-weight: 700;
   padding: 1rem 1.5rem;
+  transition: background .2s, box-shadow .2s, transform .2s;
 }
 
 .study-plan-submit:hover:not(:disabled) {
-  background: #c9860d;
+  background: #c98508;
+  box-shadow: 0 .5rem 1rem rgba(201, 133, 8, .24);
   transform: translateY(-1px);
 }
 
 .study-plan-submit:disabled {
-  background: #d1d5db;
+  border-color: #d5dbe3;
+  background: #d5dbe3;
+  box-shadow: none;
+  color: #7b8492;
   cursor: not-allowed;
 }
 
@@ -334,7 +510,7 @@
 .study-plan-plan-actions {
   display: flex;
   justify-content: flex-end;
-  margin: 3.5rem 0 1.5rem;
+  margin: 1rem 0 1.5rem;
 }
 
 .study-plan-edit-button {
@@ -1700,16 +1876,20 @@
 
 @media (max-width: 700px) {
   .study-plan-hero {
-    padding: 2.75rem 1rem 3.25rem;
+    padding: 1.5rem 1rem 0;
+  }
+
+  .study-plan-hero-content {
+    padding: 1.35rem 1.25rem;
   }
 
   .study-plan-content {
-    margin: -2rem auto 0;
-    padding: 0 1rem 3rem;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 3rem;
   }
 
   .study-plan-plan-actions {
-    margin: 3rem 0 1.25rem;
+    margin: 1rem 0 1.25rem;
   }
 
   .study-plan-form-grid {
@@ -1790,6 +1970,10 @@
 
   .study-plan-card-header {
     margin-bottom: 1.75rem;
+  }
+
+  .study-plan-card-subtitle {
+    font-size: .82rem;
   }
 
   .study-plan-settings-topbar {

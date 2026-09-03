@@ -6,9 +6,17 @@
       <section class="study-plan-hero" [class.study-plan-hero-with-plan]="hasPlan">
         <div class="study-plan-hero-content">
           @if (!hasPlan) {
+            <span class="study-plan-hero-kicker">
+              <i class="fa-solid fa-calendar-check"></i>
+              Plan de estudio
+            </span>
             <h1>Configura tu plan</h1>
             <p>Cuéntanos a qué te presentas y cuánto tiempo tienes; nosotros nos encargamos del resto.</p>
           } @else {
+            <span class="study-plan-hero-kicker">
+              <i class="fa-solid fa-fire"></i>
+              Tu preparación
+            </span>
             <h1>Tu plan de estudio personalizado</h1>
             @if (countdownExpired) {
               <p class="study-plan-hero-countdown-expired">La fecha del examen ya ha pasado</p>
@@ -479,65 +487,203 @@
             <div>
               <span class="study-plan-section-label">Primer paso</span>
               <h2>Cuéntanos cómo quieres prepararte</h2>
+              <p class="study-plan-card-subtitle">
+                Elige tu convocatoria y el tiempo disponible para organizar una ruta adaptada a ti.
+              </p>
             </div>
+            <span class="study-plan-card-icon" aria-hidden="true">
+              <i class="fa-solid fa-sliders"></i>
+            </span>
           </div>
 
           <div class="study-plan-form-grid">
             <div class="study-plan-field">
               <label for="community">Comunidad autónoma</label>
-              <div class="study-plan-select-wrap">
-                <select
+              <div class="study-plan-select-wrap study-plan-custom-select-wrap">
+                <button
+                  type="button"
                   id="community"
-                  [(ngModel)]="selectedCommunity"
-                  (ngModelChange)="onCommunityChange()">
-                  <option value="">Selecciona una comunidad</option>
-                  @for (community of communities; track community) {
-                    <option [value]="community">{{ community }}</option>
-                  }
-                </select>
+                  class="study-plan-select"
+                  [attr.aria-expanded]="activeSetupDropdown === 'community'"
+                  aria-haspopup="listbox"
+                  aria-label="Selecciona una comunidad autónoma"
+                  (click)="$event.stopPropagation(); toggleSetupDropdown('community')">
+                  <span>{{ selectedCommunity || 'Selecciona una comunidad' }}</span>
+                  <i class="fa-solid" [ngClass]="activeSetupDropdown === 'community' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+                @if (activeSetupDropdown === 'community') {
+                  <div class="study-plan-option-menu" role="listbox">
+                    <button
+                      type="button"
+                      role="option"
+                      class="study-plan-option"
+                      [class.study-plan-option-active]="selectedCommunity === ''"
+                      [attr.aria-selected]="selectedCommunity === ''"
+                      (click)="selectCommunity('')">
+                      Selecciona una comunidad
+                      @if (selectedCommunity === '') {
+                        <i class="fa-solid fa-check"></i>
+                      }
+                    </button>
+                    @for (community of communities; track community) {
+                      <button
+                        type="button"
+                        role="option"
+                        class="study-plan-option"
+                        [class.study-plan-option-active]="selectedCommunity === community"
+                        [attr.aria-selected]="selectedCommunity === community"
+                        (click)="selectCommunity(community)">
+                        <span>{{ community }}</span>
+                        @if (selectedCommunity === community) {
+                          <i class="fa-solid fa-check"></i>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
             <div class="study-plan-field">
               <label for="province">Provincia</label>
-              <div class="study-plan-select-wrap">
-                <select
+              <div class="study-plan-select-wrap study-plan-custom-select-wrap">
+                <button
+                  type="button"
                   id="province"
-                  [(ngModel)]="selectedProvince"
-                  (ngModelChange)="onProvinceChange()"
-                  [disabled]="provinces.length === 0">
-                  <option value="">Selecciona una provincia</option>
-                  @for (province of provinces; track province) {
-                    <option [value]="province">{{ province }}</option>
-                  }
-                </select>
+                  class="study-plan-select"
+                  [disabled]="provinces.length === 0"
+                  [attr.aria-expanded]="activeSetupDropdown === 'province'"
+                  aria-haspopup="listbox"
+                  aria-label="Selecciona una provincia"
+                  (click)="$event.stopPropagation(); toggleSetupDropdown('province')">
+                  <span>{{ selectedProvince || 'Selecciona una provincia' }}</span>
+                  <i class="fa-solid" [ngClass]="activeSetupDropdown === 'province' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+                @if (activeSetupDropdown === 'province') {
+                  <div class="study-plan-option-menu" role="listbox">
+                    <button
+                      type="button"
+                      role="option"
+                      class="study-plan-option"
+                      [class.study-plan-option-active]="selectedProvince === ''"
+                      [attr.aria-selected]="selectedProvince === ''"
+                      (click)="selectProvince('')">
+                      Selecciona una provincia
+                      @if (selectedProvince === '') {
+                        <i class="fa-solid fa-check"></i>
+                      }
+                    </button>
+                    @for (province of provinces; track province) {
+                      <button
+                        type="button"
+                        role="option"
+                        class="study-plan-option"
+                        [class.study-plan-option-active]="selectedProvince === province"
+                        [attr.aria-selected]="selectedProvince === province"
+                        (click)="selectProvince(province)">
+                        <span>{{ province }}</span>
+                        @if (selectedProvince === province) {
+                          <i class="fa-solid fa-check"></i>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
             <div class="study-plan-field">
               <label for="administration">Administración convocante</label>
-              <div class="study-plan-select-wrap">
-                <select
+              <div class="study-plan-select-wrap study-plan-custom-select-wrap">
+                <button
+                  type="button"
                   id="administration"
-                  [(ngModel)]="selectedAdministration"
-                  [disabled]="administrations.length === 0">
-                  <option value="">Selecciona una administración</option>
-                  @for (administration of administrations; track administration) {
-                    <option [value]="administration">{{ administration }}</option>
-                  }
-                </select>
+                  class="study-plan-select"
+                  [disabled]="administrations.length === 0"
+                  [attr.aria-expanded]="activeSetupDropdown === 'administration'"
+                  aria-haspopup="listbox"
+                  aria-label="Selecciona una administración convocante"
+                  (click)="$event.stopPropagation(); toggleSetupDropdown('administration')">
+                  <span>{{ selectedAdministration || 'Selecciona una administración' }}</span>
+                  <i class="fa-solid" [ngClass]="activeSetupDropdown === 'administration' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+                @if (activeSetupDropdown === 'administration') {
+                  <div class="study-plan-option-menu" role="listbox">
+                    <button
+                      type="button"
+                      role="option"
+                      class="study-plan-option"
+                      [class.study-plan-option-active]="selectedAdministration === ''"
+                      [attr.aria-selected]="selectedAdministration === ''"
+                      (click)="selectAdministration('')">
+                      Selecciona una administración
+                      @if (selectedAdministration === '') {
+                        <i class="fa-solid fa-check"></i>
+                      }
+                    </button>
+                    @for (administration of administrations; track administration) {
+                      <button
+                        type="button"
+                        role="option"
+                        class="study-plan-option"
+                        [class.study-plan-option-active]="selectedAdministration === administration"
+                        [attr.aria-selected]="selectedAdministration === administration"
+                        (click)="selectAdministration(administration)">
+                        <span>{{ administration }}</span>
+                        @if (selectedAdministration === administration) {
+                          <i class="fa-solid fa-check"></i>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
               </div>
             </div>
 
             <div class="study-plan-field">
               <label for="duration">Tiempo estimado hasta el examen</label>
-              <div class="study-plan-select-wrap">
-                <select id="duration" [(ngModel)]="selectedDuration">
-                  <option value="">Selecciona el tiempo disponible</option>
-                  @for (duration of durationOptions; track duration.value) {
-                    <option [value]="duration.value">{{ duration.label }}</option>
-                  }
-                </select>
+              <div class="study-plan-select-wrap study-plan-custom-select-wrap">
+                <button
+                  type="button"
+                  id="duration"
+                  class="study-plan-select"
+                  [attr.aria-expanded]="activeSetupDropdown === 'duration'"
+                  aria-haspopup="listbox"
+                  aria-label="Selecciona el tiempo disponible hasta el examen"
+                  (click)="$event.stopPropagation(); toggleSetupDropdown('duration')">
+                  <span>{{ selectedDurationLabel() }}</span>
+                  <i class="fa-solid" [ngClass]="activeSetupDropdown === 'duration' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+                @if (activeSetupDropdown === 'duration') {
+                  <div class="study-plan-option-menu" role="listbox">
+                    <button
+                      type="button"
+                      role="option"
+                      class="study-plan-option"
+                      [class.study-plan-option-active]="selectedDuration === ''"
+                      [attr.aria-selected]="selectedDuration === ''"
+                      (click)="selectDuration('')">
+                      Selecciona el tiempo disponible
+                      @if (selectedDuration === '') {
+                        <i class="fa-solid fa-check"></i>
+                      }
+                    </button>
+                    @for (duration of durationOptions; track duration.value) {
+                      <button
+                        type="button"
+                        role="option"
+                        class="study-plan-option"
+                        [class.study-plan-option-active]="selectedDuration === durationValue(duration)"
+                        [attr.aria-selected]="selectedDuration === durationValue(duration)"
+                        (click)="selectDuration(durationValue(duration))">
+                        <span>{{ duration.label }}</span>
+                        @if (selectedDuration === durationValue(duration)) {
+                          <i class="fa-solid fa-check"></i>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
               </div>
             </div>
           </div>
