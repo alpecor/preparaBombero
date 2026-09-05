@@ -63,6 +63,7 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   expandedSessionId: number | null = null;
   hasPlan = false;
   isRestDay = false;
+  isSaturdayWithoutTopics = false;
   isTodayTopicsExpanded = false;
   isStartingSession = false;
   isReviewingSessionId: number | null = null;
@@ -141,13 +142,19 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   }
 
   private preparePlanView(): void {
-    const todayKey = this.dateKey(new Date());
-    this.isRestDay = this.weekday(new Date()) === 0;
+    const today = new Date();
+    const todayKey = this.dateKey(today);
+    const todayWeekday = this.weekday(today);
+    this.isRestDay = todayWeekday === 0;
     const sessionForToday = this.sessions.find(
       session => this.dateKey(session.date) === todayKey
     );
+    this.isSaturdayWithoutTopics =
+      todayWeekday === 6 &&
+      sessionForToday !== undefined &&
+      sessionForToday.topics.length === 0;
 
-    this.todaySession = this.isRestDay
+    this.todaySession = this.isRestDay || this.isSaturdayWithoutTopics
       ? null
       : sessionForToday
         ?? this.sessions.find(session => session.status === 'PENDIENTE')

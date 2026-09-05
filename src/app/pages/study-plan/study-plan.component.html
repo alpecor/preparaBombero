@@ -152,6 +152,15 @@
                   <p>Aprovéchalo para recargar fuerzas. El lunes retomamos tu plan.</p>
                 </div>
               </section>
+            } @else if (isSaturdayWithoutTopics) {
+              <section class="study-plan-rest-card">
+                <i class="fa-solid fa-mug-hot"></i>
+                <div>
+                  <span>SÁBADO · PLAN RECIÉN CREADO</span>
+                  <h3>Hoy no tienes nada que repasar</h3>
+                  <p>Has creado tu plan de estudio hoy. El lunes comenzamos.</p>
+                </div>
+              </section>
             } @else if (todaySession) {
               <section class="study-plan-today-card">
                 <div class="study-plan-today-topline">
