@@ -109,7 +109,12 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
         this.requestService.request('GET', '/study', {}, {}, true),
         this.requestService.request('GET', '/user', {}, {}, true)
       ]);
-      this.sessions = Array.isArray(response) ? response : [];
+      this.sessions = Array.isArray(response)
+        ? response.map(session => ({
+            ...session,
+            topics: Array.isArray(session.topics) ? session.topics : []
+          }))
+        : [];
       this.currentExamDate = user?.examEstimatedDate ?? null;
       this.hasPlan = this.sessions.length > 0;
 
@@ -160,10 +165,11 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
         ?? this.sessions.find(session => session.status === 'PENDIENTE')
         ?? null;
 
-    const todayId = this.todaySession?.id;
+    const todayId = sessionForToday?.id ?? this.todaySession?.id;
     this.upcomingSessions = this.sessions
       .filter(session =>
         session.id !== todayId &&
+        session.topics.length > 0 &&
         session.status === 'PENDIENTE' &&
         this.dateKey(session.date) >= todayKey &&
         this.weekday(session.date) !== 0
@@ -172,7 +178,7 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
       .slice(0, 5);
 
     this.historySessions = this.sessions
-      .filter(session => session.status !== 'PENDIENTE')
+      .filter(session => session.status !== 'PENDIENTE' && session.topics.length > 0)
       .sort((a, b) => this.timestamp(b.date) - this.timestamp(a.date));
     this.historyWeeks = this.groupHistoryByWeek(this.historySessions);
     this.historyPage = 0;
