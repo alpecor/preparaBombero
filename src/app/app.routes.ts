@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { WelcomeComponent } from './pages/welcome/welcome.component';
 import AuthLoginComponent from './pages/auth/auth-login/auth-login.component';
 import { ExamenesComponent } from './pages/examenes/examenes.component';
 import { ExamenesCardsComponent } from './pages/examenes-cards/examenes-cards.component';
@@ -25,19 +24,9 @@ import { ReviewResultComponent } from './pages/review-result/review-result.compo
 import { LandingComponent } from './pages/landing/landing.component';
 import { StudyPlanComponent } from './pages/study-plan/study-plan.component';
 
-export const routes: Routes = [
-  //URLs DE LA HOME
-  {
-    path: '', component: HomeComponent
-  },
-  {
-    path: 'terminos-y-condiciones', component: TermsConditionsComponent
-  },
-  {
-    path: 'politica-de-privacidad', component: PrivacyPolicyComponent
-  },
+import { SiteLayoutComponent } from './components/site-layout/site-layout.component';
 
-  //URLs DEL LOGIN
+export const routes: Routes = [
   {
     path: 'login', component: AuthLoginComponent, canActivate: [noAuthGuard]
 
@@ -51,95 +40,79 @@ export const routes: Routes = [
   {
     path: 'reset-password', component: ResetPasswordComponent, canActivate: [noAuthGuard]
   },
-  
-
-
-  //URL DE EXAMENES
-  {
-    path: 'listado-de-examenes', component: ExamenesComponent
-  },
-  {
-    path: 'examenes', component: ExamenesCardsComponent
-  },
-  {
-    path: 'examenes/:community', component: ExamenesCardsComponent
-  },
-  {
-    path: 'examenes/:community/:city', component: ExamenesCardsComponent
-  },
-
-  // URL DEL EXAMEN POR SLUG (carpeta examenes)
-  {
-    path: 'examen/:slug-examen-bombero', component: QuestionsComponent
-  },
-
-  // URL DEL EXAMEN HOME
-  {
-    path: 'test', component: QuestionsComponent
-  },
-
-
-  //URL DE REPASO
-  {
-    path: 'review-test', component: ReviewTestComponent, canActivate: [userAuthGuard]
-  },
-
-  //URL DE REPASO CORREGIDO
-  {
-    path: 'check-review', component: ReviewResultComponent
-  },
-
-  //URL DE EXAMEN CORREGIDO
-  {
-    path: 'check-exam', component: CheckExamComponent
-  },
-
-  //URL DE PERFIL
-  {
-    path: 'profile', component: ProfileComponent, canActivate: [userAuthGuard]
-  },
-
-  //URL DE PREGUNTAS GUARDADAS
-  {
-    path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
-  },
-
-  // URL DEL PLAN DE ESTUDIO
-  {
-    path: 'plan-estudio', component: StudyPlanComponent, canActivate: [userAuthGuard]
-  },
-
-   //URL DE LANDING
   {
     path: 'landing', component: LandingComponent
   },
-
-
-
-
-
-
-
-  //URLs DE ADMIN
   {
-    path: 'admin/examenes', component: ExamsListComponent, canActivate: [adminAuthGuard]
-  },
-  {
-    path: 'admin/reportes', component: ReportQuestionsListComponent, canActivate: [adminAuthGuard]
-  },
-
-  {
-    path: 'admin/temario', component: TopicsListComponent, canActivate: [adminAuthGuard]
-  },
-  {
-    path: 'admin/temario/:topicId', component: QuestionCreateComponent, canActivate: [adminAuthGuard] // TODO cambiar el 10
-  },
-
-
-
-
-  //URL QUE NO EXISTE, REDIRECCIONA A LA HOME
-  {
-    path: '**', redirectTo: ''
-  },
+    path: '',
+    component: SiteLayoutComponent,
+    title: 'Prepara Bombero',
+    children: [
+      {
+        path: 'informacion',
+        loadComponent: () => import('./pages/information/information.component').then(m => m.InformationComponent),
+        title: 'Información | Prepara Bombero'
+      },
+      {
+        path: '', component: HomeComponent
+      },
+      {
+        path: 'terminos-y-condiciones', component: TermsConditionsComponent
+      },
+      {
+        path: 'politica-de-privacidad', component: PrivacyPolicyComponent
+      },
+      {
+        path: 'listado-de-examenes', component: ExamenesComponent
+      },
+      {
+        path: 'examenes', component: ExamenesCardsComponent
+      },
+      {
+        path: 'examenes/:community', component: ExamenesCardsComponent
+      },
+      {
+        path: 'examenes/:community/:city', component: ExamenesCardsComponent
+      },
+      {
+        data: { showFooter: false }, path: 'examen/:slug-examen-bombero', component: QuestionsComponent
+      },
+      {
+        data: { showFooter: false }, path: 'test', component: QuestionsComponent
+      },
+      {
+        data: { showFooter: false }, path: 'review-test', component: ReviewTestComponent, canActivate: [userAuthGuard]
+      },
+      {
+        data: { showFooter: false }, path: 'check-review', component: ReviewResultComponent
+      },
+      {
+        path: 'check-exam', component: CheckExamComponent
+      },
+      {
+        path: 'profile', component: ProfileComponent, canActivate: [userAuthGuard]
+      },
+      {
+        path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
+      },
+      {
+        path: 'plan-estudio', component: StudyPlanComponent, canActivate: [userAuthGuard]
+      },
+      {
+        path: 'admin/examenes', component: ExamsListComponent, canActivate: [adminAuthGuard]
+      },
+      {
+        path: 'admin/reportes', component: ReportQuestionsListComponent, canActivate: [adminAuthGuard]
+      },
+      {
+        path: 'admin/temario', component: TopicsListComponent, canActivate: [adminAuthGuard]
+      },
+      {
+        path: 'admin/temario/:topicId', component: QuestionCreateComponent, canActivate: [adminAuthGuard] // TODO cambiar el 10
+      },
+      {
+        path: '**', redirectTo: ''
+      }
+    ]
+  }
 ];

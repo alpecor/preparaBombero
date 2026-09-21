@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { RequestService } from '../../services/request.service';
 
@@ -39,7 +37,7 @@ const SPAIN_TIME_ZONE = 'Europe/Madrid';
 @Component({
   selector: 'app-study-plan',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './study-plan.component.html',
 })
 export class StudyPlanComponent implements OnInit, OnDestroy {

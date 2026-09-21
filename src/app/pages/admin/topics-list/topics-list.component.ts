@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../../components/header/header.component';
-import { FooterComponent } from '../../../components/footer/footer.component';
 import { RequestService } from '../../../services/request.service';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -11,7 +9,7 @@ import { adminTopicsComponent } from '../../../components/admin-topics/admin-top
 @Component({
   selector: 'app-topics-list',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, adminTopicsComponent, RouterLink],
+  imports: [CommonModule, adminTopicsComponent, RouterLink],
   templateUrl: './topics-list.component.html',
   styleUrl: './topics-list.component.css'
 })

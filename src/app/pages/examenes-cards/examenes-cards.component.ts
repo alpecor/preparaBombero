@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from "../../components/footer/footer.component";
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -9,7 +7,7 @@ import { LocalStorageService } from '../../services/local-storage.service';
 @Component({
   selector: 'app-examanes-cards',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './examenes-cards.component.html'
 })
 export class ExamenesCardsComponent {

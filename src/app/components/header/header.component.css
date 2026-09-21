@@ -1,3 +1,8 @@
+.site-header,
+.site-promo-bar {
+  font-family: 'Open Sans', sans-serif;
+}
+
 .site-promo-bar {
   position: relative;
   z-index: 10;

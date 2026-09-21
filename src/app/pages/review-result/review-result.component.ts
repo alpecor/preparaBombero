@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../components/header/header.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 
 @Component({
   selector: 'app-review-result',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule],
   templateUrl: './review-result.component.html',
   styleUrl: './review-result.component.css'
 })

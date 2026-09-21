@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../../components/header/header.component';
-import { FooterComponent } from '../../../components/footer/footer.component';
 import { RequestService } from '../../../services/request.service';
 
 
 @Component({
   selector: 'app-report-questions-list',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule],
   templateUrl: './report-questions-list.component.html',
   styleUrl: './report-questions-list.component.css'
 })

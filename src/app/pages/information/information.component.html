@@ -1,0 +1,73 @@
+<div class="information-page">
+  <main>
+    <section class="information-hero" aria-labelledby="information-title">
+      <div class="information-container">
+        <span class="information-kicker"><i class="fa-regular fa-compass" aria-hidden="true"></i> Guía de la plataforma</span>
+        <h1 id="information-title">Saca partido a tu preparación</h1>
+        <p>Exámenes, repaso y un plan a tu medida. Descubre todo lo que puedes hacer en Prepara Bombero y cómo dar cada paso.</p>
+        <span class="information-hint"><i class="fa-solid fa-arrow-pointer" aria-hidden="true"></i> Pulsa una tarjeta para descubrir cómo funciona. Usa el aspa para cerrarla.</span>
+      </div>
+    </section>
+
+    <section class="information-container information-content" aria-labelledby="guides-title">
+      <div class="information-section-heading">
+        <div><span class="information-kicker">Tú eliges por dónde empezar</span><h2 id="guides-title">Conoce tus herramientas</h2></div>
+        <span class="information-count">{{ guides.length }} herramientas</span>
+      </div>
+      <div class="information-grid">
+        @for (guide of guides; track guide.id; let index = $index) {
+          <article class="guide" (keydown.escape)="setGuide(null, card)">
+            <section class="guide-detail" [id]="'detail-' + guide.id" [hidden]="activeGuide !== guide.id" [attr.aria-label]="guide.title">
+              <div class="guide-detail-header">
+                <span class="information-kicker">Cómo funciona</span>
+                <button #closeButton type="button" class="guide-close" [attr.aria-label]="'Cerrar explicación de ' + guide.title" (click)="setGuide(null, card)">
+                  <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+              </div>
+              @if (guide.pages[activeGuide === guide.id ? activePage : 0]; as page) {
+              <div aria-live="polite" aria-atomic="true">
+              <h3>{{ page.title }}</h3>
+              <ol>
+                @for (step of page.steps; track $index) { <li>{{ step }}</li> }
+              </ol>
+              @if (page.pace) {
+                <table>
+                  <caption>Temas por sesión según el tiempo restante</caption>
+                  <thead><tr><th scope="col">Días hasta el examen</th><th scope="col">Temas</th></tr></thead>
+                  <tbody>
+                    <tr><td>Más de 180</td><td>1</td></tr>
+                    <tr><td>De 120 a 180</td><td>2</td></tr>
+                    <tr><td>De 98 a 119</td><td>3</td></tr>
+                    <tr><td>De 63 a 97</td><td>4</td></tr>
+                    <tr><td>De 14 a 62</td><td>5</td></tr>
+                    <tr><td>Menos de 14</td><td>Sprint</td></tr>
+                  </tbody>
+                </table>
+              }
+              @if (page.note) { <p class="guide-note">{{ page.note }}</p> }
+              </div>
+              }
+              @if (guide.pages.length > 1) {
+                <nav class="guide-pagination" [attr.aria-label]="'Páginas de la guía: ' + guide.title">
+                  <button type="button" [disabled]="activePage === 0" (click)="changePage(guide, -1)">
+                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Anterior
+                  </button>
+                  <span role="status">{{ activeGuide === guide.id ? activePage + 1 : 1 }} / {{ guide.pages.length }}</span>
+                  <button type="button" [disabled]="activePage === guide.pages.length - 1" (click)="changePage(guide, 1)">
+                    Siguiente <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                  </button>
+                </nav>
+              }
+            </section>
+            <button #card type="button" class="guide-card" [hidden]="activeGuide === guide.id" [id]="'title-' + guide.id" [attr.aria-expanded]="activeGuide === guide.id" [attr.aria-controls]="'detail-' + guide.id" (click)="setGuide(guide.id, closeButton)">
+              <span class="guide-card-top"><span class="guide-icon"><i [class]="'fa-solid ' + guide.icon" aria-hidden="true"></i></span><span class="guide-number">{{ index + 1 < 10 ? '0' : '' }}{{ index + 1 }}</span></span>
+              <span class="guide-title">{{ guide.title }}</span>
+              <span class="guide-summary">{{ guide.summary }}</span>
+              <span class="guide-action">Cómo funciona<i class="fa-solid fa-plus" aria-hidden="true"></i></span>
+            </button>
+          </article>
+        }
+      </div>
+    </section>
+  </main>
+</div>

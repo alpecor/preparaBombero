@@ -1,8 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { TextSanitizerComponent } from "../../components/text-sanitizer/text-sanitizer.component";
@@ -14,7 +12,7 @@ type BlockKey = 'all' | 'leg' | 'esp' | 'otr';
 @Component({
   selector: 'app-saved-questions',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent, TextSanitizerComponent],
+  imports: [CommonModule, FormsModule, TextSanitizerComponent],
   templateUrl: './saved-questions.component.html',
   styleUrls: ['./saved-questions.component.css']
 })

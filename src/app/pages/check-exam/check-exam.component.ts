@@ -1,6 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { CommonModule } from '@angular/common';
 import {NgOptimizedImage} from '@angular/common';
@@ -11,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-check-exam',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, CommonModule, NgOptimizedImage, TextSanitizerComponent],
+  imports: [CommonModule, NgOptimizedImage, TextSanitizerComponent],
   templateUrl: './check-exam.component.html',
   styleUrl: './check-exam.component.css'
 })

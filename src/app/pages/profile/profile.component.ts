@@ -1,6 +1,4 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { RequestService } from '../../services/request.service';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -22,7 +20,7 @@ export type ChartOptions = {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [NgOptimizedImage, HeaderComponent, FooterComponent, CommonModule, NgApexchartsModule, RouterLink],
+  imports: [NgOptimizedImage, CommonModule, NgApexchartsModule, RouterLink],
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {

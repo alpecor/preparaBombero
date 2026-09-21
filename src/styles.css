@@ -25,6 +25,10 @@
     --form-color: #F6F6F6;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   user-select: none;
 }

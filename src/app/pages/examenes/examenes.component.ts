@@ -1,13 +1,11 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { RequestService } from '../../services/request.service';
 import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
 
 @Component({
   selector: 'app-examenes',
   standalone: true,
-  imports: [HeaderComponent,FooterComponent,TextSanitizerComponent],
+  imports: [TextSanitizerComponent],
   templateUrl: './examenes.component.html',
   styleUrl: './examenes.component.css',
   encapsulation: ViewEncapsulation.None

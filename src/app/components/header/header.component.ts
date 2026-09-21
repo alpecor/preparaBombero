@@ -1,6 +1,8 @@
 import { NgOptimizedImage } from '@angular/common';
 import { Component, OnInit} from '@angular/core';
-import { RouterLink, Router, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, RouterLink, Router, RouterLinkActive } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { RequestService } from '../../services/request.service';
@@ -14,7 +16,18 @@ import { RequestService } from '../../services/request.service';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private router: Router, private authService: AuthService, private requestService: RequestService) {}
+  constructor(private router: Router, private authService: AuthService, private requestService: RequestService) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed()
+    ).subscribe(() => {
+      this.closeMobileMenu();
+      this.closeAnnouncement();
+      this.showSavedToast = false;
+      void this.refreshAuthentication();
+    });
+  }
+  private accessToken: string | null | undefined;
   title: string = "";
   description: string = "";
   isAnnouncementOpen = false;
@@ -30,20 +43,37 @@ export class HeaderComponent implements OnInit {
 
 
   async ngOnInit(): Promise<void> {
-    this.loadInfo();
-    
-    //para saber si el usuario esta subscrito
+    void this.loadInfo();
+    await this.refreshAuthentication();
+  }
+
+  private async refreshAuthentication(): Promise<void> {
+    const token = localStorage.getItem('access_token');
+    if (token === this.accessToken) return;
+    this.accessToken = token;
+    this.isAdmin = this.authService.isAdmin();
+    this.isUser = this.authService.isUser();
+    this.isNotAuth = this.authService.isNotAuth();
+    this.isSubscribed = false;
+    if (!token) return;
+    await this.refreshSubscription();
+  }
+
+  private async refreshSubscription(): Promise<void> {
+    const token = this.accessToken;
     try {
       const user = await this.requestService.request('GET', '/user', {}, {}, true);
-      this.isSubscribed = user.subscribed === true;
+      if (token === this.accessToken) this.isSubscribed = user.subscribed === true;
     } catch (err) {
-      this.isSubscribed = false;
+      if (token === this.accessToken) this.isSubscribed = false;
     }
   }
 
   // Método para el click de preguntas guardadas si estas subscrito o no
-  onSavedClick(): void {
+  async onSavedClick(): Promise<void> {
     this.closeMobileMenu();
+    await this.refreshAuthentication();
+    if (this.accessToken) await this.refreshSubscription();
     if (!this.isSubscribed) {
       this.showToast(
         'Funcionalidad PREMIUM: debes estar susbcrito para acceder a Preguntas guardadas.',

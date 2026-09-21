@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { HeaderComponent } from '../../components/header/header.component';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Router, RouterLink } from '@angular/router';
 import { RequestService } from '../../services/request.service';
@@ -13,7 +12,7 @@ import {Title} from "@angular/platform-browser";
 @Component({
   selector: 'app-questions',
   standalone: true,
-  imports: [NgOptimizedImage, CommonModule, HeaderComponent, PaginatorModule, RouterLink],
+  imports: [NgOptimizedImage, CommonModule, PaginatorModule, RouterLink],
   templateUrl: './questions.component.html',
   styleUrl: './questions.component.css'
 })

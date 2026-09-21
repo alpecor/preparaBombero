@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { HeaderComponent } from '../../../components/header/header.component';
-import { FooterComponent } from '../../../components/footer/footer.component';
 import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../../services/request.service';
 import { EditorModule } from 'primeng/editor';
@@ -10,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-question-create',
   standalone: true,
-  imports: [EditorModule, CommonModule, HeaderComponent, FooterComponent, FormsModule],
+  imports: [EditorModule, CommonModule, FormsModule],
   templateUrl: './question-create.component.html',
   styleUrl: './question-create.component.css'
 })

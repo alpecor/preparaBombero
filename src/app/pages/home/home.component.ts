@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { RequestService } from '../../services/request.service';
 import { Router, RouterLink } from '@angular/router';
 import { topicsComponent } from '../../components/topics/topics.component';
@@ -13,7 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent,FooterComponent,CommonModule, FormsModule, NgOptimizedImage, RouterLink, topicsComponent],
+  imports: [CommonModule, FormsModule, NgOptimizedImage, RouterLink, topicsComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {

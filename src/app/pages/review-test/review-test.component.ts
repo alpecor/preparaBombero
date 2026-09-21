@@ -4,15 +4,13 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { RequestService } from '../../services/request.service';
 import { PaginatorModule} from 'primeng/paginator';
-import { HeaderComponent } from '../../components/header/header.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
 
 
 @Component({
   selector: 'app-review-test',
   standalone: true,
-  imports: [PaginatorModule, HeaderComponent, FooterComponent, CommonModule, NgOptimizedImage, TextSanitizerComponent],
+  imports: [PaginatorModule, CommonModule, NgOptimizedImage, TextSanitizerComponent],
   templateUrl: './review-test.component.html',
   styleUrl: './review-test.component.css'
 })
