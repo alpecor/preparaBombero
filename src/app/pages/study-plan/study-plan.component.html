@@ -175,44 +175,10 @@
                 </div>
 
                 <div class="study-plan-today-title-row">
-                  @if (isTodayTopicsExpanded && todaySession.topics.length > 1) {
-                    <span class="study-plan-today-topics-heading">Temas del examen</span>
-                  } @else {
-                    <span class="study-plan-today-summary">
-                      <span class="study-plan-today-summary-copy">
-                        <span class="study-plan-today-summary-label">Temario de hoy</span>
-                        @if (todaySession.topics.length > 0) {
-                          <span class="study-plan-today-summary-topic">
-                            <span class="study-plan-today-summary-code">{{ topicPrefix(todaySession.topics[0]) }}</span>
-                            <span>{{ topicName(todaySession.topics[0]) }}</span>
-                          </span>
-                          @if (todaySession.topics.length > 1) {
-                            <span class="study-plan-today-summary-more">
-                              +{{ todaySession.topics.length - 1 }} más
-                            </span>
-                          }
-                        } @else {
-                          <span class="study-plan-today-summary-topic">Temario no disponible</span>
-                        }
-                      </span>
-                    </span>
-                  }
-                  @if (todaySession.topics.length > 1) {
-                    <button
-                      type="button"
-                      class="study-plan-today-title-toggle"
-                      [attr.aria-expanded]="isTodayTopicsExpanded"
-                      [attr.aria-label]="isTodayTopicsExpanded ? 'Ocultar temas de la sesión' : 'Mostrar temas de la sesión'"
-                      (click)="toggleTodayTopics()">
-                      <i
-                        class="fa-solid"
-                        [ngClass]="isTodayTopicsExpanded ? 'fa-chevron-up' : 'fa-chevron-down'"
-                        aria-hidden="true"></i>
-                    </button>
-                  }
+                  <span class="study-plan-today-topics-heading">Temas del examen</span>
                 </div>
 
-                @if (isTodayTopicsExpanded && todaySession.topics.length > 1) {
+                @if (todaySession.topics.length > 0) {
                   <div class="study-plan-today-topic-list">
                       <ul>
                         @for (topic of todaySession.topics; track $index) {
@@ -223,6 +189,8 @@
                         }
                       </ul>
                   </div>
+                } @else {
+                  <p class="study-plan-empty">Temario no disponible</p>
                 }
 
                 <p class="study-plan-topic-meta">
@@ -291,7 +259,10 @@
                         [attr.aria-expanded]="expandedSessionId === session.id"
                         [attr.aria-controls]="'study-plan-session-topics-' + session.id"
                         (click)="toggleUpcomingSession(session.id)">
-                        <span class="study-plan-session-day">{{ sessionShortDay(session) }}</span>
+                        <span class="study-plan-session-day">
+                          <span>{{ sessionShortDay(session) }}</span>
+                          <span class="study-plan-session-date">{{ sessionShortDate(session) }}</span>
+                        </span>
                         <strong>{{ sessionPreviewTitle(session) }}</strong>
                         <span class="study-plan-session-count">
                           {{ session.type === 'SIMULACRO' ? 'Simulacro' : '30 preg.' }}

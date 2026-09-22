@@ -1,0 +1,339 @@
+<main class="reinforcements-page">
+  <div class="rf-demo">
+    <span
+      ><i class="fa-solid fa-flask" aria-hidden="true"></i> Vista de demostración · Packs y precios de
+      ejemplo. Las compras son simuladas y se reinician al recargar.</span
+    ><button type="button" (click)="resetDemo()">Reiniciar demo</button>
+  </div>
+
+  <section class="rf-hero" aria-labelledby="rf-title">
+    <div>
+      <span class="rf-kicker"
+        ><i class="fa-solid fa-book-open" aria-hidden="true"></i> Refuerzo de temario</span
+      >
+      <h1 id="rf-title">Suma preguntas<br />a tu oposición</h1>
+      <p>
+        Contenido propio para los temas con menos preguntas en exámenes oficiales. Refuerza lo que necesitas y
+        da más variedad a tu preparación.
+      </p>
+    </div>
+    <div class="rf-stat">
+      <i class="fa-solid fa-layer-group" aria-hidden="true"></i><strong>{{ store.packs.length }}</strong
+      ><span>refuerzos de muestra<br />para explorar</span>
+    </div>
+  </section>
+
+  <aside class="rf-permanence">
+    <i class="fa-solid fa-infinity" aria-hidden="true"></i>
+    <div>
+      <h2>Un pago único. Tu refuerzo para siempre.</h2>
+      <p>
+        Los packs son contenido propio, no exámenes oficiales. Una vez disponibles, podrás practicarlos por
+        separado aunque no tengas Premium. Con Premium, las preguntas de los packs comprados se integrarán en
+        los exámenes personalizados y el plan de estudio cuando coincida su ámbito.
+      </p>
+    </div>
+  </aside>
+  @if (message) {
+    <p class="rf-feedback" role="status">{{ message }}</p>
+  }
+
+  <section aria-labelledby="rf-owned-title" class="rf-section">
+    <div class="rf-heading">
+      <div>
+        <span class="rf-kicker">Tu colección</span>
+        <h2 #collectionTitle id="rf-owned-title" tabindex="-1">Tus refuerzos</h2>
+        <p>Practícalos de forma independiente, con o sin Premium.</p>
+      </div>
+      <span class="rf-counter">{{ store.ownedPacks().length }} en tu colección de muestra</span>
+    </div>
+    <div class="rf-owned-grid">
+      @for (pack of store.ownedPacks(); track pack.id) {
+        <article class="rf-owned-card">
+          <span class="rf-icon"><i [class]="'fa-solid ' + icon(pack.type)" aria-hidden="true"></i></span>
+          <div>
+            <h3>{{ pack.title }}</h3>
+            <span class="rf-permanent-label"
+              ><i class="fa-solid fa-infinity" aria-hidden="true"></i> Acceso permanente · Demo</span
+            >
+          </div>
+          <button
+            #practiceButton
+            class="rf-text-button"
+            type="button"
+            (click)="open(pack, 'practice', practiceButton)"
+          >
+            Practicar <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </article>
+      } @empty {
+        <p class="rf-empty">
+          Todavía no tienes refuerzos. Explora el catálogo para encontrar el que necesitas.
+        </p>
+      }
+    </div>
+  </section>
+
+  <section aria-labelledby="rf-catalog-title" class="rf-section">
+    <div class="rf-heading">
+      <div>
+        <span class="rf-kicker">Explora el catálogo</span>
+        <h2 id="rf-catalog-title">¿Qué necesitas reforzar?</h2>
+        <p>Consulta qué incluye cada pack y a qué ámbito pertenece.</p>
+      </div>
+    </div>
+    <div class="rf-filters">
+      <label for="rf-search">Buscar refuerzos</label>
+      <div class="rf-search">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i
+        ><input
+          id="rf-search"
+          type="search"
+          [(ngModel)]="search"
+          placeholder="Busca un tema, comunidad, provincia o administración..."
+        />
+      </div>
+      <div class="rf-cascade">
+        <div>
+          <label for="rf-community">Comunidad autónoma</label
+          ><select id="rf-community" [(ngModel)]="community" (ngModelChange)="changeCommunity()">
+            <option value="">Todas las comunidades</option>
+            @for (territory of store.territories; track territory.name) {
+              <option [value]="territory.name">{{ territory.name }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label for="rf-province">Provincia</label
+          ><select
+            id="rf-province"
+            [(ngModel)]="province"
+            (ngModelChange)="changeProvince()"
+            [disabled]="!community"
+          >
+            <option value="">
+              {{ community ? 'Todas las provincias' : 'Selecciona una comunidad primero' }}
+            </option>
+            @for (item of provinces; track item.name) {
+              <option [value]="item.name">{{ item.name }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label for="rf-administration">Administración</label
+          ><select
+            id="rf-administration"
+            [(ngModel)]="administration"
+            [disabled]="administrations.length === 0"
+          >
+            <option value="">
+              {{
+                !province
+                  ? 'Selecciona una provincia primero'
+                  : administrations.length
+                    ? 'Todas las administraciones'
+                    : 'Sin administraciones registradas'
+              }}
+            </option>
+            @for (item of administrations; track item) {
+              <option [value]="item">{{ item }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="rf-results">
+      <p role="status">
+        {{ filteredPacks.length }}
+        {{ filteredPacks.length === 1 ? 'refuerzo encontrado' : 'refuerzos encontrados' }}
+      </p>
+      @if (search || community) {
+        <button type="button" class="rf-text-button" (click)="clearFilters()">
+          Limpiar filtros <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      }
+    </div>
+    <div class="rf-catalog">
+      @for (pack of filteredPacks; track pack.id) {
+        <article class="rf-pack">
+          <div class="rf-pack-top">
+            <span class="rf-type"
+              ><i [class]="'fa-solid ' + icon(pack.type)" aria-hidden="true"></i> {{ pack.type }}</span
+            ><span class="rf-quantity">{{ pack.questionCount }} preguntas</span>
+          </div>
+          <div>
+            <span class="rf-scope">{{ scope(pack) }}</span>
+            <h3>{{ pack.title }}</h3>
+            <p class="rf-location">{{ location(pack) }}</p>
+          </div>
+          <ul>
+            @for (bullet of pack.bullets; track bullet) {
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i>{{ bullet }}</li>
+            }
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i>Respuestas con explicación</li>
+          </ul>
+          <div class="rf-buy-row">
+            @if (store.isOwned(pack.id)) {
+              <span class="rf-owned-label"
+                ><i class="fa-solid fa-circle-check" aria-hidden="true"></i> En tu colección</span
+              ><button
+                #ownedPractice
+                type="button"
+                class="rf-secondary"
+                (click)="open(pack, 'practice', ownedPractice)"
+              >
+                Practicar
+              </button>
+            } @else {
+              <div class="rf-price">{{ price(pack.priceCents) }}<small>pago único</small></div>
+              <button
+                #buyButton
+                type="button"
+                class="rf-primary"
+                [attr.aria-label]="'Comprar ' + pack.title + ' (demostración)'"
+                (click)="open(pack, 'purchase', buyButton)"
+              >
+                Comprar <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+        </article>
+      } @empty {
+        <div class="rf-empty">
+          <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+          <h3>Sin refuerzos registrados para esta selección</h3>
+          <p>Prueba con otros filtros o cuéntanos qué tema te gustaría reforzar.</p>
+          <button class="rf-secondary" type="button" (click)="clearFilters()">Ver todo el catálogo</button>
+        </div>
+      }
+    </div>
+    <aside class="rf-contact">
+      <div>
+        <h3>¿Echas en falta algún tema?</h3>
+        <p>
+          Cuéntanos qué callejero o temario necesita más preguntas. Valoraremos tu propuesta para próximos
+          refuerzos.
+        </p>
+      </div>
+      <a class="rf-secondary" href="mailto:preparabombero2024@gmail.com"
+        ><i class="fa-regular fa-envelope" aria-hidden="true"></i> Escríbenos</a
+      >
+    </aside>
+  </section>
+
+  <dialog
+    #packDialog
+    class="rf-dialog"
+    aria-labelledby="rf-dialog-title"
+    (click)="backdropClick($event)"
+    (close)="restoreFocus()"
+  >
+    <div class="rf-dialog-inner">
+      <div class="rf-dialog-heading">
+        <div>
+          <span class="rf-kicker">{{
+            mode === 'purchase' ? 'Pago único · Demostración' : 'Práctica de muestra'
+          }}</span>
+          <h2 id="rf-dialog-title">
+            {{ mode === 'purchase' ? 'Comprar refuerzo' : 'Practica tu refuerzo' }}
+          </h2>
+        </div>
+        <button type="button" class="rf-close" aria-label="Cerrar ventana" (click)="close()">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      @if (selectedPack; as pack) {
+        <div class="rf-product">
+          <span class="rf-icon"><i [class]="'fa-solid ' + icon(pack.type)" aria-hidden="true"></i></span>
+          <div>
+            <h3>{{ pack.title }}</h3>
+            <p>{{ location(pack) }}</p>
+            <small>{{ pack.questionCount }} preguntas en el pack de ejemplo</small>
+          </div>
+        </div>
+        @if (mode === 'purchase') {
+          <div class="rf-modal-note">
+            <i class="fa-solid fa-infinity" aria-hidden="true"></i>
+            <p>
+              El pack será tuyo para siempre. Podrás practicarlo desde «Tus refuerzos» sin depender de
+              Premium. Su contenido es propio, no procede de exámenes oficiales.
+            </p>
+          </div>
+          <ul class="rf-includes">
+            @for (bullet of pack.bullets; track bullet) {
+              <li>{{ bullet }}</li>
+            }
+          </ul>
+          <div class="rf-total">
+            <span>Total · pago único</span><strong>{{ price(pack.priceCents) }}</strong>
+          </div>
+          <button type="button" class="rf-primary rf-wide" (click)="purchase()">
+            <i class="fa-solid fa-flask" aria-hidden="true"></i> Simular compra
+          </button>
+          <p class="rf-disclaimer">
+            No se te cobrará nada ni se solicitarán datos de pago. Este botón añade el pack a la colección de
+            demostración hasta que recargues la página.
+          </p>
+        } @else {
+          <p class="rf-disclaimer">
+            Estas 2 preguntas ilustran la interfaz. Los packs y sus preguntas reales todavía no están
+            disponibles.
+          </p>
+          @if (finished) {
+            <div class="rf-finish" role="status">
+              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+              <h3>Práctica de muestra terminada</h3>
+              <p>{{ correctCount }} de {{ questions.length }} respuestas correctas.</p>
+            </div>
+            <button class="rf-primary rf-wide" type="button" (click)="close()">Volver a mis refuerzos</button>
+          } @else {
+            @if (question; as question) {
+              <div class="rf-question">
+                <span class="rf-kicker">Pregunta {{ questionIndex + 1 }} de {{ questions.length }}</span>
+                <fieldset>
+                  <legend>{{ question.title }}</legend>
+                  @for (option of question.options; track $index; let i = $index) {
+                    <label
+                      class="rf-option"
+                      [class.rf-correct]="corrected && i === question.correctIndex"
+                      [class.rf-wrong]="corrected && i === selectedAnswer && i !== question.correctIndex"
+                      ><input
+                        type="radio"
+                        name="rf-answer"
+                        [value]="i"
+                        [(ngModel)]="selectedAnswer"
+                        [disabled]="corrected"
+                      />{{ option }}</label
+                    >
+                  }
+                </fieldset>
+              </div>
+              @if (corrected) {
+                <div class="rf-explanation" role="status">
+                  <strong>{{
+                    selectedAnswer === question.correctIndex
+                      ? '¡Respuesta correcta!'
+                      : 'Revisa la respuesta correcta'
+                  }}</strong>
+                  <p>{{ question.explanation }}</p>
+                </div>
+                <button class="rf-primary rf-wide" type="button" (click)="next()">
+                  {{ questionIndex === questions.length - 1 ? 'Finalizar práctica' : 'Siguiente pregunta' }}
+                </button>
+              } @else {
+                <button
+                  class="rf-primary rf-wide"
+                  type="button"
+                  [disabled]="selectedAnswer === null"
+                  (click)="correct()"
+                >
+                  Corregir respuesta
+                </button>
+              }
+            }
+          }
+        }
+      }
+    </div>
+  </dialog>
+</main>

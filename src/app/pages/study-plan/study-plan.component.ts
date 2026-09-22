@@ -63,7 +63,6 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   expandedSessionId: number | null = null;
   hasPlan = false;
   isRestDay = false;
-  isTodayTopicsExpanded = false;
   isStartingSession = false;
   isReviewingSessionId: number | null = null;
   isDeletingPlan = false;
@@ -279,9 +278,6 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
     this.expandedSessionId = this.expandedSessionId === sessionId ? null : sessionId;
   }
 
-  toggleTodayTopics(): void {
-    this.isTodayTopicsExpanded = !this.isTodayTopicsExpanded;
-  }
 
   get canSubmit(): boolean {
     return Boolean(
@@ -687,6 +683,14 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
       .format(new Date(session.date))
       .replace('.', '')
       .toUpperCase();
+  }
+
+  sessionShortDate(session: StudySession): string {
+    return new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'short',
+      timeZone: SPAIN_TIME_ZONE
+    }).format(new Date(session.date)).replace(/\./g, '');
   }
 
   sessionStatusLabel(session: StudySession): string {

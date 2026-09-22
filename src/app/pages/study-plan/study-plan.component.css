@@ -678,82 +678,6 @@
   gap: .75rem;
 }
 
-.study-plan-today-summary {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  align-items: center;
-  gap: .75rem;
-  margin-top: 1.1rem;
-  border: 1px solid #f3dfb8;
-  border-radius: .85rem;
-  background: #fffaf0;
-  padding: .7rem .8rem;
-}
-
-.study-plan-today-summary-copy {
-  display: flex;
-  width: 100%;
-  min-width: 0;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .25rem .5rem;
-}
-
-.study-plan-today-summary-label {
-  flex-basis: 100%;
-  color: #a56800;
-  font-size: .65rem;
-  font-weight: 800;
-  letter-spacing: .09em;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.study-plan-today-summary-topic {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: .4rem;
-  overflow: hidden;
-  color: #526174;
-  font-size: 1rem;
-  line-height: 1.3;
-  white-space: nowrap;
-}
-
-.study-plan-today-summary-topic > span:last-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.study-plan-today-summary-code {
-  flex: 0 0 auto;
-  border: 1px solid #e8c982;
-  border-radius: 999px;
-  background: #fff5df;
-  color: #73551e;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .72rem;
-  font-weight: 800;
-  line-height: 1;
-  padding: .34rem .5rem;
-}
-
-.study-plan-today-summary-more {
-  flex: 0 0 auto;
-  border: 1px solid #e8d7b2;
-  border-radius: 999px;
-  background: white;
-  color: #8b650f;
-  font-size: .72rem;
-  font-weight: 700;
-  line-height: 1;
-  padding: .34rem .5rem;
-  white-space: nowrap;
-}
-
 .study-plan-today-card h3 {
   flex: 1;
   margin: 1.1rem 0 .4rem;
@@ -773,24 +697,6 @@
   font-weight: 800;
   letter-spacing: .09em;
   text-transform: uppercase;
-}
-
-.study-plan-today-title-toggle {
-  display: grid;
-  place-items: center;
-  flex: 0 0 2.25rem;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-top: 1.1rem;
-  border: 1px solid #f2d59f;
-  border-radius: .55rem;
-  background: #fff9ed;
-  color: #a56800;
-  cursor: pointer;
-}
-
-.study-plan-today-title-toggle:hover {
-  background: #fff3d9;
 }
 
 .study-plan-today-topic-list {
@@ -1002,7 +908,7 @@
 
 .study-plan-session-row {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
   align-items: center;
   gap: .65rem;
   min-height: 3rem;
@@ -1031,9 +937,19 @@
 }
 
 .study-plan-session-day {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
   color: #6b7280;
   font-size: .7rem;
   font-weight: 800;
+}
+
+.study-plan-session-date {
+  color: #526174;
+  font-size: .68rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .study-plan-session-row strong {

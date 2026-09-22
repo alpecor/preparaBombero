@@ -5,6 +5,7 @@
 @import "../node_modules/quill/dist/quill.core.css";
 @import "../node_modules/quill/dist/quill.snow.css";
 @import "./app/pages/study-plan/study-plan.component.css";
+@import "./app/pages/reinforcements/reinforcements.component.css";
 @import "./app/pages/home/home.component.css";
 @import "./app/pages/profile/profile.component.css";
 @import "./app/pages/examenes-cards/examenes-cards.component.css";

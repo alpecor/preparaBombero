@@ -1,0 +1,578 @@
+app-reinforcements {
+  display: block;
+}
+.reinforcements-page {
+  max-width: 1180px;
+  margin: auto;
+  padding: 1.5rem 1.5rem 4rem;
+  color: #172033;
+  font-family: 'Open Sans', sans-serif;
+}
+.reinforcements-page h1,
+.reinforcements-page h2,
+.reinforcements-page h3,
+.reinforcements-page .rf-price,
+.reinforcements-page .rf-stat strong {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+}
+.reinforcements-page h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  margin: 0.8rem 0;
+}
+.reinforcements-page h2 {
+  font-size: 1.35rem;
+  margin: 0.35rem 0;
+}
+.reinforcements-page h3 {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.reinforcements-page p {
+  color: #596a81;
+  line-height: 1.7;
+  font-size: 0.84rem;
+}
+.reinforcements-page button,
+.reinforcements-page a,
+.reinforcements-page input,
+.reinforcements-page select {
+  font: inherit;
+}
+.reinforcements-page button,
+.reinforcements-page a {
+  touch-action: manipulation;
+}
+.reinforcements-page button {
+  cursor: pointer;
+}
+.reinforcements-page button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.reinforcements-page button:focus-visible,
+.reinforcements-page a:focus-visible,
+.reinforcements-page input:focus-visible,
+.reinforcements-page select:focus-visible {
+  outline: 3px solid #c98508;
+  outline-offset: 3px;
+}
+.reinforcements-page .rf-demo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  color: #596a81;
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+.reinforcements-page .rf-demo button {
+  flex-shrink: 0;
+  text-decoration: underline;
+}
+.reinforcements-page .rf-demo i {
+  margin-right: 0.3rem;
+}
+.reinforcements-page .rf-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 2.5rem;
+  border: 1px solid #f1dfbd;
+  border-radius: 1.4rem;
+  background: radial-gradient(ellipse at right top, #ffe7b4, transparent 70%), #fffaf0;
+}
+.reinforcements-page .rf-hero p {
+  max-width: 580px;
+}
+.reinforcements-page .rf-kicker {
+  color: #a56800;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.reinforcements-page .rf-kicker i {
+  margin-right: 0.4rem;
+}
+.reinforcements-page .rf-stat {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 0.2rem 0.8rem;
+  background: white;
+  border: 1px solid #efdfc1;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  flex-shrink: 0;
+}
+.reinforcements-page .rf-stat > i {
+  grid-row: span 2;
+  color: #c98508;
+  font-size: 1.6rem;
+}
+.reinforcements-page .rf-stat strong {
+  font-size: 1.9rem;
+  color: #a56800;
+}
+.reinforcements-page .rf-stat span {
+  font-size: 0.7rem;
+  color: #596a81;
+}
+.reinforcements-page .rf-permanence,
+.reinforcements-page .rf-modal-note {
+  display: flex;
+  gap: 1rem;
+  padding: 1.15rem;
+  background: white;
+  border: 1px solid #e3e8ed;
+  border-left: 3px solid #438767;
+  border-radius: 0.8rem;
+  margin: 1.2rem 0 2rem;
+}
+.reinforcements-page .rf-permanence > i,
+.reinforcements-page .rf-modal-note > i {
+  color: #438767;
+  font-size: 1.4rem;
+  padding-top: 0.4rem;
+}
+.reinforcements-page .rf-permanence h2 {
+  font-size: 0.86rem;
+  margin: 0 0 0.3rem;
+}
+.reinforcements-page .rf-permanence p {
+  font-size: 0.77rem;
+}
+.reinforcements-page .rf-section {
+  margin-top: 2.3rem;
+}
+.reinforcements-page .rf-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.reinforcements-page .rf-counter {
+  font-size: 0.7rem;
+  color: #596a81;
+}
+.reinforcements-page .rf-owned-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.reinforcements-page .rf-owned-card {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: white;
+  border: 1px solid #e1e6ed;
+  border-radius: 1rem;
+  padding: 1.1rem;
+}
+.reinforcements-page .rf-owned-card > div {
+  flex: 1;
+}
+.reinforcements-page .rf-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.75rem;
+  background: #fff2d6;
+  color: #a56800;
+}
+.reinforcements-page .rf-permanent-label,
+.reinforcements-page .rf-owned-label {
+  display: block;
+  color: #347554;
+  font-size: 0.69rem;
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+.reinforcements-page .rf-text-button {
+  color: #956000;
+  font-size: 0.74rem;
+  font-weight: 700;
+  background: none;
+  border: 0;
+}
+.reinforcements-page .rf-filters {
+  background: white;
+  border: 1px solid #e1e6ed;
+  border-radius: 1rem;
+  padding: 1.2rem;
+}
+.reinforcements-page .rf-filters label {
+  display: block;
+  font-size: 0.69rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.reinforcements-page .rf-search {
+  position: relative;
+}
+.reinforcements-page .rf-search i {
+  position: absolute;
+  left: 0.9rem;
+  top: 1rem;
+  color: #77869a;
+}
+.reinforcements-page .rf-search input {
+  padding-left: 2.5rem;
+}
+.reinforcements-page .rf-cascade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.reinforcements-page input[type='search'],
+.reinforcements-page select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #dce3eb;
+  border-radius: 0.65rem;
+  background: #f9fafb;
+  font-size: 0.78rem;
+  min-height: 2.7rem;
+  padding: 0.65rem 0.8rem;
+}
+.reinforcements-page input[type='search'] {
+  padding-left: 2.5rem;
+}
+.reinforcements-page select:disabled {
+  color: #7b8796;
+  background: #f1f3f5;
+}
+.reinforcements-page .rf-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+.reinforcements-page .rf-results p {
+  font-size: 0.75rem;
+}
+.reinforcements-page .rf-catalog {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.reinforcements-page .rf-pack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #e1e6ed;
+  border-radius: 1rem;
+}
+.reinforcements-page .rf-pack-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.reinforcements-page .rf-type {
+  background: #fff3d9;
+  color: #956000;
+  border-radius: 2rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+.reinforcements-page .rf-quantity,
+.reinforcements-page .rf-scope {
+  font-size: 0.65rem;
+  color: #68778c;
+}
+.reinforcements-page .rf-scope {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.reinforcements-page .rf-location {
+  font-size: 0.72rem;
+  color: #956000;
+  margin-top: 0.5rem;
+}
+.reinforcements-page .rf-pack ul {
+  display: grid;
+  gap: 0.45rem;
+}
+.reinforcements-page .rf-pack li {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: #596a81;
+  line-height: 1.6;
+}
+.reinforcements-page .rf-pack li i {
+  color: #438767;
+  padding-top: 0.25rem;
+}
+.reinforcements-page .rf-buy-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid #edf0f4;
+  padding-top: 1rem;
+  margin-top: auto;
+}
+.reinforcements-page .rf-price {
+  font-size: 1.15rem;
+}
+.reinforcements-page .rf-price small {
+  display: block;
+  color: #68778c;
+  font-size: 0.63rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+}
+.reinforcements-page .rf-primary,
+.reinforcements-page .rf-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.65rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-decoration: none;
+  border: 1px solid #de9a17;
+}
+.reinforcements-page .rf-primary {
+  background: #de9a17;
+  color: white;
+  box-shadow: 0 4px 12px #de9a1724;
+}
+.reinforcements-page .rf-primary:hover:not(:disabled) {
+  background: #c98508;
+}
+.reinforcements-page .rf-secondary {
+  background: #fffaf0;
+  color: #956000;
+}
+.reinforcements-page .rf-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border: 1px solid #f0dfbd;
+  border-radius: 1rem;
+  padding: 1.3rem;
+  margin-top: 1.5rem;
+  background: #fffaf0;
+}
+.reinforcements-page .rf-contact a {
+  flex-shrink: 0;
+}
+.reinforcements-page .rf-contact p {
+  font-size: 0.77rem;
+  margin-top: 0.4rem;
+}
+.reinforcements-page .rf-empty {
+  grid-column: 1/-1;
+  text-align: center;
+  background: white;
+  border: 1px dashed #cbd5e1;
+  border-radius: 1rem;
+  padding: 2.5rem 1rem;
+}
+.reinforcements-page .rf-empty > i {
+  font-size: 1.8rem;
+  color: #a56800;
+  margin-bottom: 1rem;
+}
+.reinforcements-page .rf-empty button {
+  margin-top: 1rem;
+}
+.reinforcements-page .rf-feedback {
+  padding: 1rem;
+  background: #edf7f0;
+  border: 1px solid #bcd8c5;
+  border-radius: 0.7rem;
+  color: #347554;
+}
+.reinforcements-page .rf-dialog {
+  padding: 0;
+  border: 0;
+  border-radius: 1.2rem;
+  width: min(560px, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  color: #172033;
+}
+.reinforcements-page .rf-dialog::backdrop {
+  background: #111827b3;
+}
+.reinforcements-page .rf-dialog-inner {
+  padding: 1.7rem;
+}
+.reinforcements-page .rf-dialog-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.reinforcements-page .rf-close {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border: 1px solid #e1e6ed;
+  border-radius: 0.65rem;
+  background: white;
+  color: #596a81;
+}
+.reinforcements-page .rf-product {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  background: #fffaf0;
+  padding: 1rem;
+  border-radius: 0.8rem;
+}
+.reinforcements-page .rf-product p,
+.reinforcements-page .rf-product small {
+  font-size: 0.72rem;
+  color: #68778c;
+}
+.reinforcements-page .rf-modal-note {
+  background: #edf7f0;
+  border: 0;
+  margin: 1rem 0;
+}
+.reinforcements-page .rf-modal-note p {
+  font-size: 0.75rem;
+  color: #347554;
+}
+.reinforcements-page .rf-includes {
+  list-style: disc;
+  padding-left: 1.2rem;
+  font-size: 0.78rem;
+  color: #596a81;
+}
+.reinforcements-page .rf-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e1e6ed;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+.reinforcements-page .rf-total strong {
+  font-size: 1.5rem;
+}
+.reinforcements-page .rf-wide {
+  width: 100%;
+  margin-top: 1rem;
+}
+.reinforcements-page .rf-disclaimer {
+  font-size: 0.72rem;
+  margin: 1rem 0 0;
+}
+.reinforcements-page .rf-question {
+  margin-top: 1.2rem;
+}
+.reinforcements-page .rf-question legend {
+  font-weight: 700;
+  margin: 0.6rem 0 1rem;
+  font-size: 0.9rem;
+}
+.reinforcements-page .rf-option {
+  display: flex;
+  align-items: start;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+  border: 1px solid #dce3eb;
+  padding: 0.85rem;
+  border-radius: 0.7rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.reinforcements-page .rf-option input {
+  margin-top: 0.2rem;
+  accent-color: #c98508;
+}
+.reinforcements-page .rf-correct {
+  border-color: #438767;
+  background: #edf7f0;
+}
+.reinforcements-page .rf-wrong {
+  border-color: #b5473b;
+  background: #fff1ef;
+}
+.reinforcements-page .rf-explanation {
+  padding: 1rem;
+  background: #edf7f0;
+  border-radius: 0.7rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+.reinforcements-page .rf-finish {
+  text-align: center;
+  padding: 1.5rem 0;
+}
+.reinforcements-page .rf-finish i {
+  color: #438767;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 1000px) {
+  .reinforcements-page .rf-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .reinforcements-page .rf-owned-grid {
+    grid-template-columns: 1fr;
+  }
+  .reinforcements-page .rf-cascade {
+    gap: 0.6rem;
+  }
+}
+@media (max-width: 650px) {
+  .reinforcements-page {
+    padding: 1rem 1rem 3rem;
+  }
+  .reinforcements-page .rf-hero {
+    padding: 1.5rem;
+    align-items: start;
+    flex-direction: column;
+  }
+  .reinforcements-page .rf-stat {
+    grid-template-columns: auto auto auto;
+    padding: 0.8rem 1rem;
+  }
+  .reinforcements-page .rf-stat > i {
+    grid-row: auto;
+  }
+  .reinforcements-page .rf-catalog,
+  .reinforcements-page .rf-cascade {
+    grid-template-columns: 1fr;
+  }
+  .reinforcements-page .rf-heading,
+  .reinforcements-page .rf-contact,
+  .reinforcements-page .rf-demo {
+    flex-direction: column;
+    align-items: start;
+  }
+  .reinforcements-page .rf-owned-card {
+    flex-wrap: wrap;
+  }
+  .reinforcements-page .rf-owned-card > div {
+    min-width: 150px;
+  }
+  .reinforcements-page .rf-dialog-inner {
+    padding: 1.2rem;
+  }
+}

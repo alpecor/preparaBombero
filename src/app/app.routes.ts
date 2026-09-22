@@ -49,6 +49,11 @@ export const routes: Routes = [
     title: 'Prepara Bombero',
     children: [
       {
+        path: 'refuerzos',
+        loadComponent: () => import('./pages/reinforcements/reinforcements.component').then(m => m.ReinforcementsComponent),
+        title: 'Refuerzos | Prepara Bombero'
+      },
+      {
         path: 'informacion',
         loadComponent: () => import('./pages/information/information.component').then(m => m.InformationComponent),
         title: 'Información | Prepara Bombero'

@@ -78,103 +78,102 @@
 
     <div id="main-navigation" class="site-header-content">
       <nav class="site-main-nav" aria-label="Navegación principal">
-        @if(isNotAuth) {
-          <a
-            class="site-nav-item"
-            [routerLink]="['/']"
-            [routerLinkActiveOptions]="{ exact: true }"
-            routerLinkActive="site-nav-item-active"
-            (click)="closeMobileMenu()">
-            <i class="fa-solid fa-house"></i>
-            <span>Inicio</span>
-          </a>
+        <a
+        class="site-nav-item"
+        [routerLink]="['/']"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="site-nav-item-active"
+        (click)="closeMobileMenu()">
+        <i class="fa-solid fa-house"></i>
+        <span>Inicio</span>
+        </a>
+        @if (isNotAuth) {
           <button type="button" class="site-nav-item" (click)="onExamsClick()">
-            <i class="fa-solid fa-folder-open"></i>
-            <span>Exámenes</span>
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Exámenes</span>
           </button>
         }
-
-        @if(isAdmin || isUser) {
+        @if (isAdmin || isUser) {
           <a
-            class="site-nav-item"
-            [routerLink]="['/']"
-            [routerLinkActiveOptions]="{ exact: true }"
-            routerLinkActive="site-nav-item-active"
-            (click)="closeMobileMenu()">
-            <i class="fa-solid fa-house"></i>
-            <span>Inicio</span>
+          class="site-nav-item"
+          [routerLink]="['/examenes']"
+          routerLinkActive="site-nav-item-active"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-folder-open"></i>
+          <span>Exámenes</span>
           </a>
           <a
-            class="site-nav-item"
-            [routerLink]="['/examenes']"
-            routerLinkActive="site-nav-item-active"
-            (click)="closeMobileMenu()">
-            <i class="fa-solid fa-folder-open"></i>
-            <span>Exámenes</span>
+          class="site-nav-item"
+          [routerLink]="['/plan-estudio']"
+          routerLinkActive="site-nav-item-active"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span>Plan de estudio</span>
           </a>
           <button
-            type="button"
-            class="site-nav-item"
-            [class.site-nav-item-active]="isRouteActive('/preguntas-guardadas')"
-            (click)="onSavedClick()">
-            <i class="fa-regular fa-floppy-disk"></i>
-            <span>Guardadas</span>
+          type="button"
+          class="site-nav-item"
+          [class.site-nav-item-active]="isRouteActive('/preguntas-guardadas')"
+          (click)="onSavedClick()">
+          <i class="fa-regular fa-floppy-disk"></i>
+          <span>Guardadas</span>
           </button>
+        }
+        <a
+        class="site-nav-item"
+        [routerLink]="['/refuerzos']"
+        routerLinkActive="site-nav-item-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMobileMenu()">
+        <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+        <span>Refuerzo</span>
+        </a>
+        @if (isAdmin || isUser) {
           <a
-            class="site-nav-item"
-            [routerLink]="['/plan-estudio']"
-            routerLinkActive="site-nav-item-active"
-            (click)="closeMobileMenu()">
-            <i class="fa-solid fa-calendar-check"></i>
-            <span>Plan de estudio</span>
-          </a>
-
-          @if(isAdmin) {
-            <span class="site-nav-divider" aria-hidden="true"></span>
-            <a
-              class="site-nav-item site-nav-item-admin"
-              [routerLink]="['/admin/examenes']"
-              routerLinkActive="site-nav-item-active"
-              (click)="closeMobileMenu()">
-              <i class="fa-solid fa-table-list"></i>
-              <span>Administración</span>
-            </a>
-            <a
-              class="site-nav-item site-nav-item-admin"
-              [routerLink]="['/admin/reportes']"
-              routerLinkActive="site-nav-item-active"
-              (click)="closeMobileMenu()">
-              <i class="fa-solid fa-ban"></i>
-              <span>Reportes</span>
-            </a>
-            <a
-              class="site-nav-item site-nav-item-admin"
-              [routerLink]="['/admin/temario']"
-              routerLinkActive="site-nav-item-active"
-              (click)="closeMobileMenu()">
-              <i class="fa-solid fa-book"></i>
-              <span>Temario</span>
-            </a>
-          }
-
-          <a
-            class="site-nav-item"
-            [routerLink]="['/profile']"
-            routerLinkActive="site-nav-item-active"
-            (click)="closeMobileMenu()">
-            <i class="fa-solid fa-user"></i>
-            <span>Perfil</span>
+          class="site-nav-item"
+          [routerLink]="['/profile']"
+          routerLinkActive="site-nav-item-active"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-user"></i>
+          <span>Perfil</span>
           </a>
         }
         <a
-          class="site-nav-item"
-          [routerLink]="['/informacion']"
-          routerLinkActive="site-nav-item-active"
-          ariaCurrentWhenActive="page"
-          (click)="closeMobileMenu()">
-          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-          <span>Información</span>
+        class="site-nav-item"
+        [routerLink]="['/informacion']"
+        routerLinkActive="site-nav-item-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMobileMenu()">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <span>Información</span>
         </a>
+        @if (isAdmin) {
+          <span class="site-nav-divider" aria-hidden="true"></span>
+          <a
+          class="site-nav-item site-nav-item-admin"
+          [routerLink]="['/admin/examenes']"
+          routerLinkActive="site-nav-item-active"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-table-list"></i>
+          <span>Administración</span>
+          </a>
+          <a
+          class="site-nav-item site-nav-item-admin"
+          [routerLink]="['/admin/reportes']"
+          routerLinkActive="site-nav-item-active"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-ban"></i>
+          <span>Reportes</span>
+          </a>
+          <a
+          class="site-nav-item site-nav-item-admin"
+          [routerLink]="['/admin/temario']"
+          routerLinkActive="site-nav-item-active"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-book"></i>
+          <span>Temario</span>
+          </a>
+        }
       </nav>
 
       <div class="site-header-actions">

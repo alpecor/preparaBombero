@@ -29,6 +29,29 @@ export class InformationComponent {
 
   readonly guides: Guide[] = [
     {
+      id: 'refuerzos', icon: 'fa-layer-group', title: 'Refuerzos',
+      summary: 'Amplía los temas con pocas preguntas oficiales mediante packs de contenido propio.',
+      pages: [
+        {
+          title: 'Encuentra tu refuerzo',
+          steps: [
+            'Entra en Refuerzos y busca un tema o filtra por comunidad, provincia y administración.',
+            'Consulta el ámbito, las preguntas, el contenido y el precio de cada pack. Son packs de pago único, independientes de Premium.',
+            'En esta demostración puedes simular una compra para añadir el pack a Tu colección y probar su práctica.'
+          ],
+          note: 'Los packs, precios y preguntas son de ejemplo. No se realizan cobros y la colección de muestra se reinicia al recargar.'
+        },
+        {
+          title: 'Practica tus packs',
+          steps: [
+            'Desde Tus refuerzos, pulsa Practicar. El acceso independiente a los packs comprados no dependerá de Premium.',
+            'Selecciona una respuesta, corrígela y consulta la explicación antes de pasar a la siguiente.',
+            'Cuando la función esté conectada, con Premium las preguntas de los packs comprados se integrarán en los exámenes personalizados y el plan de estudio según su ámbito. Los exámenes oficiales seguirán siendo independientes.'
+          ]
+        }
+      ]
+    },
+    {
       "id": "examenes",
       "icon": "fa-list-check",
       "title": "Exámenes",
