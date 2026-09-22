@@ -17,9 +17,9 @@ app-reinforcements {
   font-weight: 800;
 }
 .reinforcements-page h1 {
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  line-height: 1.15;
-  margin: 0.8rem 0;
+  margin: 0.5rem 0 0.4rem;
+  font-size: clamp(1.8rem, 4vw, 2.65rem);
+  line-height: 1.1;
 }
 .reinforcements-page h2 {
   font-size: 1.35rem;
@@ -63,7 +63,7 @@ app-reinforcements {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
   color: #596a81;
   font-size: 0.7rem;
   line-height: 1.6;
@@ -78,49 +78,62 @@ app-reinforcements {
 .reinforcements-page .rf-hero {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 2rem;
-  padding: 2.5rem;
-  border: 1px solid #f1dfbd;
-  border-radius: 1.4rem;
-  background: radial-gradient(ellipse at right top, #ffe7b4, transparent 70%), #fffaf0;
+  min-height: 10.5rem;
+  overflow: hidden;
+  padding: 1.7rem 2rem;
+  border: 1px solid #f0d99f;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(100deg, rgba(255, 248, 232, 0.98), rgba(255, 252, 246, 0.91)),
+    radial-gradient(circle at 90% 20%, rgba(222, 154, 23, 0.17), transparent 38%);
+  box-shadow: 0 0.6rem 1.5rem rgba(148, 103, 24, 0.07);
+}
+.reinforcements-page .rf-hero-copy {
+  max-width: 45rem;
 }
 .reinforcements-page .rf-hero p {
-  max-width: 580px;
+  max-width: 38rem;
+  margin: 0;
+  color: #6d7b8d;
+  font-size: 0.86rem;
+  line-height: 1.6;
 }
 .reinforcements-page .rf-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
   color: #a56800;
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .reinforcements-page .rf-kicker i {
-  margin-right: 0.4rem;
+  color: #de9a17;
 }
 .reinforcements-page .rf-stat {
-  display: grid;
-  grid-template-columns: auto auto;
+  display: flex;
   align-items: center;
-  gap: 0.2rem 0.8rem;
-  background: white;
-  border: 1px solid #efdfc1;
-  border-radius: 1rem;
-  padding: 1.2rem;
+  gap: 0.65rem;
+  border: 1px solid #e8c982;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.76);
+  padding: 0.7rem 0.9rem;
   flex-shrink: 0;
 }
-.reinforcements-page .rf-stat > i {
-  grid-row: span 2;
-  color: #c98508;
-  font-size: 1.6rem;
-}
 .reinforcements-page .rf-stat strong {
-  font-size: 1.9rem;
-  color: #a56800;
+  color: #b97805;
+  font-size: 1.35rem;
+  line-height: 1;
 }
 .reinforcements-page .rf-stat span {
-  font-size: 0.7rem;
-  color: #596a81;
+  max-width: 5rem;
+  color: #80601f;
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.25;
 }
 .reinforcements-page .rf-permanence,
 .reinforcements-page .rf-modal-note {
@@ -203,15 +216,64 @@ app-reinforcements {
   border: 0;
 }
 .reinforcements-page .rf-filters {
-  background: white;
-  border: 1px solid #e1e6ed;
-  border-radius: 1rem;
-  padding: 1.2rem;
+  overflow: visible;
+  border: 1px solid #f0d99f;
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(100deg, rgba(255, 248, 232, 0.98), rgba(255, 252, 246, 0.91)),
+    radial-gradient(circle at 90% 20%, rgba(222, 154, 23, 0.17), transparent 38%);
+  box-shadow: 0 0.6rem 1.5rem rgba(148, 103, 24, 0.07);
+  padding: 1.4rem;
+}
+.reinforcements-page .rf-filter-heading,
+.reinforcements-page .rf-filter-heading-copy {
+  display: flex;
+  align-items: center;
+}
+.reinforcements-page .rf-filter-heading {
+  justify-content: space-between;
+  gap: 1rem;
+}
+.reinforcements-page .rf-filter-heading-copy {
+  gap: 0.75rem;
+}
+.reinforcements-page .rf-filter-icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 2.5rem;
+  border-radius: 0.7rem;
+  background: #fff2d6;
+  color: #c98508;
+  font-size: 1rem;
+}
+.reinforcements-page .rf-filter-heading h3 {
+  color: #172033;
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+.reinforcements-page .rf-filter-heading p {
+  margin-top: 0.18rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+.reinforcements-page .rf-filter-total {
+  flex: 0 0 auto;
+  color: #a56800;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.reinforcements-page .rf-filter-fields {
+  margin-top: 1.15rem;
+  border-top: 1px solid rgba(240, 217, 159, 0.78);
+  padding-top: 1.05rem;
 }
 .reinforcements-page .rf-filters label {
   display: block;
+  color: #80601f;
   font-size: 0.69rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 0.5rem;
 }
 .reinforcements-page .rf-search {
@@ -232,13 +294,12 @@ app-reinforcements {
   gap: 1rem;
   margin-top: 1rem;
 }
-.reinforcements-page input[type='search'],
-.reinforcements-page select {
+.reinforcements-page input[type='search'] {
   width: 100%;
   min-width: 0;
-  border: 1px solid #dce3eb;
+  border: 1px solid #d9bd79;
   border-radius: 0.65rem;
-  background: #f9fafb;
+  background: white;
   font-size: 0.78rem;
   min-height: 2.7rem;
   padding: 0.65rem 0.8rem;
@@ -246,9 +307,109 @@ app-reinforcements {
 .reinforcements-page input[type='search'] {
   padding-left: 2.5rem;
 }
-.reinforcements-page select:disabled {
-  color: #7b8796;
+.reinforcements-page .rf-select-wrap {
+  position: relative;
+}
+.reinforcements-page .rf-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.7rem;
+  border: 1px solid #d9bd79;
+  border-radius: 0.65rem;
+  background: white;
+  color: #172033;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.reinforcements-page .rf-select > span,
+.reinforcements-page .rf-option > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reinforcements-page .rf-select > i {
+  flex: 0 0 auto;
+  color: #718096;
+  font-size: 0.7rem;
+}
+.reinforcements-page .rf-select:hover:not(:disabled) {
+  border-color: #de9a17;
+  background: white;
+}
+.reinforcements-page .rf-select:focus-visible {
+  border-color: #c98508;
+  box-shadow: 0 0 0 0.2rem rgba(222, 154, 23, 0.14);
+  outline: none;
+}
+.reinforcements-page .rf-select:disabled {
   background: #f1f3f5;
+  color: #aeb6c2;
+  cursor: not-allowed;
+}
+.reinforcements-page .rf-select:disabled > i {
+  color: #b8c0cb;
+}
+.reinforcements-page .rf-option-menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  left: 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  border: 1px solid #e1e7ef;
+  border-radius: 0.85rem;
+  background: white;
+  box-shadow: 0 0.8rem 1.6rem rgba(30, 41, 59, 0.14);
+  padding: 0.35rem;
+}
+.reinforcements-page .rf-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 2.6rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: #526174;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.reinforcements-page .rf-option:hover,
+.reinforcements-page .rf-option:focus-visible {
+  background: #fff8e8;
+  color: #172033;
+  outline: none;
+}
+.reinforcements-page .rf-option-active {
+  background: #fff8e8;
+  color: #a56800;
+  font-weight: 700;
+}
+.reinforcements-page .rf-option > i {
+  flex: 0 0 auto;
+  color: #c98508;
+  font-size: 0.75rem;
 }
 .reinforcements-page .rf-results {
   display: flex;
@@ -272,6 +433,18 @@ app-reinforcements {
   background: white;
   border: 1px solid #e1e6ed;
   border-radius: 1rem;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.reinforcements-page .rf-pack:hover,
+.reinforcements-page .rf-pack:focus-within {
+  border-color: #e4c681;
+  background: #fffaf0;
+  box-shadow: 0 0.7rem 1.5rem rgba(148, 103, 24, 0.13);
+  transform: translateY(-0.2rem);
 }
 .reinforcements-page .rf-pack-top {
   display: flex;
@@ -550,11 +723,7 @@ app-reinforcements {
     flex-direction: column;
   }
   .reinforcements-page .rf-stat {
-    grid-template-columns: auto auto auto;
     padding: 0.8rem 1rem;
-  }
-  .reinforcements-page .rf-stat > i {
-    grid-row: auto;
   }
   .reinforcements-page .rf-catalog,
   .reinforcements-page .rf-cascade {
@@ -562,9 +731,13 @@ app-reinforcements {
   }
   .reinforcements-page .rf-heading,
   .reinforcements-page .rf-contact,
-  .reinforcements-page .rf-demo {
+  .reinforcements-page .rf-demo,
+  .reinforcements-page .rf-filter-heading {
     flex-direction: column;
     align-items: start;
+  }
+  .reinforcements-page .rf-filters {
+    padding: 1.1rem;
   }
   .reinforcements-page .rf-owned-card {
     flex-wrap: wrap;

@@ -1,7 +1,9 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReinforcementsService } from './reinforcements.service';
 import { PracticeQuestion, ReinforcementPack } from './reinforcements.models';
+
+type ReinforcementDropdown = 'community' | 'province' | 'administration' | null;
 
 @Component({
   selector: 'app-reinforcements',
@@ -10,13 +12,18 @@ import { PracticeQuestion, ReinforcementPack } from './reinforcements.models';
   templateUrl: './reinforcements.component.html',
 })
 export class ReinforcementsComponent {
+  private readonly alphabeticalOrder = new Intl.Collator('es', { sensitivity: 'base' });
   readonly store = inject(ReinforcementsService);
+  readonly territories = [...this.store.territories].sort((a, b) =>
+    this.alphabeticalOrder.compare(a.name, b.name),
+  );
   @ViewChild('packDialog') dialog!: ElementRef<HTMLDialogElement>;
   @ViewChild('collectionTitle') collectionTitle!: ElementRef<HTMLElement>;
   search = '';
   community = '';
   province = '';
   administration = '';
+  activeDropdown: ReinforcementDropdown = null;
   message = '';
   selectedPack: ReinforcementPack | null = null;
   mode: 'purchase' | 'practice' = 'purchase';
@@ -29,11 +36,15 @@ export class ReinforcementsComponent {
   private trigger?: HTMLElement;
 
   get provinces() {
-    return this.store.territories.find((t) => t.name === this.community)?.provinces ?? [];
+    return [...(this.store.territories.find((t) => t.name === this.community)?.provinces ?? [])].sort(
+      (a, b) => this.alphabeticalOrder.compare(a.name, b.name),
+    );
   }
 
   get administrations() {
-    return this.provinces.find((p) => p.name === this.province)?.administrations ?? [];
+    return [...(this.provinces.find((p) => p.name === this.province)?.administrations ?? [])].sort(
+      this.alphabeticalOrder.compare,
+    );
   }
 
   get filteredPacks(): ReinforcementPack[] {
@@ -58,13 +69,64 @@ export class ReinforcementsComponent {
     this.province = '';
     this.administration = '';
   }
+
   changeProvince(): void {
     this.administration = '';
   }
+
+  toggleDropdown(dropdown: Exclude<ReinforcementDropdown, null>): void {
+    if (
+      (dropdown === 'province' && !this.community) ||
+      (dropdown === 'administration' && this.administrations.length === 0)
+    ) {
+      return;
+    }
+
+    this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+  }
+
+  selectCommunity(community: string): void {
+    this.community = community;
+    this.changeCommunity();
+    this.activeDropdown = null;
+  }
+
+  selectProvince(province: string): void {
+    this.province = province;
+    this.changeProvince();
+    this.activeDropdown = null;
+  }
+
+  selectAdministration(administration: string): void {
+    this.administration = administration;
+    this.activeDropdown = null;
+  }
+
+  provinceLabel(): string {
+    return this.province || (this.community ? 'Todas las provincias' : 'Selecciona una comunidad primero');
+  }
+
+  administrationLabel(): string {
+    if (this.administration) return this.administration;
+    if (!this.province) return 'Selecciona una provincia primero';
+    return this.administrations.length ? 'Todas las administraciones' : 'Sin administraciones registradas';
+  }
+
+  @HostListener('document:click')
+  closeDropdown(): void {
+    this.activeDropdown = null;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeDropdownOnEscape(): void {
+    this.activeDropdown = null;
+  }
+
   clearFilters(): void {
     this.search = '';
     this.community = '';
     this.changeCommunity();
+    this.activeDropdown = null;
   }
 
   price(cents: number): string {

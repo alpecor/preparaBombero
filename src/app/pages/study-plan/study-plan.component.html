@@ -78,18 +78,43 @@
 
             <div class="study-plan-settings-section">
               <span class="study-plan-settings-label">Nueva estimación - Tiempo estimado hasta el examen</span>
-              <div class="study-plan-select-wrap">
-                <select
+              <div class="study-plan-select-wrap study-plan-custom-select-wrap">
+                <button
+                  type="button"
                   id="settings-duration"
-                  [(ngModel)]="settingsSelectedDuration"
+                  class="study-plan-select"
                   [disabled]="isUpdatingExamDate"
-                  (ngModelChange)="onSettingsDurationChange($event)">
-                  @for (duration of durationOptions; track duration.value) {
-                    <option [value]="duration.value">
-                      {{ duration.label }}{{ isCurrentDuration(duration) ? ' (actual)' : '' }}
-                    </option>
-                  }
-                </select>
+                  [attr.aria-expanded]="activeSetupDropdown === 'duration'"
+                  aria-haspopup="listbox"
+                  aria-label="Selecciona una nueva estimación hasta el examen"
+                  (click)="$event.stopPropagation(); toggleSetupDropdown('duration')">
+                  <span>{{ settingsDurationLabel() }}</span>
+                  <i
+                    class="fa-solid"
+                    [ngClass]="activeSetupDropdown === 'duration' ? 'fa-chevron-up' : 'fa-chevron-down'">
+                  </i>
+                </button>
+                @if (activeSetupDropdown === 'duration') {
+                  <div
+                    class="study-plan-option-menu"
+                    role="listbox"
+                    aria-label="Tiempo estimado hasta el examen">
+                    @for (duration of durationOptions; track duration.value) {
+                      <button
+                        type="button"
+                        role="option"
+                        class="study-plan-option"
+                        [class.study-plan-option-active]="settingsSelectedDuration === durationValue(duration)"
+                        [attr.aria-selected]="settingsSelectedDuration === durationValue(duration)"
+                        (click)="selectSettingsDuration(durationValue(duration))">
+                        <span>{{ duration.label }}{{ isCurrentDuration(duration) ? ' (actual)' : '' }}</span>
+                        @if (settingsSelectedDuration === durationValue(duration)) {
+                          <i class="fa-solid fa-check"></i>
+                        }
+                      </button>
+                    }
+                  </div>
+                }
               </div>
             </div>
 

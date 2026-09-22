@@ -20,6 +20,31 @@ describe('Refuerzos demo', () => {
     expect(component.filteredPacks.length).toBe(0);
   });
 
+  it('sorts every location dropdown alphabetically in Spanish', () => {
+    const sortedCommunities = [...component.territories].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+    expect(component.territories.map((item) => item.name)).toEqual(
+      sortedCommunities.map((item) => item.name),
+    );
+
+    component.selectCommunity('Andalucía');
+    expect(component.provinces.map((item) => item.name)).toEqual([
+      'Almería',
+      'Cádiz',
+      'Córdoba',
+      'Granada',
+      'Huelva',
+      'Jaén',
+      'Málaga',
+      'Sevilla',
+    ]);
+
+    component.selectProvince('Sevilla');
+    expect(component.administrations).toEqual([
+      'Ayuntamiento de Sevilla',
+      'Consorcio Provincial de Bomberos',
+    ]);
+  });
+
   it('combines accent-insensitive search and hierarchical filters without duplicating ancestors', () => {
     component.search = 'cadiz';
     expect(component.filteredPacks.length).toBe(1);

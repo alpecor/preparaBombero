@@ -128,6 +128,15 @@
         <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
         <span>Refuerzo</span>
         </a>
+        <a
+        class="site-nav-item"
+        [routerLink]="['/informacion']"
+        routerLinkActive="site-nav-item-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMobileMenu()">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <span>Información</span>
+        </a>
         @if (isAdmin || isUser) {
           <a
           class="site-nav-item"
@@ -138,41 +147,57 @@
           <span>Perfil</span>
           </a>
         }
-        <a
-        class="site-nav-item"
-        [routerLink]="['/informacion']"
-        routerLinkActive="site-nav-item-active"
-        ariaCurrentWhenActive="page"
-        (click)="closeMobileMenu()">
-        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        <span>Información</span>
-        </a>
         @if (isAdmin) {
           <span class="site-nav-divider" aria-hidden="true"></span>
-          <a
-          class="site-nav-item site-nav-item-admin"
-          [routerLink]="['/admin/examenes']"
-          routerLinkActive="site-nav-item-active"
-          (click)="closeMobileMenu()">
-          <i class="fa-solid fa-table-list"></i>
-          <span>Administración</span>
-          </a>
-          <a
-          class="site-nav-item site-nav-item-admin"
-          [routerLink]="['/admin/reportes']"
-          routerLinkActive="site-nav-item-active"
-          (click)="closeMobileMenu()">
-          <i class="fa-solid fa-ban"></i>
-          <span>Reportes</span>
-          </a>
-          <a
-          class="site-nav-item site-nav-item-admin"
-          [routerLink]="['/admin/temario']"
-          routerLinkActive="site-nav-item-active"
-          (click)="closeMobileMenu()">
-          <i class="fa-solid fa-book"></i>
-          <span>Temario</span>
-          </a>
+          <div class="site-admin-menu">
+            <button
+              type="button"
+              class="site-nav-item site-admin-trigger"
+              [class.site-nav-item-active]="isAdminSectionActive()"
+              [attr.aria-expanded]="isAdminMenuOpen"
+              aria-haspopup="menu"
+              aria-controls="site-admin-dropdown"
+              (click)="$event.stopPropagation(); toggleAdminMenu()">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Administración</span>
+              <i
+                class="fa-solid site-admin-chevron"
+                [ngClass]="isAdminMenuOpen ? 'fa-chevron-up' : 'fa-chevron-down'"
+                aria-hidden="true"></i>
+            </button>
+
+            @if (isAdminMenuOpen) {
+              <div id="site-admin-dropdown" class="site-admin-dropdown" role="menu">
+                <a
+                  class="site-admin-dropdown-item"
+                  [routerLink]="['/admin/examenes']"
+                  routerLinkActive="site-admin-dropdown-item-active"
+                  role="menuitem"
+                  (click)="closeMobileMenu()">
+                  <span class="site-admin-dropdown-icon"><i class="fa-solid fa-table-list"></i></span>
+                  <span>Administración</span>
+                </a>
+                <a
+                  class="site-admin-dropdown-item"
+                  [routerLink]="['/admin/reportes']"
+                  routerLinkActive="site-admin-dropdown-item-active"
+                  role="menuitem"
+                  (click)="closeMobileMenu()">
+                  <span class="site-admin-dropdown-icon"><i class="fa-solid fa-ban"></i></span>
+                  <span>Reportes</span>
+                </a>
+                <a
+                  class="site-admin-dropdown-item"
+                  [routerLink]="['/admin/temario']"
+                  routerLinkActive="site-admin-dropdown-item-active"
+                  role="menuitem"
+                  (click)="closeMobileMenu()">
+                  <span class="site-admin-dropdown-icon"><i class="fa-solid fa-book"></i></span>
+                  <span>Temario</span>
+                </a>
+              </div>
+            }
+          </div>
         }
       </nav>
 

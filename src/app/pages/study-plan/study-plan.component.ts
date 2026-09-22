@@ -9,7 +9,6 @@ interface DurationOption {
   label: string;
   value: number;
 }
-
 interface StudySession {
   id: number;
   date: string;
@@ -422,6 +421,7 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   backToPlan(): void {
     this.showSettings = false;
     this.errorMessage = '';
+    this.activeSetupDropdown = null;
   }
 
   openDeleteConfirmation(): void {
@@ -475,6 +475,28 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
     );
 
     return duration?.label ?? 'Sin estimación configurada';
+  }
+
+  settingsDurationLabel(): string {
+    const duration = this.durationOptions.find(
+      option => this.durationValue(option) === this.settingsSelectedDuration
+    );
+
+    if (!duration) {
+      return 'Selecciona el tiempo disponible';
+    }
+
+    return `${duration.label}${this.isCurrentDuration(duration) ? ' (actual)' : ''}`;
+  }
+
+  selectSettingsDuration(duration: string): void {
+    if (this.isUpdatingExamDate) {
+      return;
+    }
+
+    this.settingsSelectedDuration = duration;
+    this.activeSetupDropdown = null;
+    this.onSettingsDurationChange(duration);
   }
 
   onSettingsDurationChange(value: string): void {

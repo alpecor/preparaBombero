@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, OnInit} from '@angular/core';
+import { Component, HostListener, OnInit} from '@angular/core';
 import { NavigationEnd, RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit {
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
   isMobileMenuOpen = false;
+  isAdminMenuOpen = false;
 
 
   async ngOnInit(): Promise<void> {
@@ -106,10 +107,30 @@ export class HeaderComponent implements OnInit {
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    if (!this.isMobileMenuOpen) this.isAdminMenuOpen = false;
   }
 
   closeMobileMenu(): void {
     this.isMobileMenuOpen = false;
+    this.isAdminMenuOpen = false;
+  }
+
+  toggleAdminMenu(): void {
+    this.isAdminMenuOpen = !this.isAdminMenuOpen;
+  }
+
+  isAdminSectionActive(): boolean {
+    return this.router.url === '/admin' || this.router.url.startsWith('/admin/');
+  }
+
+  @HostListener('document:click')
+  closeAdminMenu(): void {
+    this.isAdminMenuOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  closeAdminMenuOnEscape(): void {
+    this.isAdminMenuOpen = false;
   }
 
   isRouteActive(path: string): boolean {
