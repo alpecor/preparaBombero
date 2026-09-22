@@ -1,58 +1,48 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { DEMO_PACKS, DEMO_TERRITORIES } from './reinforcements.mock';
-import { PracticeQuestion, ReinforcementPack } from './reinforcements.models';
+import { Injectable, inject, signal } from '@angular/core';
+import { RequestService } from '../../services/request.service';
+import { ReinforcementPack } from './reinforcements.models';
 
-/** Demo adapter only. No payments, backend writes or real entitlements. */
 @Injectable({ providedIn: 'root' })
 export class ReinforcementsService {
-  readonly packs = DEMO_PACKS;
-  readonly territories = DEMO_TERRITORIES;
-  private readonly ownedIds = signal(new Set(['demo-pack-2']));
-  readonly ownedPacks = computed(() => this.packs.filter((pack) => this.isOwned(pack.id)));
+  private readonly requestService = inject(RequestService);
 
-  isOwned(id: string): boolean {
-    return this.ownedIds().has(id);
+  readonly packs = signal<ReinforcementPack[]>([]);
+  readonly loading = signal(false);
+  readonly error = signal('');
+  readonly purchasingId = signal<number | null>(null);
+
+  async loadPacks(): Promise<void> {
+    this.loading.set(true);
+    this.error.set('');
+
+    try {
+      const packs = await this.requestService.request('GET', '/pack', {}, {});
+      this.packs.set(packs as ReinforcementPack[]);
+    } catch {
+      this.error.set('No se han podido cargar los packs. Inténtalo de nuevo.');
+    } finally {
+      this.loading.set(false);
+    }
   }
 
-  simulatePurchase(id: string): boolean {
-    if (!this.packs.some((pack) => pack.id === id) || this.isOwned(id)) return false;
-    this.ownedIds.update((ids) => new Set([...ids, id]));
-    return true;
-  }
+  async checkout(packId: number): Promise<string | null> {
+    this.purchasingId.set(packId);
+    this.error.set('');
 
-  resetDemo(): void {
-    this.ownedIds.set(new Set(['demo-pack-2']));
-  }
+    try {
+      const response = await this.requestService.request(
+        'POST',
+        `/pack/${packId}/checkout`,
+        {},
+        {},
+      );
 
-  /** Illustrates correction only; these are not the advertised pack contents. */
-  getDemoQuestions(pack: ReinforcementPack): PracticeQuestion[] {
-    if (!this.isOwned(pack.id)) return [];
-    return [
-      {
-        id: `${pack.id}-scope`,
-        title: '¿A qué comunidad autónoma pertenece este refuerzo de muestra?',
-        options: [
-          pack.community,
-          ...this.territories
-            .map((t) => t.name)
-            .filter((name) => name !== pack.community)
-            .slice(0, 3),
-        ],
-        correctIndex: 0,
-        explanation: `Este refuerzo está ubicado en ${pack.community}. Esta pregunta solo demuestra el funcionamiento de la práctica.`,
-      },
-      {
-        id: `${pack.id}-content`,
-        title: '¿De dónde proceden las preguntas de los refuerzos?',
-        options: [
-          'Solo de exámenes oficiales',
-          'De contenido propio creado por el equipo',
-          'De las respuestas de otros usuarios',
-        ],
-        correctIndex: 1,
-        explanation:
-          'Los refuerzos son contenido propio y complementan el banco oficial. Esta es una pregunta de demostración, no una pregunta del pack.',
-      },
-    ];
+      return response?.url ?? null;
+    } catch {
+      this.error.set('No se ha podido iniciar la compra. Inténtalo de nuevo.');
+      return null;
+    } finally {
+      this.purchasingId.set(null);
+    }
   }
 }

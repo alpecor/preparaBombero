@@ -15,8 +15,9 @@ import { FooterComponent } from '../footer/footer.component';
     <app-footer [hidden]="!showFooter" />
   `,
   styles: `
-    :host { display: flex; flex-direction: column; min-height: 100vh; background: #f7f8fa; }
-    .site-content { flex: 1; min-width: 0; }
+    :host { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; background: #f7f8fa; }
+    .site-content { flex: 1 0 auto; min-width: 0; }
+    app-footer { margin-top: auto; }
     app-footer[hidden] { display: none; }
   `
 })

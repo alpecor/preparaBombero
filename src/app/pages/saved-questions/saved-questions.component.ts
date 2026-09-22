@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { TextSanitizerComponent } from "../../components/text-sanitizer/text-sanitizer.component";
@@ -21,6 +22,10 @@ export class SavedQuestionsComponent implements OnInit {
   //************************* VARIABLES ****************************//
   savedQuestions: any[] = [];
   totalSavedQuestions = 0;
+  packId: number | null = null;
+  packName = '';
+  packDescription: string | null = null;
+  packLoadError = '';
   topics: Set<string> = new Set();
   topicSelected: string = '';
   isTopicMenuOpen = false;
@@ -31,29 +36,78 @@ export class SavedQuestionsComponent implements OnInit {
 
 
   //************************* CONSTRUCTOR ****************************//
-  constructor(private requestService: RequestService,private localStorageService: LocalStorageService) {}
+  constructor(
+    private requestService: RequestService,
+    private localStorageService: LocalStorageService,
+    private route: ActivatedRoute,
+  ) {}
 
 
   //************************* ngOnInit ****************************//
-  ngOnInit(): void {
-    this.loadSavedQuestions();
+  async ngOnInit(): Promise<void> {
+    const rawPackId = this.route.snapshot.paramMap.get('packId');
+    const parsedPackId = Number(rawPackId);
+
+    if (rawPackId && Number.isInteger(parsedPackId) && parsedPackId > 0) {
+      this.packId = parsedPackId;
+      await this.loadPackQuestions();
+      return;
+    }
+
+    await this.loadSavedQuestions();
+  }
+
+  get isPackView(): boolean {
+    return this.packId !== null;
   }
 
 
   //************************* FUNCION PARA OBTENER PREGUNTAS GUARDADAS ****************************//
   async loadSavedQuestions() {
-    // Primero cargamos las preguntas reportadas
     const allSavedQuestions = await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
-    this.totalSavedQuestions = allSavedQuestions.length;
-    this.topics = new Set(allSavedQuestions.map((x:any) => x.topicTitle).filter((topic: any) => Boolean(topic)));
-    this.savedQuestions = this.topicSelected !== ''
-      ? allSavedQuestions.filter((x:any) => x.topicTitle === this.topicSelected)
-      : allSavedQuestions;
-    this.savedQuestions.map((x:any)=>x.isCorrected = false);
-    this.savedQuestions.map((x:any)=>x.showJustification = false);
-    this.savedQuestions.map((x:any)=>x.optionSelected = null);
+    this.initializeQuestions(allSavedQuestions);
+  }
 
-    // Reset de barajado cada vez que recargas/buscas
+  async loadPackQuestions(): Promise<void> {
+    if (!this.packId) return;
+
+    this.packLoadError = '';
+
+    try {
+      const response = await this.requestService.request(
+        'GET',
+        `/pack/${this.packId}/questions`,
+        {},
+        {},
+        true,
+      );
+
+      this.packName = response?.pack?.name ?? 'Pack comprado';
+      this.packDescription = response?.pack?.description ?? null;
+      this.topicSelected = '';
+      this.initializeQuestions(response?.questions ?? []);
+    } catch {
+      this.packLoadError = 'No se han podido cargar las preguntas de este pack.';
+      this.initializeQuestions([]);
+    }
+  }
+
+  private initializeQuestions(questions: any[]): void {
+    this.totalSavedQuestions = questions.length;
+    this.topics = new Set(
+      questions
+        .map((question: any) => question.topicTitle)
+        .filter((topic: any) => Boolean(topic)),
+    );
+    this.savedQuestions = !this.isPackView && this.topicSelected !== ''
+      ? questions.filter((question: any) => question.topicTitle === this.topicSelected)
+      : questions;
+    this.savedQuestions.forEach((question: any) => {
+      question.isCorrected = false;
+      question.showJustification = false;
+      question.optionSelected = null;
+    });
+
     this.originalOrder = null;
     this.isShuffled = false;
     this.isTopicMenuOpen = false;
@@ -190,4 +244,3 @@ toggleShuffle(): void {
 
 
 }
-

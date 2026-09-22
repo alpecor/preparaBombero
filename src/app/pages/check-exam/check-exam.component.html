@@ -1,4 +1,4 @@
-<div class="check-exam-page  bg-[#f7f8fa] text-[#172033]">
+<div class="check-exam-page bg-[#f7f8fa] text-[#172033]">
 
   @if (showSavedToast) {
     <div
@@ -24,7 +24,7 @@
           Revisa tus respuestas, consulta las explicaciones y descubre en qué puedes seguir mejorando.
         </p>
 
-        <div class="check-exam-summary-grid mt-8 grid items-stretch gap-4 lg:grid-cols-2">
+        <div class="check-exam-summary-grid mt-8 grid items-stretch gap-4 grid-cols-2">
           <div class="check-exam-score-stack flex flex-col gap-4">
             <article class="check-exam-score-highlight rounded-2xl border border-[#e8c982] bg-gradient-to-br from-[#fff2d2] to-[#fffaf0] p-5 shadow-sm">
               <div class="flex items-start justify-between gap-4">
@@ -50,14 +50,14 @@
 
             @if (isSubscribed) {
               <article class="check-exam-score-card flex-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+                <div class="flex flex-col justify-between gap-3 flex-row items-end">
                   <div>
                     <span class="check-exam-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Escenarios de puntuación</span>
                     <h2 class="mt-1 font-extrabold text-[#172033]">Cómo quedaría tu nota</h2>
                   </div>
-                  <span class="text-xs leading-relaxed text-slate-500 sm:text-right">Según el sistema de penalización aplicado</span>
+                  <span class="text-xs leading-relaxed text-slate-500 text-right">Según el sistema de penalización aplicado</span>
                 </div>
-                <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                <div class="mt-5 grid gap-3 grid-cols-2">
                   <div class="check-exam-score-option rounded-xl border border-[#e8c982] bg-[#fffaf0] p-4">
                     <span class="text-[.68rem] font-bold text-[#80601f]">Sin penalización</span>
                     <strong class="mt-2 block font-extrabold text-[#172033]">{{ scores.noPenalty.toFixed(2) }} <small>/ 10</small></strong>
@@ -77,7 +77,7 @@
                 </div>
               </article>
             } @else {
-              <section class="check-exam-premium-callout flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[#e8c982] bg-[#fffaf0] p-5 sm:flex-row sm:items-center">
+              <section class="check-exam-premium-callout flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[#e8c982] bg-[#fffaf0] p-5 flex-row items-center">
                 <div class="flex items-start gap-3">
                   <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]"><i class="fa-solid fa-lock"></i></span>
                   <div>
@@ -93,7 +93,7 @@
             }
           </div>
 
-          <article class="check-exam-results-card flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:h-full">
+          <article class="check-exam-results-card flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm h-full">
             <div class="flex items-start justify-between gap-4">
               <div>
                 <span class="text-[.66rem] font-extrabold uppercase tracking-[.1em] text-[#a56800]">Resumen de respuestas</span>
@@ -157,12 +157,12 @@
 
     <section class="check-exam-content py-9 pb-16">
       <div class="check-exam-container mx-auto w-[calc(100%-3rem)] max-w-[1080px]">
-        <div class="check-exam-section-heading mb-5 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+        <div class="check-exam-section-heading mb-5 flex flex-col items-start justify-between gap-4 flex-row items-end">
           <div>
             <span class="check-exam-section-kicker text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Revisión del examen</span>
             <h2 class="mt-1 font-extrabold text-[#172033]">Repasa cada pregunta</h2>
           </div>
-          <span class="inline-flex items-center gap-2 text-left text-xs leading-relaxed text-slate-500 md:text-right">
+          <span class="inline-flex items-center gap-2 text-left text-xs leading-relaxed text-slate-500 text-right">
             <i class="fa-solid fa-circle-info text-[#b97805]"></i>
             Consulta la explicación para entender cada respuesta.
           </span>
@@ -238,9 +238,9 @@
                         disabled />
                       <span class="min-w-0 flex-1">{{ respuesta }}</span>
                       @if (isCorrect(question, respuesta)) {
-                        <span class="hidden shrink-0 text-[.65rem] font-extrabold text-[#3c9660] sm:inline">Correcta</span>
+                        <span class="hidden shrink-0 text-[.65rem] font-extrabold text-[#3c9660] inline">Correcta</span>
                       } @else if (isUserSelectedAndIncorrect(question, respuesta)) {
-                        <span class="hidden shrink-0 text-[.65rem] font-extrabold text-[#c45b4b] sm:inline">Tu respuesta</span>
+                        <span class="hidden shrink-0 text-[.65rem] font-extrabold text-[#c45b4b] inline">Tu respuesta</span>
                       }
                     </li>
                   }
@@ -296,9 +296,9 @@
         class="mt-2 block min-h-32 w-full resize-y rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10"
         rows="5"
         placeholder="Describe brevemente el error..."></textarea>
-      <div class="mt-5 flex justify-end gap-2 max-sm:flex-col-reverse">
-        <button type="button" class="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModal()">Cancelar</button>
-        <button type="button" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="sendReport()">
+      <div class="mt-5 flex justify-end gap-2">
+        <button type="button" class="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 hover:bg-slate-50 focus-visible:outline-none" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md hover:bg-[#c98508] focus-visible:outline-none" (click)="sendReport()">
           Enviar reporte
           <i class="fa-solid fa-paper-plane"></i>
         </button>

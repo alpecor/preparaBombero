@@ -42,12 +42,6 @@ li::marker { color: #956000; font-weight: 800; }
 table { width: 100%; margin-top: 1rem; border-collapse: collapse; font-size: .74rem; }
 caption { margin-bottom: .6rem; text-align: left; font-weight: 700; }
 th, td { padding: .5rem .3rem; border-bottom: 1px solid #eddfc4; text-align: left; }
-@media (max-width: 950px) { .information-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px) {
-  .information-container { width: calc(100% - 2rem); }
-  .information-hero { padding: 2.5rem 0 2rem; }
-  .information-grid { grid-template-columns: 1fr; }
-  .information-section-heading { align-items: start; flex-direction: column; }
-  .guide-card { min-height: 220px; }
-}
+
+
 @media (prefers-reduced-motion: reduce) { .guide-card { transition: none; } }

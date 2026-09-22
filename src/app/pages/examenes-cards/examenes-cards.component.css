@@ -367,52 +367,11 @@
   font-size: .75rem;
 }
 
-@media (max-width: 1000px) {
-  .exams-cards-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
 
-@media (max-width: 760px) {
-  .exams-main {
-    padding-top: 1.6rem;
-  }
 
-  .exams-container {
-    width: min(100% - 2rem, 38rem);
-  }
 
-  .exams-heading-panel {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 1.15rem;
-    padding: 1.35rem;
-  }
 
-  .exams-count-badge {
-    align-self: flex-start;
-  }
 
-  .exams-cards-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .exams-section-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: .35rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .exams-cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .exam-explorer-card {
-    min-height: 9.5rem;
-  }
-}
 
 /* Ajuste final de las tarjetas: prevalece sobre cualquier estilo heredado. */
 .exams-page .exam-explorer-card {

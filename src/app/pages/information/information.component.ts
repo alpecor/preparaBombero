@@ -35,18 +35,18 @@ export class InformationComponent {
         {
           title: 'Encuentra tu refuerzo',
           steps: [
-            'Entra en Refuerzos y busca un tema o filtra por comunidad, provincia y administración.',
-            'Consulta el ámbito, las preguntas, el contenido y el precio de cada pack. Son packs de pago único, independientes de Premium.',
-            'En esta demostración puedes simular una compra para añadir el pack a Tu colección y probar su práctica.'
+            'Entra en Refuerzos y busca el pack que quieres comprar.',
+            'Consulta su descripción, número de preguntas y precio de pago único.',
+            'Pulsa Comprar y completa el pago seguro de Stripe. El pack se asociará a tu cuenta cuando el pago quede confirmado.'
           ],
-          note: 'Los packs, precios y preguntas son de ejemplo. No se realizan cobros y la colección de muestra se reinicia al recargar.'
+          note: 'Los packs comprados permanecen asociados a tu cuenta independientemente de tu suscripción.'
         },
         {
-          title: 'Practica tus packs',
+          title: 'Preguntas de tus packs',
           steps: [
-            'Desde Tus refuerzos, pulsa Practicar. El acceso independiente a los packs comprados no dependerá de Premium.',
-            'Selecciona una respuesta, corrígela y consulta la explicación antes de pasar a la siguiente.',
-            'Cuando la función esté conectada, con Premium las preguntas de los packs comprados se integrarán en los exámenes personalizados y el plan de estudio según su ámbito. Los exámenes oficiales seguirán siendo independientes.'
+            'Cuando consultes un tema, se utilizarán las preguntas oficiales y las preguntas de los packs que hayas comprado para ese mismo tema.',
+            'Las preguntas de packs que no hayas comprado no se incluirán en tus sesiones.',
+            'Los exámenes oficiales mantienen únicamente sus preguntas oficiales.'
           ]
         }
       ]

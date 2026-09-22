@@ -36,5 +36,5 @@
 .topics-modal-card{max-height:calc(100vh - 2rem);overflow:auto}
 .topics-modal-input{font-family:'Open Sans',sans-serif!important}
 .modal-overlay{z-index:1200}
-@media(max-width:720px){.topics-admin-heading,.topics-admin-hero-footer{align-items:flex-start;flex-direction:column}.topics-admin-count-badge,.topics-admin-create-button{width:100%}.topics-admin-hero-footer{gap:1rem}.topic-node{align-items:flex-start;flex-direction:column}.topic-node-main{width:100%}.topic-node-actions{width:100%;justify-content:flex-end}.topic-children{margin-left:.55rem;padding-left:.6rem}}
-@media(max-width:560px){.topics-admin-container{width:calc(100% - 1.5rem)}.topics-admin-main{padding-top:1.4rem}.topics-admin-hero-panel{padding:1.35rem 1.1rem 1.15rem}.topics-modal-card{padding:1.25rem}.topics-modal-primary,.topics-modal-secondary,.topics-modal-danger{width:100%}}
+
+

@@ -1,4 +1,4 @@
-<div class="reported-questions-page  bg-[#f7f8fa] text-[#172033]">
+<div class="reported-questions-page bg-[#f7f8fa] text-[#172033]">
 
   <main>
     <section class="reported-questions-main">
@@ -87,12 +87,12 @@
                 </span>
               </header>
 
-              <div class="reported-question-card-body px-5 py-5 sm:px-6 sm:py-6">
+              <div class="reported-question-card-body px-5 py-5 px-6 py-6">
                 <div class="reported-question-title-row flex items-start gap-3">
                   <span class="reported-question-title-icon mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#fff2d2] text-[#c98508]">
                     <i class="fa-solid fa-file-circle-question"></i>
                   </span>
-                  <h3 class="text-lg font-extrabold leading-snug text-[#172033] sm:text-xl">{{ question.quiz.title }}</h3>
+                  <h3 class="text-lg font-extrabold leading-snug text-[#172033] text-xl">{{ question.quiz.title }}</h3>
                 </div>
 
                 <div class="my-5 h-px bg-slate-200"></div>
@@ -117,7 +117,7 @@
                 </div>
               </div>
 
-              <footer class="reported-question-card-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 sm:px-6">
+              <footer class="reported-question-card-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 px-6">
                 <span class="inline-flex items-center gap-2 text-[.68rem] leading-relaxed text-slate-500">
                   <i class="fa-solid fa-circle-info text-[#c98508]"></i>
                   Revisa el motivo antes de cerrar este aviso.
@@ -163,16 +163,16 @@
       <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Cerrar revisión</span>
       <h2 id="remove-question-title" class="mt-2 font-extrabold text-[#172033]">¿Has revisado esta pregunta?</h2>
       <p class="mt-1 text-sm leading-relaxed text-slate-500">Al confirmar, el reporte se eliminará de la bandeja de pendientes.</p>
-      <div class="reported-modal-actions mt-5 flex justify-end gap-2 max-sm:flex-col-reverse">
+      <div class="reported-modal-actions mt-5 flex justify-end gap-2">
         <button
           type="button"
-          class="reported-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full"
+          class="reported-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none"
           (click)="closeRemoveModal()">
           Seguir revisando
         </button>
         <button
           type="button"
-          class="reported-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full"
+          class="reported-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none"
           (click)="RemoveQuestion()">
           Marcar como revisada
           <i class="fa-solid fa-check"></i>
@@ -215,7 +215,7 @@
       <div class="reported-modal-actions mt-5 flex justify-end">
         <button
           type="button"
-          class="reported-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full"
+          class="reported-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none"
           (click)="closeSeeModal()">
           Entendido
           <i class="fa-solid fa-check"></i>

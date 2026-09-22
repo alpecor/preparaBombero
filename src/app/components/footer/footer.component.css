@@ -28,5 +28,5 @@
 .site-footer-socials a{display:grid;width:1.9rem;height:1.9rem;place-items:center;border:1px solid #344258;border-radius:.55rem;background:#1a2639;color:#aeb9c8;font-size:.75rem;text-decoration:none;transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease}
 .site-footer-socials a:hover,.site-footer-socials a:focus-visible{border-color:#e4b451;background:#fff2d6;color:#a56800;outline:none;transform:translateY(-2px)}
 .site-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-top:1px solid rgba(255,255,255,.1);color:#7f8da0;font-size:.65rem;padding:1.1rem 0}
-@media(max-width:850px){.site-footer-main{grid-template-columns:1fr 1fr;gap:2rem}.site-footer-community{grid-column:1/-1}.site-footer-community p{max-width:26rem}}
-@media(max-width:560px){.site-footer-container{width:calc(100% - 1.5rem)}.site-footer-main{grid-template-columns:1fr;gap:2rem;padding:2.5rem 0 2rem}.site-footer-community{grid-column:auto}.site-footer-bottom{align-items:flex-start;flex-direction:column;gap:.35rem}.site-footer-glow{right:-14rem}}
+
+

@@ -22,5 +22,5 @@
 .topics-modal-icon{width:2.75rem;height:2.75rem}
 .topics-modal-input{font-family:'Open Sans',sans-serif!important}
 .modal-overlay{z-index:1200}
-@media(max-width:720px){.topic-node{align-items:flex-start;flex-direction:column}.topic-node-main{width:100%}.topic-node-actions{width:100%;justify-content:flex-end}.topic-children{margin-left:.55rem;padding-left:.6rem}}
-@media(max-width:560px){.topics-modal-card{padding:1.25rem}.topics-modal-primary,.topics-modal-secondary,.topics-modal-danger{width:100%}}
+
+

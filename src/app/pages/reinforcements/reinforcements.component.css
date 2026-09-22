@@ -702,50 +702,5 @@ app-reinforcements {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
-@media (max-width: 1000px) {
-  .reinforcements-page .rf-catalog {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .reinforcements-page .rf-owned-grid {
-    grid-template-columns: 1fr;
-  }
-  .reinforcements-page .rf-cascade {
-    gap: 0.6rem;
-  }
-}
-@media (max-width: 650px) {
-  .reinforcements-page {
-    padding: 1rem 1rem 3rem;
-  }
-  .reinforcements-page .rf-hero {
-    padding: 1.5rem;
-    align-items: start;
-    flex-direction: column;
-  }
-  .reinforcements-page .rf-stat {
-    padding: 0.8rem 1rem;
-  }
-  .reinforcements-page .rf-catalog,
-  .reinforcements-page .rf-cascade {
-    grid-template-columns: 1fr;
-  }
-  .reinforcements-page .rf-heading,
-  .reinforcements-page .rf-contact,
-  .reinforcements-page .rf-demo,
-  .reinforcements-page .rf-filter-heading {
-    flex-direction: column;
-    align-items: start;
-  }
-  .reinforcements-page .rf-filters {
-    padding: 1.1rem;
-  }
-  .reinforcements-page .rf-owned-card {
-    flex-wrap: wrap;
-  }
-  .reinforcements-page .rf-owned-card > div {
-    min-width: 150px;
-  }
-  .reinforcements-page .rf-dialog-inner {
-    padding: 1.2rem;
-  }
-}
+
+

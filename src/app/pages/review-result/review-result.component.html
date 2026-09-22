@@ -7,11 +7,11 @@
   </p>
 
   <!-- Bloque principal -->
- <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6 md:p-6">
+ <div class="bg-white border border-gray-200 rounded-2xl shadow-md p-6">
 
 
     <!-- Mensaje resumen -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div class="flex flex-col flex-row items-center justify-between gap-4 mb-6">
       <div>
         <p class="text-sm text-gray-500">Resumen</p>
         <p class="text-xl font-semibold">
@@ -32,7 +32,7 @@
     </div>
 
     <!-- KPI cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-1 grid-cols-2 grid-cols-4 gap-4 mb-8">
       <div class="p-4 rounded-xl border bg-gray-50">
         <p class="text-sm text-gray-500">Corregidas</p>
         <p class="text-3xl font-extrabold mt-1">{{ answered }}</p>
@@ -69,7 +69,7 @@
     </div>
 
     <!-- Acciones -->
-    <div class="flex flex-col sm:flex-row justify-center gap-3 mt-8">
+    <div class="flex flex-col flex-row justify-center gap-3 mt-8">
       <button
         class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-6 py-3"
         (click)="goHome()"

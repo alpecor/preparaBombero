@@ -57,5 +57,5 @@
 .info-preview-content p:last-child{margin-bottom:0}
 .info-preview-tip{display:flex;align-items:flex-start;gap:.6rem;margin-top:1rem;border-radius:.7rem;background:#f8fafc;color:#718096;font-size:.68rem;line-height:1.5;padding:.75rem}
 .info-preview-tip i{color:#c98508;margin-top:.15rem}
-@media(max-width:900px){.info-admin-grid{grid-template-columns:1fr}.info-preview-card{position:static}.info-preview-window{max-width:38rem}}
-@media(max-width:560px){.info-admin-main{padding-top:1.4rem}.info-admin-container{width:calc(100% - 1.5rem)}.info-admin-hero{align-items:flex-start;padding:1.35rem 1.1rem}.info-admin-hero-icon{display:none}.info-editor-card,.info-preview-card{padding:1.15rem}.info-field-footer{align-items:flex-start;flex-direction:column;gap:.3rem}.info-save-row{align-items:stretch;flex-direction:column}.info-save-button{width:100%}}
+
+

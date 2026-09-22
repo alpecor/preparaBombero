@@ -886,62 +886,9 @@
   border-radius: .7rem;
 }
 
-@media (max-width: 900px) {
-  .home-welcome-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 
-  .home-guest-hero-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 
-  .home-guest-hero-showcase {
-    width: min(34rem, 100%);
-    min-height: 13rem;
-    margin: 0 auto;
-  }
 
-  .home-metrics-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .home-guest-benefits-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 700px) {
-  .home-content {
-    width: min(100% - 2rem, 34rem);
-  }
-
-  .home-welcome-grid {
-    display: block;
-    min-height: 0;
-    padding-top: 2.4rem;
-    padding-bottom: 2.5rem;
-  }
-
-  .home-guest-hero-grid {
-    display: block;
-    min-height: 0;
-    padding-top: 2.4rem;
-    padding-bottom: 2.7rem;
-  }
-
-  .home-welcome-copy h1 {
-    font-size: 2.15rem;
-  }
-
-  .home-guest-hero-copy h1 {
-    font-size: 2.15rem;
-  }
-
-.home-welcome-art {
-  display: none;
-}
-
-}
 
 .home-guest-hero-section {
   position: relative;
@@ -1265,133 +1212,9 @@
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
-  .home-guest-hero-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 
-  .home-guest-hero-showcase {
-    width: min(34rem, 100%);
-    min-height: 13rem;
-    margin: 0 auto;
-  }
 
-  .home-guest-benefits-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 
-@media (max-width: 700px) {
-  .home-guest-hero-grid {
-    display: block;
-    min-height: 0;
-    padding-top: 2.4rem;
-    padding-bottom: 2.7rem;
-  }
 
-  .home-guest-hero-copy h1 {
-    font-size: 2.15rem;
-  }
 
-  .home-guest-hero-showcase {
-    display: none;
-  }
-
-  .home-dashboard-content {
-    padding-top: 1.2rem;
-  }
-
-  .home-focus-grid,
-  .home-topic-categories,
-  .home-guest-benefits-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .home-topic-category[open] {
-    grid-column: auto;
-  }
-
-  .home-section-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .home-clear-selection {
-    align-self: flex-start;
-  }
-
-  .home-topics-section,
-  .home-pdf-card {
-    padding: 1.25rem;
-  }
-
-  .home-guest-benefits-section {
-    padding: 2.5rem 0 3rem;
-  }
-
-  .home-guest-section-heading {
-    text-align: left;
-  }
-
-  .home-guest-hero-showcase {
-    display: none;
-  }
-
-  .home-guest-cta {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 1.2rem;
-    padding: 1.35rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .home-metrics-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .home-primary-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .home-primary-action,
-  .home-secondary-action {
-    width: 100%;
-  }
-
-  .home-action-feedback-slot {
-    min-height: 4.35rem;
-  }
-
-  .home-guest-trust-points {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: .45rem;
-  }
-
-  .home-guest-cta-action {
-    width: 100%;
-  }
-
-  .home-plan-card,
-  .home-selection-card {
-    padding: 1.25rem;
-  }
-
-  .home-topic-row {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: .45rem;
-    padding: .75rem 0;
-  }
-
-  .home-topic-main {
-    width: 100%;
-  }
-
-  .home-topic-tools {
-    align-self: flex-end;
-  }
-}
 

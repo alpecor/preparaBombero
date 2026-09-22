@@ -27,11 +27,24 @@
 }
 
 html {
+  min-width: 1380px;
+  min-height: 100%;
   scrollbar-gutter: stable;
 }
 
 body {
+  min-width: 1380px;
+  min-height: 100%;
+  overflow-x: auto;
+  background: #f7f8fa;
   user-select: none;
+}
+
+app-root {
+  display: block;
+  min-width: 1380px;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* Landing page styles (scoped globally to avoid anyComponentStyle budget in production) */
@@ -296,12 +309,3 @@ body {
 
   .landing-page .reveal { opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease; }
   .landing-page .reveal.visible { opacity:1;transform:translateY(0); }
-
-@media(max-width:900px) {
-    .landing-page .hero { grid-template-columns:1fr;text-align:center;padding:60px 5% 50px; }
-    .landing-page .mock { display:none; }
-    .landing-page .hero p, .landing-page .hero-cta-row { margin-left:auto;margin-right:auto; }
-    .landing-page .hero-cta-row { justify-content:center; }
-    .landing-page .hero-stats { justify-content:center; }
-    .landing-page .nav-links { display:none; }
-  }

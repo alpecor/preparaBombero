@@ -34,5 +34,5 @@
 .reported-reason{overflow-wrap:anywhere;white-space:pre-wrap}
 @keyframes reported-spin{to{transform:rotate(360deg)}}
 @keyframes reported-pulse{0%,100%{opacity:.65;transform:scale(.96)}50%{opacity:1;transform:scale(1)}}
-@media(max-width:720px){.reported-questions-heading-panel{align-items:flex-start;flex-direction:column}.reported-options{grid-template-columns:1fr}}
-@media(max-width:560px){.reported-questions-container{width:calc(100% - 1.5rem)}.reported-questions-main{padding-top:1.4rem}.reported-questions-header-panel{padding:1.35rem 1.1rem 1.15rem}.reported-question-card-header,.reported-question-card-body,.reported-question-card-footer{padding-right:.9rem;padding-left:.9rem}.reported-question-card-footer{align-items:flex-start;flex-direction:column}.reported-question-card-footer>div{width:100%}.reported-action-button{flex:1 1 0}.reported-action-button span{white-space:nowrap}.reported-modal-card{padding:1.25rem}.reported-modal-primary,.reported-modal-secondary{width:100%}}
+
+

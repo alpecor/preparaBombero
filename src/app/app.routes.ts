@@ -51,7 +51,14 @@ export const routes: Routes = [
       {
         path: 'refuerzos',
         loadComponent: () => import('./pages/reinforcements/reinforcements.component').then(m => m.ReinforcementsComponent),
+        canActivate: [userAuthGuard],
         title: 'Refuerzos | Prepara Bombero'
+      },
+      {
+        path: 'refuerzos/:packId',
+        loadComponent: () => import('./pages/saved-questions/saved-questions.component').then(m => m.SavedQuestionsComponent),
+        canActivate: [userAuthGuard],
+        title: 'Preguntas del pack | Prepara Bombero'
       },
       {
         path: 'informacion',

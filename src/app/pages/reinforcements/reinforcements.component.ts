@@ -1,212 +1,72 @@
-import { Component, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ReinforcementsService } from './reinforcements.service';
-import { PracticeQuestion, ReinforcementPack } from './reinforcements.models';
-
-type ReinforcementDropdown = 'community' | 'province' | 'administration' | null;
+import { ReinforcementPack } from './reinforcements.models';
 
 @Component({
   selector: 'app-reinforcements',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './reinforcements.component.html',
 })
-export class ReinforcementsComponent {
-  private readonly alphabeticalOrder = new Intl.Collator('es', { sensitivity: 'base' });
+export class ReinforcementsComponent implements OnInit {
   readonly store = inject(ReinforcementsService);
-  readonly territories = [...this.store.territories].sort((a, b) =>
-    this.alphabeticalOrder.compare(a.name, b.name),
-  );
   @ViewChild('packDialog') dialog!: ElementRef<HTMLDialogElement>;
-  @ViewChild('collectionTitle') collectionTitle!: ElementRef<HTMLElement>;
+  @ViewChild('catalogTitle') catalogTitle!: ElementRef<HTMLElement>;
+
   search = '';
-  community = '';
-  province = '';
-  administration = '';
-  activeDropdown: ReinforcementDropdown = null;
-  message = '';
   selectedPack: ReinforcementPack | null = null;
-  mode: 'purchase' | 'practice' = 'purchase';
-  questions: PracticeQuestion[] = [];
-  questionIndex = 0;
-  selectedAnswer: number | null = null;
-  corrected = false;
-  finished = false;
-  correctCount = 0;
-  private trigger?: HTMLElement;
+  message = '';
 
-  get provinces() {
-    return [...(this.store.territories.find((t) => t.name === this.community)?.provinces ?? [])].sort(
-      (a, b) => this.alphabeticalOrder.compare(a.name, b.name),
-    );
-  }
-
-  get administrations() {
-    return [...(this.provinces.find((p) => p.name === this.province)?.administrations ?? [])].sort(
-      this.alphabeticalOrder.compare,
-    );
+  ngOnInit(): void {
+    void this.store.loadPacks();
   }
 
   get filteredPacks(): ReinforcementPack[] {
     const query = this.normalize(this.search.trim());
-    return this.store.packs.filter(
-      (pack) =>
-        (!this.community || pack.community === this.community) &&
-        (!this.province || pack.province === this.province) &&
-        (!this.administration || pack.administration === this.administration) &&
-        (!query ||
-          this.normalize([pack.title, pack.type, this.location(pack), ...pack.bullets].join(' ')).includes(
-            query,
-          )),
-    );
-  }
 
-  get question(): PracticeQuestion | undefined {
-    return this.questions[this.questionIndex];
-  }
+    return this.store.packs().filter((pack) => {
+      if (!query) return true;
 
-  changeCommunity(): void {
-    this.province = '';
-    this.administration = '';
-  }
-
-  changeProvince(): void {
-    this.administration = '';
-  }
-
-  toggleDropdown(dropdown: Exclude<ReinforcementDropdown, null>): void {
-    if (
-      (dropdown === 'province' && !this.community) ||
-      (dropdown === 'administration' && this.administrations.length === 0)
-    ) {
-      return;
-    }
-
-    this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
-  }
-
-  selectCommunity(community: string): void {
-    this.community = community;
-    this.changeCommunity();
-    this.activeDropdown = null;
-  }
-
-  selectProvince(province: string): void {
-    this.province = province;
-    this.changeProvince();
-    this.activeDropdown = null;
-  }
-
-  selectAdministration(administration: string): void {
-    this.administration = administration;
-    this.activeDropdown = null;
-  }
-
-  provinceLabel(): string {
-    return this.province || (this.community ? 'Todas las provincias' : 'Selecciona una comunidad primero');
-  }
-
-  administrationLabel(): string {
-    if (this.administration) return this.administration;
-    if (!this.province) return 'Selecciona una provincia primero';
-    return this.administrations.length ? 'Todas las administraciones' : 'Sin administraciones registradas';
-  }
-
-  @HostListener('document:click')
-  closeDropdown(): void {
-    this.activeDropdown = null;
-  }
-
-  @HostListener('document:keydown.escape')
-  closeDropdownOnEscape(): void {
-    this.activeDropdown = null;
-  }
-
-  clearFilters(): void {
-    this.search = '';
-    this.community = '';
-    this.changeCommunity();
-    this.activeDropdown = null;
+      return this.normalize(`${pack.name} ${pack.description ?? ''}`).includes(query);
+    });
   }
 
   price(cents: number): string {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(cents / 100);
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+    }).format(cents / 100);
   }
 
-  location(pack: ReinforcementPack): string {
-    return [pack.community, pack.province, pack.administration].filter(Boolean).join(' · ');
-  }
-
-  scope(pack: ReinforcementPack): string {
-    return pack.administration ? 'Administración' : pack.province ? 'Provincia' : 'Comunidad autónoma';
-  }
-
-  icon(type: string): string {
-    return (
-      (
-        {
-          CALLEJERO: 'fa-location-dot',
-          GEOGRAFÍA: 'fa-map',
-          'TEMAS DEL SERVICIO': 'fa-building-columns',
-        } as Record<string, string>
-      )[type] ?? 'fa-book-open'
-    );
-  }
-
-  open(pack: ReinforcementPack, mode: 'purchase' | 'practice', trigger: HTMLElement): void {
-    if (mode === 'purchase' && this.store.isOwned(pack.id)) return;
-    if (mode === 'practice' && !this.store.isOwned(pack.id)) return;
-    this.trigger = trigger;
+  openPurchase(pack: ReinforcementPack): void {
+    if (pack.purchased) return;
     this.selectedPack = pack;
-    this.mode = mode;
-    this.questions = mode === 'practice' ? this.store.getDemoQuestions(pack) : [];
-    this.questionIndex = 0;
-    this.selectedAnswer = null;
-    this.corrected = false;
-    this.finished = false;
-    this.correctCount = 0;
+    this.message = '';
     this.dialog.nativeElement.showModal();
   }
 
   close(): void {
     this.dialog.nativeElement.close();
   }
-  restoreFocus(): void {
-    const target = this.trigger?.isConnected ? this.trigger : this.collectionTitle.nativeElement;
-    target.focus({ preventScroll: true });
-  }
+
   backdropClick(event: MouseEvent): void {
     if (event.target === this.dialog.nativeElement) this.close();
   }
 
-  purchase(): void {
-    if (!this.selectedPack || this.mode !== 'purchase') return;
-    if (this.store.simulatePurchase(this.selectedPack.id)) {
-      this.message = `«${this.selectedPack.title}» añadido a tu colección de demostración. No se ha realizado ningún cobro.`;
+  async purchase(): Promise<void> {
+    if (!this.selectedPack) return;
+
+    const url = await this.store.checkout(this.selectedPack.id);
+    if (url) {
+      window.location.assign(url);
     }
-    this.close();
   }
 
-  correct(): void {
-    if (this.selectedAnswer === null || !this.question || this.corrected) return;
-    this.corrected = true;
-    if (this.selectedAnswer === this.question.correctIndex) this.correctCount++;
-  }
-
-  next(): void {
-    if (!this.corrected) return;
-    if (this.questionIndex === this.questions.length - 1) {
-      this.finished = true;
-      return;
-    }
-    this.questionIndex++;
-    this.selectedAnswer = null;
-    this.corrected = false;
-  }
-
-  resetDemo(): void {
-    this.store.resetDemo();
-    this.message = 'Demostración reiniciada. Solo queda el refuerzo de muestra inicial.';
+  clearSearch(): void {
+    this.search = '';
+    this.catalogTitle.nativeElement.focus({ preventScroll: true });
   }
 
   private normalize(value: string): string {

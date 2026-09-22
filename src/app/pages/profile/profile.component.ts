@@ -4,7 +4,6 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import {
   ApexNonAxisChartSeries,
-  ApexResponsive,
   ApexChart,
   ChartComponent,
   NgApexchartsModule
@@ -13,7 +12,6 @@ import {
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
-  responsive: ApexResponsive[];
   labels: any;
 };
 
@@ -68,17 +66,6 @@ export class ProfileComponent implements OnInit {
               }
             }
           },
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {
-                  width: 170,
-                  height: 170
-                },
-              }
-            }
-          ]
         }
       })
       this.updateSummary();

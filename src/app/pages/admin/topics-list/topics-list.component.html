@@ -1,4 +1,4 @@
-<div class="topics-admin-page  bg-[#f7f8fa] text-[#172033]">
+<div class="topics-admin-page bg-[#f7f8fa] text-[#172033]">
 
   <main>
     <section class="topics-admin-main">
@@ -64,8 +64,8 @@
             </button>
           </div>
         } @else if (!selectedCategory) {
-          <div class="topics-category-selector rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
-            <div class="topics-selector-heading flex items-end justify-between gap-4 max-md:flex-col max-md:items-start">
+          <div class="topics-category-selector rounded-2xl border border-slate-200 bg-white p-5 shadow-sm p-7">
+            <div class="topics-selector-heading flex items-end justify-between gap-4">
               <div>
                 <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Explora por bloques</span>
                 <h2 class="mt-1 font-extrabold text-[#172033]">¿Qué temario quieres gestionar?</h2>
@@ -73,7 +73,7 @@
               <span class="text-xs text-slate-500">Selecciona una categoría para ver sus temas.</span>
             </div>
 
-            <div class="topics-category-grid mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div class="topics-category-grid mt-5 grid grid-cols-1 gap-4 grid-cols-3">
               @for (category of topicCategories; track category.key) {
                 <button
                   type="button"
@@ -96,7 +96,7 @@
             </div>
           </div>
         } @else {
-          <div class="topics-selected-header mb-5 flex items-center justify-between gap-4 max-md:flex-wrap">
+          <div class="topics-selected-header mb-5 flex items-center justify-between gap-4">
             <button
               type="button"
               class="topics-back-button inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-extrabold text-slate-600 transition hover:-translate-y-px hover:border-[#e8c982] hover:bg-[#fffaf0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
@@ -104,7 +104,7 @@
               <i class="fa-solid fa-arrow-left"></i>
               Todos los bloques
             </button>
-            <div class="topics-selected-heading flex-1 text-center max-md:order-3 max-md:w-full">
+            <div class="topics-selected-heading flex-1 text-center">
               <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Bloque seleccionado</span>
               <h2 class="mt-1 font-extrabold text-[#172033]">{{ selectedCategory }}</h2>
             </div>
@@ -182,9 +182,9 @@
         </select>
       </div>
 
-      <div class="topics-modal-actions mt-6 flex justify-end gap-2 max-sm:flex-col-reverse">
-        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalCreateTopic()">Cancelar</button>
-        <button type="button" class="topics-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="createTopic()">Crear tema <i class="fa-solid fa-arrow-right"></i></button>
+      <div class="topics-modal-actions mt-6 flex justify-end gap-2">
+        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none" (click)="closeModalCreateTopic()">Cancelar</button>
+        <button type="button" class="topics-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none" (click)="createTopic()">Crear tema <i class="fa-solid fa-arrow-right"></i></button>
       </div>
     </div>
   </div>
@@ -200,9 +200,9 @@
         <label for="subtopicTitle" class="block text-xs font-extrabold text-slate-700">Nombre del subtema</label>
         <input type="text" id="subtopicTitle" class="topics-modal-input mt-2 block w-full rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 outline-none transition focus:border-[#de9a17] focus:bg-white focus:ring-4 focus:ring-[#de9a17]/10" placeholder="Ej. Procedimientos de actuación" />
       </div>
-      <div class="topics-modal-actions mt-6 flex justify-end gap-2 max-sm:flex-col-reverse">
-        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalSubtopic()">Cancelar</button>
-        <button type="button" class="topics-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none max-sm:w-full" (click)="createSubtopic()">Crear subtema <i class="fa-solid fa-arrow-right"></i></button>
+      <div class="topics-modal-actions mt-6 flex justify-end gap-2">
+        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none" (click)="closeModalSubtopic()">Cancelar</button>
+        <button type="button" class="topics-modal-primary inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#c98508] focus-visible:outline-none" (click)="createSubtopic()">Crear subtema <i class="fa-solid fa-arrow-right"></i></button>
       </div>
     </div>
   </div>
@@ -214,9 +214,9 @@
       <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#c45b4b]">Acción irreversible</span>
       <h2 id="delete-topic-title" class="mt-2 font-extrabold text-[#172033]">¿Eliminar este tema?</h2>
       <p class="mt-1 text-sm leading-relaxed text-slate-500">También se eliminarán todos sus subtemas y las preguntas relacionadas.</p>
-      <div class="topics-modal-actions mt-6 flex justify-end gap-2 max-sm:flex-col-reverse">
-        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none max-sm:w-full" (click)="closeModalDeleteTopic()">Cancelar</button>
-        <button type="button" class="topics-modal-danger inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#c45b4b] bg-[#c45b4b] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#ad493b] focus-visible:outline-none max-sm:w-full" (click)="deleteTopic()">Sí, eliminar <i class="fa-solid fa-trash-can"></i></button>
+      <div class="topics-modal-actions mt-6 flex justify-end gap-2">
+        <button type="button" class="topics-modal-secondary inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50 focus-visible:outline-none" (click)="closeModalDeleteTopic()">Cancelar</button>
+        <button type="button" class="topics-modal-danger inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-[#c45b4b] bg-[#c45b4b] px-4 py-2.5 text-xs font-extrabold text-white shadow-md transition hover:-translate-y-px hover:bg-[#ad493b] focus-visible:outline-none" (click)="deleteTopic()">Sí, eliminar <i class="fa-solid fa-trash-can"></i></button>
       </div>
     </div>
   </div>
