@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
+import { ExamsInitialData } from './examenes-cards.resolver';
 
 @Component({
   selector: 'app-examanes-cards',
@@ -33,48 +34,23 @@ export class ExamenesCardsComponent {
 
 
   //************************* ngOnInit ****************************//
-  async ngOnInit(): Promise<void> {
-    //capturamos la comunidad y la ciudad que se pasa por URL
-    this.community = this.route.snapshot.paramMap.get('community');
-    this.city = this.route.snapshot.paramMap.get('city');
+  ngOnInit(): void {
+    const initialData = this.route.snapshot.data['examsData'] as ExamsInitialData;
+    this.community = initialData?.community ?? null;
+    this.city = initialData?.city ?? null;
+    this.isSubscribed = initialData?.isSubscribed === true;
+    this.pdfData = initialData?.pdfData ?? [];
+    this.communities = Array.from(
+      new Set(this.pdfData.filter(item => item.community != null).map(item => item.community))
+    );
 
-    //Comprobar suscripción
-    try {
-      const user = await this.requestService.request('GET', '/user', {}, {}, true);
-      this.isSubscribed = user?.subscribed === true;
-    } catch {
-      this.isSubscribed = false;
+    if (this.community && !this.city) {
+      this.showCities(this.community);
+    } else if (this.community && this.city) {
+      this.showExams(this.community, this.city);
     }
 
-    //obtener las comunidades
-    try {
-      // Obtener los datos del servidor
-      if (!this.community) {
-        this.pdfData = await this.requestService.request('GET', `/pdf?sort=community`, {}, {}, true);
-      }else if (this.community && this.city){
-        this.pdfData = await this.requestService.request('GET', `/pdf?sort=name`, {}, {}, true);
-      }
-      // Filtrar comunidades únicas y asignarlas a la variable 'communities'
-      this.communities = Array.from(
-        new Set(this.pdfData.filter(x=> x.community != null).map(item => item.community))
-      );
-
-      // Mostrar ciudades si 'community' está en la URL
-      if (this.community && !this.city) {
-        this.pdfData = await this.requestService.request('GET', `/pdf?sort=city`, {}, {}, true);
-        this.showCities(this.community);
-      }
-
-      // Mostrar examanes si 'city' está en la URL
-      if (this.community && this.city) {
-        this.showExams(this.community, this.city);
-      }
-
-    } catch (error) {
-      console.error('Error fetching PDF data:', error);
-    } finally {
-      this.isLoading = false;
-    }
+    this.isLoading = false;
   }
 
   getPageKicker(): string {

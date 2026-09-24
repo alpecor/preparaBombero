@@ -119,15 +119,17 @@
           <span>Guardadas</span>
           </button>
         }
-        <a
-        class="site-nav-item"
-        [routerLink]="['/refuerzos']"
-        routerLinkActive="site-nav-item-active"
-        ariaCurrentWhenActive="page"
-        (click)="closeMobileMenu()">
-        <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-        <span>Refuerzo</span>
-        </a>
+        @if (isAdmin || isUser) {
+          <a
+          class="site-nav-item"
+          [routerLink]="['/refuerzos']"
+          routerLinkActive="site-nav-item-active"
+          ariaCurrentWhenActive="page"
+          (click)="closeMobileMenu()">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          <span>Refuerzo</span>
+          </a>
+        }
         <a
         class="site-nav-item"
         [routerLink]="['/informacion']"

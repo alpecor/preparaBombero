@@ -18,11 +18,15 @@ export class topicsComponent implements OnInit {
   @Input() isSubscribed = false;
   @Input() isAuthenticated = false;
   @Output() pdfPreview = new EventEmitter<string>();
+  @Output() topicsSelectionChange = new EventEmitter<void>();
 
   //variables para mostrar mensaje de pregunta guardada
   showSavedToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  premiumTopicNoticeId: number | null = null;
+  premiumTopicNoticeMessage = '';
+  private premiumTopicNoticeTimer: ReturnType<typeof setTimeout> | null = null;
 
   //configurar preguntas examen y repaso por tema
   questions:string[] = [];
@@ -91,9 +95,18 @@ export class topicsComponent implements OnInit {
     updateTopicSelection(this.topics, topicId, isChecked);
 
     this.localStorageService.setItem("topicsSelected", topicSelected);
+    this.topicsSelectionChange.emit();
   }
 
-  showPdfPreview(url: string) {
+  showPdfPreview(url: string, topicId?: number) {
+    if (!this.isSubscribed) {
+      if (topicId) {
+        this.showSavedToast = false;
+        this.showTopicPremiumNotice(topicId, 'PDF: función Premium');
+      }
+      return;
+    }
+
     this.pdfPreview.emit(url);
   }
 
@@ -162,6 +175,15 @@ export class topicsComponent implements OnInit {
 
   //************************* FUNCIONES PARA CONFIGURAR PREGUNTAS EN EXAMEN Y REPASO POR TEMA ****************************//
   openQuestionConfigModal(mode: 'exam' | 'review', topic: any) {
+    if (!this.isSubscribed) {
+      this.showSavedToast = false;
+      this.showTopicPremiumNotice(
+        topic.id,
+        mode === 'exam' ? 'Examen: función Premium' : 'Repaso: función Premium'
+      );
+      return;
+    }
+
     this.examConfigMode = mode;
     this.specificTopicId = topic.id;
     this.maxAvailableQuestions = Number(topic.quizCount || 0);
@@ -170,6 +192,20 @@ export class topicsComponent implements OnInit {
     this.selectedQuestionOption = this.maxAvailableQuestions >= 50 ? 50 : this.maxAvailableQuestions;
     this.customQuestionNumber = null;
     this.showExamConfigModal = true;
+  }
+
+  private showTopicPremiumNotice(topicId: number, message: string) {
+    if (this.premiumTopicNoticeTimer) {
+      clearTimeout(this.premiumTopicNoticeTimer);
+    }
+
+    this.premiumTopicNoticeId = topicId;
+    this.premiumTopicNoticeMessage = message;
+    this.premiumTopicNoticeTimer = setTimeout(() => {
+      this.premiumTopicNoticeId = null;
+      this.premiumTopicNoticeMessage = '';
+      this.premiumTopicNoticeTimer = null;
+    }, 3000);
   }
 
 

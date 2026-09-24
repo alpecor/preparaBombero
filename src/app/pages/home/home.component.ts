@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RequestService } from '../../services/request.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { topicsComponent } from '../../components/topics/topics.component';
 import { LocalStorageService } from '../../services/local-storage.service';
-import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { HomeInitialData } from './home.resolver';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
 
   //************************* VARIABLES ****************************//
   questions:string[] = []; //definir array donde guardaremos las preguntas
-  isAuthenticated = !this.authService.isNotAuth();
+  isAuthenticated = false;
   isSubscribed = false;
   topics: any = {};
   pdfPreviewUrl: SafeResourceUrl | null = null;
@@ -36,6 +36,9 @@ export class HomeComponent implements OnInit {
   showToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  premiumTopicNoticeId: number | null = null;
+  premiumTopicNoticeMessage = '';
+  private premiumTopicNoticeTimer: ReturnType<typeof setTimeout> | null = null;
 
   //configurar preguntas examen y repaso
   showExamConfigModal = false;
@@ -44,17 +47,32 @@ export class HomeComponent implements OnInit {
   customQuestionNumber: number | null = null;
   maxAvailableQuestions = 0;
   examModalSubtitle = '';
+  questionConfigError = '';
   examConfigMode: 'exam' | 'review' = 'exam';
   specificTopicId: number | null = null;
 
 
   //************************* CONSTRUCTOR ****************************//
-  constructor(private router: Router, private authService: AuthService, private requestService: RequestService, private localStorageService: LocalStorageService, private sanitizer: DomSanitizer){
+  constructor(private route: ActivatedRoute, private router: Router, private requestService: RequestService, private localStorageService: LocalStorageService, private sanitizer: DomSanitizer){
   }
 
-  showPdfPreview(url: string) {
+  showPdfPreview(url: string, topicId?: number) {
+    if (!this.isSubscribed) {
+      if (topicId) {
+        this.showToast = false;
+        this.showTopicPremiumNotice(topicId, 'PDF: función Premium');
+      } else {
+        this.showToastMsg('Consultar los PDF del temario es una funcionalidad Premium.');
+      }
+      return;
+    }
+
     this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      document
+        .getElementById('home-pdf-preview')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }
 
   closePdfPreview() {
@@ -63,46 +81,38 @@ export class HomeComponent implements OnInit {
 
 
   //************************* ngOnInit ****************************//
-  async ngOnInit(): Promise<void> {
-     // Recalcular auth por si cambió
-    this.isAuthenticated = !this.authService.isNotAuth();
+  ngOnInit(): void {
+    const initialData = this.route.snapshot.data['homeData'] as HomeInitialData;
+
+    this.isAuthenticated = initialData.isAuthenticated;
+    this.isSubscribed = initialData.user?.subscribed === true;
+    this.userDisplayName = initialData.user?.name?.trim() ?? '';
+    this.hasStudyPlan = Boolean(initialData.user?.studyPlan);
+    this.topics = initialData.topics ?? {};
+
     // Solo mostrar modal si el usuario está logueado
     if (this.isAuthenticated && !localStorage.getItem('modalShown')) {
       this.openModalTest();                  // Abre el modal solo tras login
       localStorage.setItem('modalShown', 'true');
     }
 
-    try {
-      // pedimos info del user para saber si esta o no subscrito
-      if (this.isAuthenticated) {
-        const user = await this.requestService.request('GET', `/user`,{},{}, true);
-        this.isSubscribed = user.subscribed;
-        this.userDisplayName = user.name?.trim() ?? '';
-        this.hasStudyPlan = Boolean(user.studyPlan);
-      }
-      // Solicita los temas desde el servidor
-      this.topics = await this.requestService.request('GET', `/topic`,{},{}, true);
-
-      Object.keys(this.topics).forEach(key => {
-        // Iterando sobre el array correspondiente a cada clave
-        this.topics[key] = this.topics[key].map((x: any) => {
-          let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
-          if (topicSelected.length > 0) {
-            const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
-            if (topic.length > 0) {
-              x.selected = true;
-            } else {
-              x.selected = false; // En caso de que no esté seleccionado en localStorage
-            }
+    Object.keys(this.topics).forEach(key => {
+      // Iterando sobre el array correspondiente a cada clave
+      this.topics[key] = this.topics[key].map((x: any) => {
+        let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
+        if (topicSelected.length > 0) {
+          const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
+          if (topic.length > 0) {
+            x.selected = true;
+          } else {
+            x.selected = false; // En caso de que no esté seleccionado en localStorage
           }
-          return x;
-        });
+        }
+        return x;
       });
-      this.collapseTopicTrees();
-      this.refreshHomeMetrics();
-    }catch(error: any){
-      this.router.navigate(['/error']);
-    }
+    });
+    this.collapseTopicTrees();
+    this.refreshHomeMetrics();
   }
 
 
@@ -230,6 +240,10 @@ export class HomeComponent implements OnInit {
     document.getElementById('home-topics')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  onTopicsSelectionChanged() {
+    this.refreshHomeMetrics();
+  }
+
   goToStudyPlan() {
     this.router.navigate(['/plan-estudio']);
   }
@@ -291,8 +305,28 @@ export class HomeComponent implements OnInit {
 
   //************************* FUNCIONES PARA CONFIGURAR PREGUNTAS EN EXAMEN Y REPASO ****************************//
   openQuestionConfigModal(mode: 'exam' | 'review', topic?: any) {
+    if (!this.isSubscribed) {
+      const message = mode === 'exam'
+        ? 'Examen: función Premium'
+        : 'Repaso: función Premium';
+
+      if (topic) {
+        this.showToast = false;
+        this.showTopicPremiumNotice(topic.id, message);
+      } else {
+        this.clearTopicPremiumNotice();
+        this.showToastMsg(
+          mode === 'exam'
+            ? 'Crear un examen personalizado es una funcionalidad Premium.'
+            : 'Repasar preguntas es una funcionalidad Premium.'
+        );
+      }
+      return;
+    }
+
     this.examConfigMode = mode;
     this.specificTopicId = topic?.id ?? null;
+    this.questionConfigError = '';
 
     if (topic) {
       this.maxAvailableQuestions = Number(topic.quizCount || 0);
@@ -324,47 +358,69 @@ export class HomeComponent implements OnInit {
     this.showExamConfigModal = true;
   }
 
+  private showTopicPremiumNotice(topicId: number, message: string) {
+    this.clearTopicPremiumNotice();
+    this.premiumTopicNoticeId = topicId;
+    this.premiumTopicNoticeMessage = message;
+    this.premiumTopicNoticeTimer = setTimeout(() => this.clearTopicPremiumNotice(), 3000);
+  }
+
+  private clearTopicPremiumNotice() {
+    if (this.premiumTopicNoticeTimer) {
+      clearTimeout(this.premiumTopicNoticeTimer);
+      this.premiumTopicNoticeTimer = null;
+    }
+    this.premiumTopicNoticeId = null;
+    this.premiumTopicNoticeMessage = '';
+  }
+
 
   closeExamConfigModal() {
     this.showExamConfigModal = false;
     this.specificTopicId = null;
+    this.questionConfigError = '';
   }
 
 
   selectQuestionOption(option: number) {
     this.selectedQuestionOption = option;
     this.customQuestionNumber = null;
+    this.questionConfigError = '';
   }
 
 
   onCustomQuestionInput() {
     this.selectedQuestionOption = null;
+    this.questionConfigError = '';
   }
 
 
   getSelectedQuestionNumber(): number {
     if (this.customQuestionNumber) {
-      return Math.min(this.customQuestionNumber, this.maxAvailableQuestions);
+      return Math.min(this.customQuestionNumber, this.maxAvailableQuestions, 200);
     }
 
-    return Math.min(this.selectedQuestionOption ?? this.maxAvailableQuestions, this.maxAvailableQuestions);
+    return Math.min(this.selectedQuestionOption ?? this.maxAvailableQuestions, this.maxAvailableQuestions, 200);
   }
 
 
   getSelectedTopicsQuestionCount(): number {
     const topicsSelected = this.localStorageService.getItem("topicsSelected") ?? [];
-    const selectedIds = topicsSelected.map((topic: any) => topic.id);
+    const selectedIds = new Set(topicsSelected.map((topic: any) => Number(topic.id)));
 
     let total = 0;
 
-    const walk = (items: any[]) => {
+    const walk = (items: any[], hasSelectedAncestor = false) => {
       items?.forEach(topic => {
-        if (selectedIds.includes(topic.id)) {
+        const isSelected = selectedIds.has(Number(topic.id));
+
+        // El recuento del padre ya incluye las preguntas de sus descendientes.
+        if (isSelected && !hasSelectedAncestor) {
           total += Number(topic.quizCount || 0);
         }
 
         if (Array.isArray(topic.topics) && topic.topics.length > 0) {
-          walk(topic.topics);
+          walk(topic.topics, hasSelectedAncestor || isSelected);
         }
       });
     };
@@ -389,12 +445,40 @@ export class HomeComponent implements OnInit {
       return;
     }
 
+    if (!this.validateQuestionConfiguration()) {
+      return;
+    }
+
     if (this.specificTopicId) {
       await this.startQuestionModeForSpecificTopic();
       return;
     }
 
     await this.startQuestionModeWithSelectedQuestions();
+  }
+
+  private validateQuestionConfiguration(): boolean {
+    const customValue = this.customQuestionNumber;
+
+    if (customValue !== null && (
+      !Number.isFinite(customValue) ||
+      !Number.isInteger(customValue) ||
+      customValue < 1 ||
+      customValue > 200
+    )) {
+      this.questionConfigError = 'Introduce un número entre 1 y 200. El máximo permitido es 200 preguntas.';
+      return false;
+    }
+
+    const requestedQuestions = customValue ?? this.selectedQuestionOption;
+
+    if (requestedQuestions !== null && requestedQuestions > this.maxAvailableQuestions) {
+      this.questionConfigError = `El temario seleccionado solo tiene ${this.maxAvailableQuestions} preguntas disponibles.`;
+      return false;
+    }
+
+    this.questionConfigError = '';
+    return true;
   }
 
 

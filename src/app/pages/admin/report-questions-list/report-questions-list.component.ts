@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RequestService } from '../../../services/request.service';
 
+interface ReportReporter {
+  name?: string;
+  surname?: string;
+  email?: string;
+}
+
 
 @Component({
   selector: 'app-report-questions-list',
@@ -14,7 +20,7 @@ export class ReportQuestionsListComponent implements OnInit {
 
   questions: any[] = [];
   selectedReason: string = '';  // Almacena el motivo del reporte seleccionado
-  selectedReporter: { name?: string; surname?: string; email?: string } | null = null;
+  selectedReporter: ReportReporter | null = null;
   questionToRemoveIndex: number | null = null; // Almacena el índice de la pregunta a eliminar
   isLoading = true;
   loadError = false;
@@ -35,7 +41,8 @@ export class ReportQuestionsListComponent implements OnInit {
 
     try {
       // Primero cargamos las preguntas reportadas
-      const data = await this.requestService.request('GET', `/report`, {}, {}, true);
+      const response = await this.requestService.request('GET', `/report`, {}, {}, true);
+      const data = Array.isArray(response) ? response : [];
       // Iteramos sobre cada pregunta reportada para añadir el título del tema (topic.title)
       for (let question of data) {
         // Hacemos una petición para obtener el título del tema según el topicId de la pregunta
@@ -45,6 +52,7 @@ export class ReportQuestionsListComponent implements OnInit {
         }
         // Añadimos el título del tema a la pregunta
         question.quiz.topicTitle = topicData?.title ?? "Esta pregunta todavía no está asignada a ningún tema";
+        question.reporter = this.extractReporter(question);
       }
       // Asignamos los datos modificados a la propiedad this.questions
       this.questions = data;
@@ -93,7 +101,7 @@ export class ReportQuestionsListComponent implements OnInit {
 
   //************************* FUNCIÓN PARA VISUALIZACIÓN DE PREGUNTA REPORTADA ****************************//
 
-  openSeeModal(reason: string, reporter?: { name?: string; surname?: string; email?: string }) {
+  openSeeModal(reason: string, reporter?: ReportReporter | null) {
     this.selectedReason = reason;
     this.selectedReporter = reporter ?? null;
     const modalSee = document.getElementById('seeQuestion');
@@ -109,6 +117,75 @@ export class ReportQuestionsListComponent implements OnInit {
     }
     this.selectedReason = '';
     this.selectedReporter = null;
+  }
+
+
+  get selectedReporterName(): string {
+    const name = [this.selectedReporter?.name, this.selectedReporter?.surname]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    if (name) return name;
+    return this.selectedReporter?.email ? 'Usuario identificado' : 'Usuario no identificado';
+  }
+
+
+  get selectedReporterEmail(): string {
+    return this.selectedReporter?.email || 'Correo no disponible';
+  }
+
+
+  private extractReporter(report: any): ReportReporter | null {
+    const nestedReporter =
+      report?.reporter ??
+      report?.user ??
+      report?.reportedBy ??
+      report?.reportedByUser ??
+      report?.userReport ??
+      report?.usuario ??
+      null;
+    const source = nestedReporter?.user ?? nestedReporter;
+
+    const name = this.firstText(
+      source?.name,
+      source?.nombre,
+      source?.firstName,
+      source?.firstname,
+      source?.fullName,
+      report?.userName,
+      report?.reporterName,
+      report?.name,
+    );
+    const surname = this.firstText(
+      source?.surname,
+      source?.apellidos,
+      source?.lastName,
+      source?.lastname,
+      report?.userSurname,
+      report?.reporterSurname,
+      report?.surname,
+    );
+    const email = this.firstText(
+      source?.email,
+      source?.mail,
+      source?.correo,
+      report?.userEmail,
+      report?.reporterEmail,
+      report?.email,
+    );
+
+    return name || surname || email ? { name, surname, email } : null;
+  }
+
+
+  private firstText(...values: unknown[]): string | undefined {
+    const value = values.find(
+      (candidate): candidate is string =>
+        typeof candidate === 'string' && candidate.trim().length > 0,
+    );
+
+    return value?.trim();
   }
 
 

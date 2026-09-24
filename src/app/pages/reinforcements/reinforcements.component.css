@@ -2,9 +2,9 @@ app-reinforcements {
   display: block;
 }
 .reinforcements-page {
-  max-width: 1180px;
-  margin: auto;
-  padding: 1.5rem 1.5rem 4rem;
+  width: min(1120px, calc(100% - 3rem));
+  margin: 0 auto;
+  padding: 2.3rem 0 4rem;
   color: #172033;
   font-family: 'Open Sans', sans-serif;
 }
@@ -83,12 +83,18 @@ app-reinforcements {
   min-height: 10.5rem;
   overflow: hidden;
   padding: 1.7rem 2rem;
-  border: 1px solid #f0d99f;
+  border: 1px solid #ecb96c;
   border-radius: 1.1rem;
   background:
-    linear-gradient(100deg, rgba(255, 248, 232, 0.98), rgba(255, 252, 246, 0.91)),
-    radial-gradient(circle at 90% 20%, rgba(222, 154, 23, 0.17), transparent 38%);
+    linear-gradient(100deg, rgba(255, 229, 199, 0.98), rgba(255, 244, 232, 0.94)),
+    radial-gradient(circle at 90% 20%, rgba(224, 108, 15, 0.30), transparent 38%);
   box-shadow: 0 0.6rem 1.5rem rgba(148, 103, 24, 0.07);
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.reinforcements-page .rf-stat > i {
+  color: #c98508;
 }
 .reinforcements-page .rf-hero-copy {
   max-width: 45rem;
@@ -175,17 +181,29 @@ app-reinforcements {
 }
 .reinforcements-page .rf-owned-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
 }
 .reinforcements-page .rf-owned-card {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.65rem;
   background: white;
   border: 1px solid #e1e6ed;
-  border-radius: 1rem;
-  padding: 1.1rem;
+  border-radius: 0.85rem;
+  padding: 0.85rem;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.reinforcements-page .rf-owned-card:hover,
+.reinforcements-page .rf-owned-card:focus-within {
+  border-color: #ecb96c;
+  background: #fff0dc;
+  box-shadow: 0 0.7rem 1.5rem rgba(184, 92, 18, 0.15);
+  transform: translateY(-0.2rem);
 }
 .reinforcements-page .rf-owned-card > div {
   flex: 1;
@@ -208,20 +226,51 @@ app-reinforcements {
   font-weight: 700;
   margin-top: 0.3rem;
 }
+.reinforcements-page .rf-owned-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 0.45rem;
+  min-height: 2.45rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #de9a17;
+  border-radius: 0.65rem;
+  background: #de9a17;
+  box-shadow: 0 4px 12px rgba(222, 154, 23, 0.14);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.reinforcements-page .rf-owned-action:hover,
+.reinforcements-page .rf-owned-action:focus-visible {
+  border-color: #c98508;
+  background: #c98508;
+  box-shadow: 0 6px 14px rgba(169, 104, 0, 0.2);
+  color: white;
+  transform: translateY(-1px);
+}
 .reinforcements-page .rf-text-button {
   color: #956000;
   font-size: 0.74rem;
   font-weight: 700;
   background: none;
   border: 0;
+  white-space: nowrap;
 }
 .reinforcements-page .rf-filters {
   overflow: visible;
   border: 1px solid #f0d99f;
   border-radius: 1.1rem;
-  background:
-    linear-gradient(100deg, rgba(255, 248, 232, 0.98), rgba(255, 252, 246, 0.91)),
-    radial-gradient(circle at 90% 20%, rgba(222, 154, 23, 0.17), transparent 38%);
+  background: #fff3dc;
   box-shadow: 0 0.6rem 1.5rem rgba(148, 103, 24, 0.07);
   padding: 1.4rem;
 }
@@ -299,13 +348,24 @@ app-reinforcements {
   min-width: 0;
   border: 1px solid #d9bd79;
   border-radius: 0.65rem;
+  outline: none;
   background: white;
   font-size: 0.78rem;
   min-height: 2.7rem;
   padding: 0.65rem 0.8rem;
+  transition: border-color .2s, box-shadow .2s;
 }
 .reinforcements-page input[type='search'] {
   padding-left: 2.5rem;
+}
+.reinforcements-page input[type='search']:focus,
+.reinforcements-page input[type='search']:focus-visible {
+  border-color: #de9a17;
+  outline: none;
+  box-shadow: 0 0 0 .2rem rgba(222, 154, 23, .16);
+}
+.reinforcements-page .rf-search:focus-within i {
+  color: #c98508;
 }
 .reinforcements-page .rf-select-wrap {
   position: relative;
@@ -428,7 +488,7 @@ app-reinforcements {
 .reinforcements-page .rf-pack {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   padding: 1.25rem;
   background: white;
   border: 1px solid #e1e6ed;
@@ -441,8 +501,8 @@ app-reinforcements {
 }
 .reinforcements-page .rf-pack:hover,
 .reinforcements-page .rf-pack:focus-within {
-  border-color: #e4c681;
-  background: #fffaf0;
+  border-color: #ecb96c;
+  background: #fff0dc;
   box-shadow: 0 0.7rem 1.5rem rgba(148, 103, 24, 0.13);
   transform: translateY(-0.2rem);
 }
@@ -463,32 +523,46 @@ app-reinforcements {
 }
 .reinforcements-page .rf-quantity,
 .reinforcements-page .rf-scope {
-  font-size: 0.65rem;
-  color: #68778c;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.reinforcements-page .rf-pack-top .rf-quantity {
+  margin-left: auto;
 }
 .reinforcements-page .rf-scope {
   display: block;
   margin-bottom: 0.4rem;
 }
 .reinforcements-page .rf-location {
-  font-size: 0.72rem;
-  color: #956000;
-  margin-top: 0.5rem;
+  margin-top: 0.2rem;
+  color: #c98508;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.reinforcements-page .rf-pack h3 {
+  color: #172033;
+  font-size: 0.96875rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 .reinforcements-page .rf-pack ul {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.3125rem;
 }
 .reinforcements-page .rf-pack li {
   display: flex;
-  gap: 0.5rem;
-  font-size: 0.74rem;
-  color: #596a81;
-  line-height: 1.6;
+  align-items: flex-start;
+  gap: 0.375rem;
+  color: #6b7280;
+  font-size: 0.78125rem;
+  line-height: 1.4;
 }
 .reinforcements-page .rf-pack li i {
-  color: #438767;
-  padding-top: 0.25rem;
+  flex: 0 0 auto;
+  color: #2e9e63;
+  padding-top: 0.15rem;
 }
 .reinforcements-page .rf-buy-row {
   display: flex;
@@ -496,18 +570,23 @@ app-reinforcements {
   align-items: center;
   gap: 0.5rem;
   border-top: 1px solid #edf0f4;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
   margin-top: auto;
 }
 .reinforcements-page .rf-price {
-  font-size: 1.15rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: #172033;
+  font-size: 1.0625rem;
+  font-weight: 800;
 }
 .reinforcements-page .rf-price small {
-  display: block;
-  color: #68778c;
-  font-size: 0.63rem;
-  font-weight: 400;
-  margin-top: 0.2rem;
+  display: inline;
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.71875rem;
+  font-weight: 600;
 }
 .reinforcements-page .rf-primary,
 .reinforcements-page .rf-secondary {
@@ -663,7 +742,7 @@ app-reinforcements {
   margin: 0.6rem 0 1rem;
   font-size: 0.9rem;
 }
-.reinforcements-page .rf-option {
+.reinforcements-page .rf-question .rf-option {
   display: flex;
   align-items: start;
   gap: 0.7rem;
@@ -674,7 +753,7 @@ app-reinforcements {
   font-size: 0.8rem;
   line-height: 1.5;
 }
-.reinforcements-page .rf-option input {
+.reinforcements-page .rf-question .rf-option input {
   margin-top: 0.2rem;
   accent-color: #c98508;
 }
@@ -701,6 +780,61 @@ app-reinforcements {
   color: #438767;
   font-size: 2rem;
   margin-bottom: 1rem;
+}
+
+@media (max-width: 1000px) {
+  .reinforcements-page .rf-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reinforcements-page .rf-owned-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reinforcements-page .rf-cascade {
+    gap: 0.6rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .reinforcements-page {
+    padding: 2.3rem 0 3rem;
+  }
+
+  .reinforcements-page .rf-hero {
+    align-items: start;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .reinforcements-page .rf-catalog,
+  .reinforcements-page .rf-cascade,
+  .reinforcements-page .rf-owned-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reinforcements-page .rf-heading,
+  .reinforcements-page .rf-contact,
+  .reinforcements-page .rf-filter-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .reinforcements-page .rf-filters {
+    padding: 1.1rem;
+  }
+
+  .reinforcements-page .rf-owned-card {
+    flex-wrap: wrap;
+  }
+
+  .reinforcements-page .rf-owned-card > div {
+    min-width: 150px;
+  }
+
+  .reinforcements-page .rf-dialog-inner {
+    padding: 1.2rem;
+  }
 }
 
 

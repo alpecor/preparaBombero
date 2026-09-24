@@ -17,10 +17,10 @@
 .home-welcome-section {
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid #f2e3c2;
-  background-color: #fff8e8;
+  border-bottom: 1px solid #ecb96c;
+  background-color: #ffe5c7;
   background-image:
-    linear-gradient(90deg, rgba(255, 248, 232, .99) 0%, rgba(255, 250, 241, .94) 43%, rgba(255, 252, 247, .66) 68%, rgba(255, 255, 255, .12) 100%),
+    linear-gradient(90deg, rgba(255, 229, 199, .99) 0%, rgba(255, 244, 232, .94) 43%, rgba(255, 249, 244, .7) 68%, rgba(255, 255, 255, .12) 100%),
     url('/home-firefighter-hero.png');
   background-position: center, right center;
   background-repeat: no-repeat;
@@ -362,9 +362,9 @@
 
 .home-metric-card-link:hover,
 .home-metric-card-link:focus-visible {
-  border-color: #e4c681;
-  background: #fffaf0;
-  box-shadow: 0 .7rem 1.5rem rgba(148, 103, 24, .13);
+  border-color: #ecb96c;
+  background: #fff0dc;
+  box-shadow: 0 .7rem 1.5rem rgba(184, 92, 18, .15);
   outline: none;
   transform: translateY(-.2rem);
 }
@@ -794,6 +794,27 @@
   gap: .25rem;
 }
 
+.home-topic-premium-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: .32rem;
+  margin-right: .35rem;
+  border: 1px solid #e8c982;
+  border-radius: 999px;
+  background: #fff3dc;
+  color: #956000;
+  font-size: .64rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: .42rem .58rem;
+  white-space: nowrap;
+  animation: home-feedback-in .2s ease-out;
+}
+
+.home-topic-premium-notice i {
+  color: #c98508;
+}
+
 .home-topic-question-count {
   margin-right: .35rem;
   color: #526174;
@@ -893,10 +914,10 @@
 .home-guest-hero-section {
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid #f2e3c2;
-  background-color: #fff8e8;
+  border-bottom: 1px solid #ecb96c;
+  background-color: #ffe5c7;
   background-image:
-    linear-gradient(90deg, rgba(255, 248, 232, .99) 0%, rgba(255, 250, 241, .94) 43%, rgba(255, 252, 247, .66) 68%, rgba(255, 255, 255, .12) 100%),
+    linear-gradient(90deg, rgba(255, 229, 199, .99) 0%, rgba(255, 244, 232, .94) 43%, rgba(255, 249, 244, .7) 68%, rgba(255, 255, 255, .12) 100%),
     url('/home-firefighter-hero.png');
   background-position: center, right center;
   background-repeat: no-repeat;
@@ -1121,9 +1142,14 @@
 }
 
 .home-guest-benefit-card:hover {
-  border-color: #e4c681;
-  box-shadow: 0 .7rem 1.5rem rgba(148, 103, 24, .1);
+  border-color: #ecb96c;
+  background: #fff0dc;
+  box-shadow: 0 .7rem 1.5rem rgba(184, 92, 18, .13);
   transform: translateY(-.2rem);
+}
+
+.home-pdf-content {
+  scroll-margin-top: 7rem;
 }
 
 .home-guest-benefit-icon {
@@ -1133,6 +1159,11 @@
   height: 2.7rem;
   border-radius: .75rem;
   font-size: 1rem;
+}
+
+.home-guest-benefit-top {
+  display: flex;
+  align-items: center;
 }
 
 .home-guest-benefit-icon-gold {

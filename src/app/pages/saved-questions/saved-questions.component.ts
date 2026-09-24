@@ -1,10 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { TextSanitizerComponent } from "../../components/text-sanitizer/text-sanitizer.component";
+import { SavedQuestionsInitialData } from './saved-questions.resolver';
 
 // ---- Tipos (fuera de la clase)
 interface Topic { id: string; name: string; }
@@ -21,6 +22,8 @@ export class SavedQuestionsComponent implements OnInit {
 
   //************************* VARIABLES ****************************//
   savedQuestions: any[] = [];
+  isLoading = true;
+  isSubscribed = false;
   totalSavedQuestions = 0;
   packId: number | null = null;
   packName = '';
@@ -33,6 +36,11 @@ export class SavedQuestionsComponent implements OnInit {
   showSavedToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  favoriteQuestionIds = new Set<number>();
+  reportedQuestionId: number | null = null;
+  reportReason = '';
+  isReportModalOpen = false;
+  isSendingReport = false;
 
 
   //************************* CONSTRUCTOR ****************************//
@@ -40,21 +48,31 @@ export class SavedQuestionsComponent implements OnInit {
     private requestService: RequestService,
     private localStorageService: LocalStorageService,
     private route: ActivatedRoute,
+    private router: Router,
   ) {}
 
 
   //************************* ngOnInit ****************************//
-  async ngOnInit(): Promise<void> {
-    const rawPackId = this.route.snapshot.paramMap.get('packId');
-    const parsedPackId = Number(rawPackId);
+  ngOnInit(): void {
+    const initialData = this.route.snapshot.data['savedQuestionsData'] as SavedQuestionsInitialData;
+    this.isSubscribed = initialData?.isSubscribed === true;
+    this.packId = initialData?.packId ?? null;
+    this.packLoadError = initialData?.packLoadError ?? '';
+    this.favoriteQuestionIds = new Set(
+      (initialData?.favoriteQuestions ?? []).map((question: any) => Number(question.id)),
+    );
 
-    if (rawPackId && Number.isInteger(parsedPackId) && parsedPackId > 0) {
-      this.packId = parsedPackId;
-      await this.loadPackQuestions();
-      return;
+    if (this.isPackView) {
+      this.packName = initialData?.pack?.nombre ?? 'Pack comprado';
+      this.packDescription = [
+        initialData?.pack?.comunidad,
+        initialData?.pack?.ciudad,
+        initialData?.pack?.administracion,
+      ].filter(Boolean).join(' · ') || null;
     }
 
-    await this.loadSavedQuestions();
+    this.initializeQuestions(initialData?.questions ?? []);
+    this.isLoading = false;
   }
 
   get isPackView(): boolean {
@@ -62,10 +80,35 @@ export class SavedQuestionsComponent implements OnInit {
   }
 
 
+  goToSubscription(): void {
+    void this.router.navigate(['/profile']);
+  }
+
+
   //************************* FUNCION PARA OBTENER PREGUNTAS GUARDADAS ****************************//
   async loadSavedQuestions() {
     const allSavedQuestions = await this.requestService.request('GET', `/quiz/favorite`, {}, {}, true);
+    this.favoriteQuestionIds = new Set(
+      allSavedQuestions.map((question: any) => Number(question.id)),
+    );
     this.initializeQuestions(allSavedQuestions);
+  }
+
+  private async loadFavoriteState(): Promise<void> {
+    try {
+      const favoriteQuestions = await this.requestService.request(
+        'GET',
+        `/quiz/favorite`,
+        {},
+        {},
+        true,
+      );
+      this.favoriteQuestionIds = new Set(
+        favoriteQuestions.map((question: any) => Number(question.id)),
+      );
+    } catch {
+      this.favoriteQuestionIds = new Set<number>();
+    }
   }
 
   async loadPackQuestions(): Promise<void> {
@@ -82,8 +125,12 @@ export class SavedQuestionsComponent implements OnInit {
         true,
       );
 
-      this.packName = response?.pack?.name ?? 'Pack comprado';
-      this.packDescription = response?.pack?.description ?? null;
+      this.packName = response?.pack?.nombre ?? 'Pack comprado';
+      this.packDescription = [
+        response?.pack?.comunidad,
+        response?.pack?.ciudad,
+        response?.pack?.administracion,
+      ].filter(Boolean).join(' · ') || null;
       this.topicSelected = '';
       this.initializeQuestions(response?.questions ?? []);
     } catch {
@@ -223,9 +270,81 @@ toggleShuffle(): void {
     try{
       await this.requestService.request('DELETE', `/quiz/${id}/favorite`,{},{}, true);
       this.loadSavedQuestions();
-      this.showToast('Se ha quitado la pregunta de la sección preguntas guardadas.', 'error');
+      this.showToast('Se ha quitado la pregunta de la sección preguntas guardadas.', 'success');
     }catch(error: any){
       console.log(error);
+    }
+  }
+
+
+  isQuestionSaved(id: number): boolean {
+    return this.favoriteQuestionIds.has(Number(id));
+  }
+
+
+  async toggleSavedQuestion(id: number): Promise<void> {
+    const questionId = Number(id);
+
+    try {
+      if (this.isQuestionSaved(questionId)) {
+        await this.requestService.request('DELETE', `/quiz/${questionId}/favorite`, {}, {}, true);
+        const updatedIds = new Set(this.favoriteQuestionIds);
+        updatedIds.delete(questionId);
+        this.favoriteQuestionIds = updatedIds;
+        this.showToast('Se ha quitado la pregunta de la sección preguntas guardadas.', 'success');
+        return;
+      }
+
+      await this.requestService.request('POST', `/quiz/favorite`, { quizId: questionId }, {}, true);
+      this.favoriteQuestionIds = new Set([...this.favoriteQuestionIds, questionId]);
+      this.showToast('Se ha guardado la pregunta en la sección preguntas guardadas.', 'success');
+    } catch {
+      this.showToast('No se ha podido actualizar la pregunta guardada.', 'error');
+    }
+  }
+
+
+  openReportModal(questionId: number): void {
+    this.reportedQuestionId = Number(questionId);
+    this.reportReason = '';
+    this.isReportModalOpen = true;
+  }
+
+
+  closeReportModal(): void {
+    if (this.isSendingReport) return;
+
+    this.reportedQuestionId = null;
+    this.reportReason = '';
+    this.isReportModalOpen = false;
+  }
+
+
+  async sendReport(): Promise<void> {
+    const reason = this.reportReason.trim();
+    if (!reason) {
+      this.showToast('Escribe el motivo del reporte antes de enviarlo.', 'error');
+      return;
+    }
+    if (!this.reportedQuestionId || this.isSendingReport) return;
+
+    this.isSendingReport = true;
+    try {
+      await this.requestService.request(
+        'POST',
+        `/report`,
+        { reason, quizId: this.reportedQuestionId },
+        {},
+        true,
+      );
+      this.isReportModalOpen = false;
+      this.reportedQuestionId = null;
+      this.reportReason = '';
+      this.showToast('Se ha enviado el reporte de la pregunta.', 'success');
+    } catch {
+      this.showToast('No se ha podido enviar el reporte de la pregunta.', 'error');
+    } finally {
+      this.isSendingReport = false;
     }
   }
 

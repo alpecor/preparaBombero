@@ -23,6 +23,11 @@ import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions
 import { ReviewResultComponent } from './pages/review-result/review-result.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { StudyPlanComponent } from './pages/study-plan/study-plan.component';
+import { reinforcementsResolver } from './pages/reinforcements/reinforcements.resolver';
+import { examsResolver } from './pages/examenes-cards/examenes-cards.resolver';
+import { studyPlanResolver } from './pages/study-plan/study-plan.resolver';
+import { savedQuestionsResolver } from './pages/saved-questions/saved-questions.resolver';
+import { homeResolver } from './pages/home/home.resolver';
 
 import { SiteLayoutComponent } from './components/site-layout/site-layout.component';
 
@@ -52,12 +57,14 @@ export const routes: Routes = [
         path: 'refuerzos',
         loadComponent: () => import('./pages/reinforcements/reinforcements.component').then(m => m.ReinforcementsComponent),
         canActivate: [userAuthGuard],
+        resolve: { packsReady: reinforcementsResolver },
         title: 'Refuerzos | Prepara Bombero'
       },
       {
         path: 'refuerzos/:packId',
         loadComponent: () => import('./pages/saved-questions/saved-questions.component').then(m => m.SavedQuestionsComponent),
         canActivate: [userAuthGuard],
+        resolve: { savedQuestionsData: savedQuestionsResolver },
         title: 'Preguntas del pack | Prepara Bombero'
       },
       {
@@ -66,7 +73,8 @@ export const routes: Routes = [
         title: 'Información | Prepara Bombero'
       },
       {
-        path: '', component: HomeComponent
+        path: '', component: HomeComponent,
+        resolve: { homeData: homeResolver }
       },
       {
         path: 'terminos-y-condiciones', component: TermsConditionsComponent
@@ -75,19 +83,25 @@ export const routes: Routes = [
         path: 'politica-de-privacidad', component: PrivacyPolicyComponent
       },
       {
-        path: 'listado-de-examenes', component: ExamenesComponent
+        path: 'listado-de-examenes', component: ExamenesComponent, canActivate: [userAuthGuard]
       },
       {
-        path: 'examenes', component: ExamenesCardsComponent
+        path: 'examenes', component: ExamenesCardsComponent,
+        canActivate: [userAuthGuard],
+        resolve: { examsData: examsResolver }
       },
       {
-        path: 'examenes/:community', component: ExamenesCardsComponent
+        path: 'examenes/:community', component: ExamenesCardsComponent,
+        canActivate: [userAuthGuard],
+        resolve: { examsData: examsResolver }
       },
       {
-        path: 'examenes/:community/:city', component: ExamenesCardsComponent
+        path: 'examenes/:community/:city', component: ExamenesCardsComponent,
+        canActivate: [userAuthGuard],
+        resolve: { examsData: examsResolver }
       },
       {
-        data: { showFooter: false }, path: 'examen/:slug-examen-bombero', component: QuestionsComponent
+        data: { showFooter: false }, path: 'examen/:slug-examen-bombero', component: QuestionsComponent, canActivate: [userAuthGuard]
       },
       {
         data: { showFooter: false }, path: 'test', component: QuestionsComponent
@@ -105,10 +119,12 @@ export const routes: Routes = [
         path: 'profile', component: ProfileComponent, canActivate: [userAuthGuard]
       },
       {
-        path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard]
+        path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard],
+        resolve: { savedQuestionsData: savedQuestionsResolver }
       },
       {
-        path: 'plan-estudio', component: StudyPlanComponent, canActivate: [userAuthGuard]
+        path: 'plan-estudio', component: StudyPlanComponent, canActivate: [userAuthGuard],
+        resolve: { studyPlanData: studyPlanResolver }
       },
       {
         path: 'admin/examenes', component: ExamsListComponent, canActivate: [adminAuthGuard]

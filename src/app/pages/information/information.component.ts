@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 interface GuidePage {
   title: string;
@@ -15,15 +17,19 @@ interface Guide {
   pages: GuidePage[];
 }
 
+const GUIDE_ORDER = ['examenes', 'repaso', 'plan-estudio', 'refuerzos', 'guardadas', 'reportes'];
+
 @Component({
   selector: 'app-information',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './information.component.html',
   styleUrl: './information.component.css'
 })
 export class InformationComponent {
   private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly authService = inject(AuthService);
+  readonly isAuthenticated = !this.authService.isNotAuth();
   activeGuide: string | null = null;
   activePage = 0;
 
@@ -35,6 +41,7 @@ export class InformationComponent {
         {
           title: 'Encuentra tu refuerzo',
           steps: [
+            'Los packs están pensados para reforzar los temas que cuentan con pocas preguntas oficiales y ayudarte a afianzar mejor tus conocimientos mediante más práctica.',
             'Entra en Refuerzos y busca el pack que quieres comprar.',
             'Consulta su descripción, número de preguntas y precio de pago único.',
             'Pulsa Comprar y completa el pago seguro de Stripe. El pack se asociará a tu cuenta cuando el pago quede confirmado.'
@@ -44,10 +51,12 @@ export class InformationComponent {
         {
           title: 'Preguntas de tus packs',
           steps: [
-            'Cuando consultes un tema, se utilizarán las preguntas oficiales y las preguntas de los packs que hayas comprado para ese mismo tema.',
-            'Las preguntas de packs que no hayas comprado no se incluirán en tus sesiones.',
+            'Si eres Premium y tienes un plan de estudio activo, las preguntas de los packs que hayas comprado se combinarán con las preguntas oficiales de esos mismos temas en tus sesiones del plan.',
+            'Cuando prepares un examen personalizado con un tema para el que hayas comprado un pack, también se combinarán las preguntas oficiales y las del pack.',
+            'Aunque no seas Premium, podrás practicar por separado las preguntas de tus packs comprados siempre que quieras desde Refuerzos.',
             'Los exámenes oficiales mantienen únicamente sus preguntas oficiales.'
-          ]
+          ],
+          note: 'Solo se añadirán preguntas de los packs que hayas comprado y que correspondan al temario incluido en la sesión.'
         }
       ]
     },
@@ -113,7 +122,7 @@ export class InformationComponent {
             "La pregunta quedará en tu colección de Preguntas guardadas, accesible desde Guardadas en el menú.",
             "Vuelve a esa colección para repasarla después. Puedes quitar de guardadas las preguntas que ya no quieras conservar."
           ],
-          "note": "El acceso a Preguntas guardadas es una función Premium y requiere una suscripción activa."
+          "note": "Las preguntas oficiales guardadas requieren Premium. Las preguntas de los packs que hayas comprado también se pueden guardar y consultar sin una suscripción activa."
         },
         {
           "title": "Organiza tus guardadas",
@@ -193,7 +202,7 @@ export class InformationComponent {
         }
       ]
     }
-  ];
+  ].sort((first, second) => GUIDE_ORDER.indexOf(first.id) - GUIDE_ORDER.indexOf(second.id));
 
   setGuide(id: string | null, focusTarget: HTMLButtonElement): void {
     this.activeGuide = id;

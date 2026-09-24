@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { RequestService } from '../../services/request.service';
+import { StudyPlanInitialData } from './study-plan.resolver';
 
 interface DurationOption {
   label: string;
@@ -30,6 +31,7 @@ interface HistoryWeek {
 }
 
 type SetupDropdown = 'community' | 'province' | 'administration' | 'duration' | null;
+type StudyPlanAccess = 'allowed' | 'subscription-required' | 'renewal-required';
 
 const SPAIN_TIME_ZONE = 'Europe/Madrid';
 
@@ -61,6 +63,7 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   historyPage = 0;
   expandedSessionId: number | null = null;
   hasPlan = false;
+  studyPlanAccess: StudyPlanAccess = 'allowed';
   isRestDay = false;
   isStartingSession = false;
   isReviewingSessionId: number | null = null;
@@ -86,28 +89,69 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
   constructor(
     private requestService: RequestService,
     private router: Router,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private route: ActivatedRoute
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.loadPlan();
+  ngOnInit(): void {
+    const initialData = this.route.snapshot.data['studyPlanData'] as StudyPlanInitialData;
+    this.applyInitialData(initialData);
   }
 
   ngOnDestroy(): void {
     this.stopCountdown();
   }
 
+  private applyInitialData(initialData: StudyPlanInitialData | undefined): void {
+    this.errorMessage = initialData?.errorMessage ?? '';
+    this.currentExamDate = initialData?.user?.examEstimatedDate ?? null;
+    this.sessions = initialData?.sessions ?? [];
+    this.studyPlanAccess = 'allowed';
+
+    if (!initialData?.user) {
+      this.hasPlan = false;
+    } else if (initialData.user.subscribed !== true) {
+      const hasActivePlan = Boolean(initialData.user.studyPlan)
+        && this.isPlanDateCurrent(this.currentExamDate);
+      this.studyPlanAccess = hasActivePlan
+        ? 'renewal-required'
+        : 'subscription-required';
+      this.hasPlan = hasActivePlan;
+    } else {
+      this.hasPlan = this.sessions.length > 0;
+      if (this.hasPlan) {
+        this.preparePlanView();
+      } else {
+        this.configuration = initialData.configuration ?? {};
+        this.communities = Object.keys(this.configuration).filter(Boolean);
+      }
+    }
+
+    this.isLoading = false;
+    this.startCountdown();
+  }
+
   async loadPlan(): Promise<void> {
     this.isLoading = true;
     this.errorMessage = '';
+    this.studyPlanAccess = 'allowed';
 
     try {
-      const [response, user] = await Promise.all([
-        this.requestService.request('GET', '/study', {}, {}, true),
-        this.requestService.request('GET', '/user', {}, {}, true)
-      ]);
-      this.sessions = Array.isArray(response) ? response : [];
+      const user = await this.requestService.request('GET', '/user', {}, {}, true);
       this.currentExamDate = user?.examEstimatedDate ?? null;
+
+      if (user?.subscribed !== true) {
+        const hasActivePlan = Boolean(user?.studyPlan) && this.isPlanDateCurrent(this.currentExamDate);
+        this.studyPlanAccess = hasActivePlan
+          ? 'renewal-required'
+          : 'subscription-required';
+        this.hasPlan = hasActivePlan;
+        this.sessions = [];
+        return;
+      }
+
+      const response = await this.requestService.request('GET', '/study', {}, {}, true);
+      this.sessions = Array.isArray(response) ? response : [];
       this.hasPlan = this.sessions.length > 0;
 
       if (this.hasPlan) {
@@ -124,6 +168,31 @@ export class StudyPlanComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.startCountdown();
     }
+  }
+
+  goToSubscription(): void {
+    void this.router.navigate(['/profile']);
+  }
+
+  planEndDateLabel(): string {
+    if (!this.currentExamDate) {
+      return '';
+    }
+
+    return new Intl.DateTimeFormat('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: SPAIN_TIME_ZONE
+    }).format(new Date(this.currentExamDate));
+  }
+
+  private isPlanDateCurrent(examDate: string | number | null): boolean {
+    if (!examDate || Number.isNaN(new Date(examDate).getTime())) {
+      return false;
+    }
+
+    return this.dateKey(examDate) >= this.dateKey(new Date());
   }
 
   private async loadConfiguration(): Promise<void> {

@@ -70,17 +70,27 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  // Método para el click de preguntas guardadas si estas subscrito o no
+  // Las preguntas oficiales guardadas requieren Premium. Los compradores de
+  // packs también pueden acceder para consultar las favoritas de sus packs.
   async onSavedClick(): Promise<void> {
     this.closeMobileMenu();
     await this.refreshAuthentication();
     if (this.accessToken) await this.refreshSubscription();
     if (!this.isSubscribed) {
-      this.showToast(
-        'Funcionalidad PREMIUM: debes estar susbcrito para acceder a Preguntas guardadas.',
-        'error'
-      );
-      return;
+      try {
+        const packs = await this.requestService.request('GET', '/pack', {}, {}, true);
+        const hasPurchasedPack = Array.isArray(packs) && packs.some((pack: any) => pack.purchased === true);
+        if (!hasPurchasedPack) {
+          this.showToast(
+            'Preguntas guardadas está disponible con Premium o al comprar un pack de refuerzo.',
+            'error'
+          );
+          return;
+        }
+      } catch {
+        this.showToast('No se ha podido comprobar el acceso a Preguntas guardadas.', 'error');
+        return;
+      }
     }
     this.router.navigate(['/preguntas-guardadas']);
   }

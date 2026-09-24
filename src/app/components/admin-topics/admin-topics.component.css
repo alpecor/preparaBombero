@@ -1,7 +1,7 @@
 :host{display:block}
 .topic-child-group{margin-top:.7rem}
 .topic-node{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid #e3e8ee;border-radius:.9rem;background:#fff;padding:.7rem .8rem;transition:border-color .2s,box-shadow .2s,transform .2s}
-.topic-node:hover{border-color:#e8c982;box-shadow:0 .3rem .8rem rgba(148,103,24,.08);transform:translateY(-1px)}
+.topic-node:hover{border-color:#ecb96c;background:#fff0dc;box-shadow:0 .3rem .8rem rgba(184,92,18,.1);transform:translateY(-1px)}
 .topic-node-secondary{border-left:2px solid #d7e0ea}
 .topic-node-main{display:flex;align-items:center;min-width:0;gap:.75rem;flex:1 1 auto}
 .topic-node-index{display:grid;width:2rem;height:2rem;flex:0 0 2rem;place-items:center;border-radius:.6rem;background:#f1f5f9;color:#718096;font-size:.7rem}

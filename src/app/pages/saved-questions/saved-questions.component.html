@@ -23,7 +23,7 @@
                 {{ isPackView ? 'Refuerzo comprado' : 'Tu biblioteca de repaso' }}
               </span>
               <h1 class="mt-2 font-extrabold leading-tight text-[#172033]">
-                {{ isPackView ? packName : 'Preguntas guardadas' }}
+                {{ isLoading && isPackView ? 'Cargando refuerzo...' : (isPackView ? packName : 'Preguntas guardadas') }}
               </h1>
               <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">
                 @if (isPackView) {
@@ -35,12 +35,12 @@
             </div>
             <div class="saved-questions-count-badge">
               <span class="grid h-10 w-10 place-items-center rounded-xl bg-[#fff2d2] text-[#c98508]">
-                <i class="fa-solid fa-layer-group"></i>
+                <i class="fa-solid" [ngClass]="isLoading ? 'fa-spinner fa-spin' : (!isPackView && !isSubscribed ? 'fa-lock' : 'fa-layer-group')"></i>
               </span>
               <div>
-                <strong>{{ totalSavedQuestions }}</strong>
+                <strong>{{ isLoading ? '—' : (!isPackView && !isSubscribed ? 'Premium' : totalSavedQuestions) }}</strong>
                 <span class="mt-1 block text-[.68rem] font-bold text-slate-500">
-                  {{ isPackView ? 'preguntas del pack' : 'preguntas guardadas' }}
+                  {{ isLoading ? 'cargando datos' : (!isPackView && !isSubscribed ? 'funcionalidad exclusiva' : (isPackView ? 'preguntas del pack' : 'preguntas guardadas')) }}
                 </span>
               </div>
             </div>
@@ -50,6 +50,7 @@
             <p class="saved-questions-error" role="alert">{{ packLoadError }}</p>
           }
 
+          @if (!isLoading && (isPackView || isSubscribed)) {
           <section class="saved-questions-toolbar">
           <div class="flex flex-col justify-between gap-3 flex-row items-center">
             <div class="flex items-center gap-3 text-[#172033]">
@@ -135,13 +136,37 @@
             </button>
           </div>
         </section>
+          }
         </section>
       </div>
     </section>
 
     <section class="saved-questions-content pt-6 pb-16">
-      <div class="saved-questions-container mx-auto w-[calc(100%-3rem)] max-w-[900px]">
-        @if (savedQuestions.length === 0) {
+      <div
+        class="saved-questions-container mx-auto w-[calc(100%-3rem)] max-w-[900px]"
+        [class.saved-questions-premium-container]="!isPackView && !isSubscribed">
+        @if (isLoading) {
+          <div class="saved-questions-loading-state" role="status">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Cargando preguntas...</span>
+          </div>
+        } @else if (!isPackView && !isSubscribed) {
+          <div class="saved-questions-empty saved-questions-premium-empty rounded-2xl border bg-white px-6 py-14 text-center shadow-sm">
+            <span class="saved-questions-access-icon">
+              <i class="fa-solid fa-crown"></i>
+            </span>
+            <span class="saved-questions-premium-label">Función Premium</span>
+            <h2>Guardar preguntas es una funcionalidad Premium</h2>
+            <p>
+              Activa Premium para guardar las preguntas que quieras volver a practicar y tenerlas siempre disponibles en esta sección.
+            </p>
+            <button type="button" class="saved-questions-access-button" (click)="goToSubscription()">
+              <i class="fa-solid fa-crown"></i>
+              Activar Premium
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        } @else if (savedQuestions.length === 0) {
           <div class="saved-questions-empty rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center shadow-sm">
             <span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#fff2d2] text-xl text-[#c98508]">
               <i class="fa-solid" [ngClass]="isPackView ? 'fa-box-open' : 'fa-bookmark'"></i>
@@ -159,7 +184,7 @@
           </div>
         } @else {
           <div class="mb-5 flex flex-col justify-between gap-3 flex-row items-end">
-            <div>
+            <div class="self-start text-left">
               <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Colección de preguntas</span>
               <h2 class="mt-1 font-extrabold text-[#172033]">
                 {{ isPackView ? 'Realiza las preguntas del pack' : 'Repasa tus guardadas' }}
@@ -174,7 +199,7 @@
           <div class="saved-questions-list flex flex-col gap-5">
             <article
               *ngFor="let question of savedQuestions; let i = index"
-              class="saved-question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md">
+              class="saved-question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-[#ecb96c] hover:bg-[#fff0dc] hover:shadow-md">
               <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50 px-5 py-3.5">
                 <div class="flex flex-wrap items-center gap-2">
                   <span class="inline-flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.1em] text-slate-500">
@@ -197,6 +222,14 @@
                 </div>
 
                 <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    class="saved-question-action inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#f0d9a4] bg-[#fff9ed] text-sm text-[#de9a17] transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+                    title="Reportar pregunta"
+                    aria-label="Reportar pregunta"
+                    (click)="openReportModal(question.id)">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </button>
                   @if (question.isCorrected) {
                     <button
                       type="button"
@@ -216,6 +249,16 @@
                       aria-label="Quitar pregunta guardada"
                       (click)="deleteSavedQuestion(question.id)">
                       <i class="fa-solid fa-bookmark"></i>
+                    </button>
+                  } @else {
+                    <button
+                      type="button"
+                      class="saved-question-action saved-question-favorite inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-sm text-slate-400 transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+                      [class.saved-question-favorite-active]="isQuestionSaved(question.id)"
+                      [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
+                      [attr.aria-label]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
+                      (click)="toggleSavedQuestion(question.id)">
+                      <i class="fa-bookmark" [ngClass]="isQuestionSaved(question.id) ? 'fa-solid' : 'fa-regular'"></i>
                     </button>
                   }
                 </div>
@@ -338,5 +381,49 @@
       </div>
     </section>
   </main>
+
+  @if (isReportModalOpen) {
+    <div
+      class="fixed inset-0 z-[1200] grid place-items-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pack-report-modal-title">
+      <button
+        type="button"
+        class="absolute inset-0 h-full w-full cursor-default bg-[#172033]/70"
+        aria-label="Cerrar reporte"
+        (click)="closeReportModal()"></button>
+      <div class="relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl">
+        <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-[#fff2d6] text-[#c98508]">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <span class="text-[.68rem] font-extrabold uppercase tracking-[.12em] text-[#a56800]">Ayúdanos a mejorar</span>
+        <h2 id="pack-report-modal-title" class="mt-2 font-extrabold text-[#172033]">Reportar esta pregunta</h2>
+        <p class="mt-1 text-sm leading-relaxed text-slate-500">Cuéntanos qué problema has encontrado y lo revisaremos lo antes posible.</p>
+        <label class="mt-5 block text-xs font-extrabold text-slate-700" for="packReportReason">Motivo del reporte</label>
+        <textarea
+          id="packReportReason"
+          class="mt-2 min-h-32 w-full resize-y rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-[#de9a17] focus:ring-2 focus:ring-[#de9a17]/20"
+          [(ngModel)]="reportReason"
+          placeholder="Describe el error o la duda que has encontrado..."></textarea>
+        <div class="mt-5 flex justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-extrabold text-slate-600 transition hover:bg-slate-50"
+            [disabled]="isSendingReport"
+            (click)="closeReportModal()">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="rounded-lg border border-[#de9a17] bg-[#de9a17] px-4 py-2.5 text-xs font-extrabold text-white shadow-sm transition hover:bg-[#c98508] disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="isSendingReport"
+            (click)="sendReport()">
+            {{ isSendingReport ? 'Enviando...' : 'Enviar reporte' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

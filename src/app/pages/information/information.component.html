@@ -9,6 +9,31 @@
       </div>
     </section>
 
+    @if (!isAuthenticated) {
+      <section class="information-container information-guest-cta" aria-labelledby="information-register-title">
+        <div class="information-guest-copy">
+          <span class="information-kicker"><i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i> Empieza hoy</span>
+          <h2 id="information-register-title">No esperes más para preparar tu plaza</h2>
+          <p>
+            Crea tu cuenta gratis y empieza a utilizar herramientas pensadas para ayudarte a practicar,
+            organizar tu temario y avanzar con más seguridad hacia tu objetivo.
+          </p>
+          <div class="information-guest-actions">
+            <a class="information-register-button" routerLink="/register">
+              Registrarme gratis <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="information-login-link" routerLink="/login">Ya tengo una cuenta</a>
+          </div>
+        </div>
+        <ul class="information-guest-benefits" aria-label="Ventajas de crear una cuenta">
+          <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Practica con exámenes oficiales</span></li>
+          <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Crea exámenes y repasos por temario</span></li>
+          <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Accede a refuerzos y amplía tu preparación</span></li>
+          <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>Descubre las opciones Premium cuando las necesites</span></li>
+        </ul>
+      </section>
+    }
+
     <section class="information-container information-content" aria-labelledby="guides-title">
       <div class="information-section-heading">
         <div><span class="information-kicker">Tú eliges por dónde empezar</span><h2 id="guides-title">Conoce tus herramientas</h2></div>

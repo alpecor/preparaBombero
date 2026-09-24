@@ -29,8 +29,13 @@
           <p>{{ getPageDescription() }}</p>
         </div>
         <div class="exams-count-badge">
-          <strong>{{ getCurrentCount() }}</strong>
-          <span>{{ getCurrentCountLabel() }}</span>
+          @if (isLoading) {
+            <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            <span>Cargando datos</span>
+          } @else {
+            <strong>{{ getCurrentCount() }}</strong>
+            <span>{{ getCurrentCountLabel() }}</span>
+          }
         </div>
       </section>
 

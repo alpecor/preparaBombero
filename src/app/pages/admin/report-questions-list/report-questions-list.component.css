@@ -4,7 +4,7 @@
 .reported-questions-main,.reported-questions-content{background:#f7f8fa}
 .reported-questions-main{padding:2.3rem 0 1.5rem}
 .reported-questions-container{width:min(1080px,calc(100% - 3rem));margin:0 auto}
-.reported-questions-header-panel{overflow:hidden;border:1px solid #f0d99f;border-radius:1.1rem;background:linear-gradient(100deg,rgba(255,248,232,.98),rgba(255,252,246,.91)),radial-gradient(circle at 90% 20%,rgba(222,154,23,.17),transparent 38%);box-shadow:0 .6rem 1.5rem rgba(148,103,24,.07);padding:1.7rem 2rem 1.35rem}
+.reported-questions-header-panel{overflow:hidden;border:1px solid #ecb96c;border-radius:1.1rem;background:linear-gradient(100deg,rgba(255,229,199,.98),rgba(255,244,232,.94)),radial-gradient(circle at 90% 20%,rgba(224,108,15,.30),transparent 38%);box-shadow:0 .6rem 1.5rem rgba(148,103,24,.07);padding:1.7rem 2rem 1.35rem}
 .reported-questions-heading-panel{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem}
 .reported-questions-heading-copy{max-width:45rem}
 .reported-questions-heading-copy h1{margin:.5rem 0 .4rem;color:#172033;font-size:clamp(1.8rem,4vw,2.65rem);font-weight:800;line-height:1.1}

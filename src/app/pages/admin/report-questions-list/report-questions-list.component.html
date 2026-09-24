@@ -68,7 +68,7 @@
           <div class="reported-questions-list flex flex-col gap-5">
             <article
               *ngFor="let question of questions; let i = index"
-              class="reported-question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md">
+              class="reported-question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-[#ecb96c] hover:bg-[#fff0dc] hover:shadow-md">
               <header class="reported-question-card-header flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50 px-5 py-3.5">
                 <div class="flex flex-wrap items-center gap-2">
                   <span class="inline-flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.1em] text-slate-500">
@@ -202,10 +202,10 @@
           </span>
           <div class="min-w-0">
             <strong class="block truncate text-sm font-extrabold text-[#172033]">
-              {{ selectedReporter ? (selectedReporter.name || '') + ' ' + (selectedReporter.surname || '') : 'Usuario no identificado' }}
+              {{ selectedReporterName }}
             </strong>
             <span class="mt-0.5 block truncate text-xs text-slate-500">
-              {{ selectedReporter?.email || 'Correo no disponible' }}
+              {{ selectedReporterEmail }}
             </span>
           </div>
         </div>

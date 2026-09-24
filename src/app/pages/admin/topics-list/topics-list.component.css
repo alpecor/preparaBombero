@@ -3,7 +3,7 @@
 .topics-admin-page h1,.topics-admin-page h2,.topics-admin-page h3,.topics-admin-page button,.topics-admin-page input,.topics-admin-page select{font-family:'Montserrat',sans-serif}
 .topics-admin-main{padding:2.3rem 0 1.5rem}
 .topics-admin-container{width:min(1080px,calc(100% - 3rem));margin:0 auto}
-.topics-admin-hero-panel{overflow:hidden;border:1px solid #f0d99f;border-radius:1.1rem;background:linear-gradient(100deg,rgba(255,248,232,.98),rgba(255,252,246,.91)),radial-gradient(circle at 90% 20%,rgba(222,154,23,.17),transparent 38%);box-shadow:0 .6rem 1.5rem rgba(148,103,24,.07);padding:1.7rem 2rem 1.35rem}
+.topics-admin-hero-panel{overflow:hidden;border:1px solid #ecb96c;border-radius:1.1rem;background:linear-gradient(100deg,rgba(255,229,199,.98),rgba(255,244,232,.94)),radial-gradient(circle at 90% 20%,rgba(224,108,15,.30),transparent 38%);box-shadow:0 .6rem 1.5rem rgba(148,103,24,.07);padding:1.7rem 2rem 1.35rem}
 .topics-admin-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem}
 .topics-admin-heading-copy h1{margin:.5rem 0 .4rem;color:#172033;font-size:clamp(1.8rem,4vw,2.65rem);font-weight:800;line-height:1.1}
 .topics-admin-heading-copy p{max-width:38rem;margin:0;color:#6d7b8d;font-size:.86rem;line-height:1.6}
@@ -14,7 +14,7 @@
 .topics-admin-count-badge div>span{display:block;max-width:8rem;margin-top:.25rem;color:#80601f;font-size:.66rem;font-weight:800;line-height:1.25}
 .topics-admin-hero-footer{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1.5rem;border-top:1px solid rgba(240,217,159,.78);padding-top:1.15rem}
 .topic-node{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid #e3e8ee;border-radius:.9rem;background:#fff;padding:.7rem .8rem;transition:border-color .2s,box-shadow .2s,transform .2s}
-.topic-node:hover{border-color:#e8c982;box-shadow:0 .3rem .8rem rgba(148,103,24,.08);transform:translateY(-1px)}
+.topic-node:hover{border-color:#ecb96c;background:#fff0dc;box-shadow:0 .3rem .8rem rgba(184,92,18,.1);transform:translateY(-1px)}
 .topic-node-primary{border-left:3px solid #de9a17}
 .topic-node-main{display:flex;align-items:center;min-width:0;gap:.75rem;flex:1 1 auto}
 .topic-node-index{display:grid;width:2rem;height:2rem;flex:0 0 2rem;place-items:center;border-radius:.6rem;background:#fff2d2;color:#b97805;font-size:.68rem;font-weight:800}

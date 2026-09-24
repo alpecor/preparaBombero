@@ -1,1 +1,59 @@
 @import '../auth-login/auth-login.component.css';
+
+.auth-register-page {
+  height: auto;
+  min-height: 100vh;
+  place-items: start center;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.auth-register-page .auth-shell {
+  height: auto;
+  min-height: calc(100vh - 2rem);
+}
+
+.auth-register-page .auth-visual-panel,
+.auth-register-page .auth-form-panel {
+  height: auto;
+}
+
+.auth-register-page .auth-form-panel {
+  min-height: max-content;
+}
+
+@media (max-height: 50rem) {
+  .auth-register-page .auth-form-panel {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .auth-register-page .auth-logo {
+    width: 4.7rem;
+  }
+
+  .auth-register-page .auth-form-heading {
+    margin: .7rem 0 1rem;
+  }
+
+  .auth-register-page .auth-form {
+    gap: .7rem;
+  }
+
+  .auth-register-page .auth-input-shell input {
+    min-height: 2.7rem;
+  }
+
+  .auth-register-page .auth-submit-button {
+    min-height: 2.8rem;
+    margin-top: .15rem;
+  }
+
+  .auth-register-page .auth-form-switch {
+    margin-top: .8rem;
+  }
+
+  .auth-register-page .auth-form-note {
+    margin-top: .75rem;
+  }
+}

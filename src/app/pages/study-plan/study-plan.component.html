@@ -4,47 +4,65 @@
     @if (!showSettings) {
       <section class="study-plan-hero" [class.study-plan-hero-with-plan]="hasPlan">
         <div class="study-plan-hero-content">
-          @if (!hasPlan) {
-            <span class="study-plan-hero-kicker">
-              <i class="fa-solid fa-calendar-check"></i>
-              Plan de estudio
-            </span>
-            <h1>Configura tu plan</h1>
-            <p>Cuéntanos a qué te presentas y cuánto tiempo tienes; nosotros nos encargamos del resto.</p>
-          } @else {
-            <span class="study-plan-hero-kicker">
-              <i class="fa-solid fa-fire"></i>
-              Tu preparación
-            </span>
-            <h1>Tu plan de estudio personalizado</h1>
-            @if (countdownExpired) {
-              <p class="study-plan-hero-countdown-expired">La fecha del examen ya ha pasado</p>
-            } @else if (currentExamDate) {
-              <div class="study-plan-hero-countdown" aria-label="Tiempo restante para el examen">
-                <span class="study-plan-countdown-label">Tiempo restante hasta el examen</span>
-                <div class="study-plan-countdown-units">
-                  <div class="study-plan-countdown-unit">
-                    <strong>{{ formatCountdownValue(countdown.days) }}</strong>
-                    <span>días</span>
-                  </div>
-                  <div class="study-plan-countdown-separator">:</div>
-                  <div class="study-plan-countdown-unit">
-                    <strong>{{ formatCountdownValue(countdown.hours) }}</strong>
-                    <span>horas</span>
-                  </div>
-                  <div class="study-plan-countdown-separator">:</div>
-                  <div class="study-plan-countdown-unit">
-                    <strong>{{ formatCountdownValue(countdown.minutes) }}</strong>
-                    <span>minutos</span>
-                  </div>
-                  <div class="study-plan-countdown-separator">:</div>
-                  <div class="study-plan-countdown-unit">
-                    <strong>{{ formatCountdownValue(countdown.seconds) }}</strong>
-                    <span>segundos</span>
+          <div class="study-plan-hero-copy">
+            @if (isLoading) {
+              <div class="study-plan-hero-loading" role="status" aria-label="Cargando tu plan de estudio">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            } @else if (!hasPlan) {
+              <span class="study-plan-hero-kicker">
+                <i class="fa-solid fa-calendar-check"></i>
+                Plan de estudio
+              </span>
+              <h1>Configura tu plan</h1>
+              <p>Cuéntanos a qué te presentas y cuánto tiempo tienes; nosotros nos encargamos del resto.</p>
+            } @else {
+              <span class="study-plan-hero-kicker">
+                <i class="fa-solid fa-fire"></i>
+                Tu preparación
+              </span>
+              <h1>Tu plan de estudio personalizado</h1>
+              @if (countdownExpired) {
+                <p class="study-plan-hero-countdown-expired">La fecha del examen ya ha pasado</p>
+              } @else if (currentExamDate) {
+                <div class="study-plan-hero-countdown" aria-label="Tiempo restante para el examen">
+                  <span class="study-plan-countdown-label">Tiempo restante hasta el examen</span>
+                  <div class="study-plan-countdown-units">
+                    <div class="study-plan-countdown-unit">
+                      <strong>{{ formatCountdownValue(countdown.days) }}</strong>
+                      <span>días</span>
+                    </div>
+                    <div class="study-plan-countdown-separator">:</div>
+                    <div class="study-plan-countdown-unit">
+                      <strong>{{ formatCountdownValue(countdown.hours) }}</strong>
+                      <span>horas</span>
+                    </div>
+                    <div class="study-plan-countdown-separator">:</div>
+                    <div class="study-plan-countdown-unit">
+                      <strong>{{ formatCountdownValue(countdown.minutes) }}</strong>
+                      <span>minutos</span>
+                    </div>
+                    <div class="study-plan-countdown-separator">:</div>
+                    <div class="study-plan-countdown-unit">
+                      <strong>{{ formatCountdownValue(countdown.seconds) }}</strong>
+                      <span>segundos</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
             }
+          </div>
+
+          @if (!isLoading && studyPlanAccess !== 'allowed') {
+            <div class="study-plan-premium-badge">
+              <span><i class="fa-solid fa-lock"></i></span>
+              <div>
+                <strong>Premium</strong>
+                <small>{{ studyPlanAccess === 'renewal-required' ? 'suscripción inactiva' : 'funcionalidad exclusiva' }}</small>
+              </div>
+            </div>
           }
         </div>
       </section>
@@ -56,6 +74,36 @@
           <i class="fa-solid fa-spinner fa-spin"></i>
           <span>Cargando tu plan de estudio...</span>
         </div>
+      } @else if (studyPlanAccess !== 'allowed') {
+        <section class="study-plan-access-card" aria-labelledby="study-plan-access-title">
+          <span class="study-plan-access-icon" aria-hidden="true">
+            <i class="fa-solid" [ngClass]="studyPlanAccess === 'renewal-required' ? 'fa-rotate' : 'fa-crown'"></i>
+          </span>
+          <span class="study-plan-section-label">
+            {{ studyPlanAccess === 'renewal-required' ? 'Plan pendiente de reactivación' : 'Función Premium' }}
+          </span>
+          <h2 id="study-plan-access-title">
+            {{ studyPlanAccess === 'renewal-required'
+              ? 'Renueva tu suscripción para continuar con tu plan'
+              : 'Crea tu plan de estudio personalizado con Premium' }}
+          </h2>
+          @if (studyPlanAccess === 'renewal-required') {
+            <p>
+              Tu plan sigue programado hasta el <strong>{{ planEndDateLabel() }}</strong>.
+              Renueva tu suscripción para continuar con las sesiones que tenías preparadas.
+            </p>
+          } @else {
+            <p>
+              Para crear un plan de estudio personalizado necesitas una suscripción Premium activa.
+              Con ella podrás organizar tus sesiones y seguir una preparación adaptada a la fecha de tu examen.
+            </p>
+          }
+          <button type="button" class="study-plan-access-button" (click)="goToSubscription()">
+            <i class="fa-solid" [ngClass]="studyPlanAccess === 'renewal-required' ? 'fa-rotate' : 'fa-crown'"></i>
+            {{ studyPlanAccess === 'renewal-required' ? 'Renovar suscripción' : 'Activar Premium' }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </section>
       } @else if (showSettings) {
         <div class="study-plan-settings">
           <div class="study-plan-settings-topbar">

@@ -13,7 +13,7 @@
   }
 
   <main>
-    <section class="questions-hero relative overflow-hidden border-b border-[#ead8ae] bg-gradient-to-br from-[#fff8e8] via-[#fffaf2] to-white">
+    <section class="questions-hero relative overflow-hidden border-b border-[#ecb96c] bg-gradient-to-br from-[#ffe5c7] via-[#fff4e8] to-white">
       <div class="questions-container mx-auto w-[calc(100%-3rem)] max-w-[1080px] py-12">
         <div class="questions-hero-heading flex flex-col items-start justify-between gap-8 flex-row">
           <div class="questions-hero-copy max-w-2xl">
@@ -63,7 +63,7 @@
         <div class="questions-list flex flex-col gap-4">
           <article
             *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
-            class="question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md">
+            class="question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-[#ecb96c] hover:bg-[#fff0dc] hover:shadow-md">
             <div class="question-card-header flex items-center justify-between gap-4 border-b border-slate-100 bg-slate-50 px-5 py-3">
               <div class="question-number inline-flex items-baseline gap-2">
                 <span class="text-[.66rem] font-extrabold uppercase tracking-[.1em] text-slate-500">Pregunta</span>

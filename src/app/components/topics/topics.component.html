@@ -31,35 +31,42 @@
       <span class="ml-2">{{ item.title }}</span>
     </div>
     <div class="flex items-center">
-      <span class="mr-2">{{ item.quizCount }}</span>
+      @if (premiumTopicNoticeId === item.id) {
+        <span class="topic-inline-premium-notice" role="status" aria-live="polite">
+          <i class="fa-solid fa-lock"></i>
+          {{ premiumTopicNoticeMessage }}
+        </span>
+      }
+      <span class="topic-question-count">
+        {{ item.quizCount | number:'1.0-0' }} <small>preg.</small>
+      </span>
       @if (isAuthenticated) {
-        <i
+        <button
+          type="button"
+          class="topic-action-button"
           (click)="openQuestionConfigModal('exam', item)"
           title="Hacer examen"
-          class="mr-2 fa-solid fa-pen-to-square fa-lg"
-          style="cursor: pointer"
-        >
-        </i>
-        <span class="inline-flex w-8 justify-center">
-          <i
-            (click)="openQuestionConfigModal('review', item)"
-            title="Hacer repaso"
-            class="fa-solid fa-file-pen fa-lg"
-            style="cursor: pointer"
-          >
-          </i>
-        </span>
-        <span class="inline-flex w-8 justify-center">
-          @if (item.url) {
-            <button
-              (click)="showPdfPreview(item.url)"
-              title="Ver PDF"
-              type="button"
-            >
-              <i class="fa-solid fa-file-pdf fa-lg"></i>
-            </button>
-          }
-        </span>
+          aria-label="Hacer examen">
+          <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="topic-action-button"
+          (click)="openQuestionConfigModal('review', item)"
+          title="Hacer repaso"
+          aria-label="Hacer repaso">
+          <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+        </button>
+        @if (item.url) {
+          <button
+            type="button"
+            class="topic-action-button"
+            (click)="showPdfPreview(item.url, item.id)"
+            title="Ver PDF"
+            aria-label="Ver PDF">
+            <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+          </button>
+        }
       }
     </div>
   </div>
@@ -71,6 +78,7 @@
   [isSubscribed]="isSubscribed"
   [isAuthenticated]="isAuthenticated"
   (pdfPreview)="showPdfPreview($event)"
+  (topicsSelectionChange)="topicsSelectionChange.emit()"
 />
 } }
 
