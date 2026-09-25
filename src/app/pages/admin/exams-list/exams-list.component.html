@@ -1,12 +1,11 @@
-<div class="info-admin-page bg-[#f7f8fa] text-[#172033]">
-
+<div class="info-admin-page">
   <main class="info-admin-main">
     <div class="info-admin-container">
       <section class="info-admin-hero">
         <div class="info-admin-hero-copy">
           <span class="info-admin-kicker"><i class="fa-solid fa-bullhorn"></i> Panel de comunicación</span>
           <h1>Información y novedades</h1>
-          <p>Prepara el mensaje que verán tus usuarios al entrar en la plataforma y mantenlos al día de cada mejora.</p>
+          <p>Escribe el resumen de la barra superior y crea las páginas que explicarán cada novedad a los usuarios.</p>
         </div>
         <span class="info-admin-hero-icon" aria-hidden="true"><i class="fa-solid fa-newspaper"></i></span>
       </section>
@@ -17,52 +16,107 @@
             <div class="info-card-head">
               <span class="info-step">01</span>
               <div>
-                <span class="info-card-kicker">Mensaje destacado</span>
-                <h2>Novedad de portada</h2>
+                <span class="info-card-kicker">Barra negra de la web</span>
+                <h2>Resumen de portada</h2>
               </div>
             </div>
-            <p class="info-card-description">Este texto aparecerá en la franja superior de la web para llamar la atención sobre la actualización.</p>
+            <p class="info-card-description">Este es el único texto que se mostrará en la franja superior. Las explicaciones completas irán en las páginas de abajo.</p>
 
-            <label for="comments" class="info-field-label">Titular de la novedad</label>
+            <label for="announcement-summary" class="info-field-label">Resumen de las novedades</label>
             <textarea
-              id="comments"
-              name="title"
-              [(ngModel)]="title"
+              id="announcement-summary"
+              name="summary"
+              [(ngModel)]="summary"
               rows="3"
+              required
+              maxlength="500"
               class="info-title-input"
-              placeholder="Ej. Nuevo plan de estudio personalizado disponible">
+              placeholder="Ej. Nueva web, plan de estudio y nuevos packs de refuerzo">
             </textarea>
             <div class="info-field-footer">
-              <span><i class="fa-solid fa-circle-info"></i> Sé breve y directo para que se lea de un vistazo.</span>
-              <span>{{ (title || '').length }} caracteres</span>
+              <span><i class="fa-solid fa-circle-info"></i> Sé breve: este texto será el anuncio visible en la barra negra.</span>
+              <span>{{ summary.length }} / 500</span>
             </div>
           </section>
 
-          <section class="info-editor-card info-editor-card-rich">
-            <div class="info-card-head">
-              <span class="info-step">02</span>
-              <div>
-                <span class="info-card-kicker">Contenido ampliado</span>
-                <h2>Detalles de la actualización</h2>
+          <section class="info-editor-card info-pages-card">
+            <div class="info-pages-heading">
+              <div class="info-card-head">
+                <span class="info-step">02</span>
+                <div>
+                  <span class="info-card-kicker">Contenido ampliado</span>
+                  <h2>Páginas de novedades</h2>
+                </div>
               </div>
+              <button type="button" class="info-add-page-button" (click)="addPage()" [disabled]="pages.length >= 30">
+                <i class="fa-solid fa-plus"></i> Nueva página
+              </button>
             </div>
-            <p class="info-card-description">Cuando el usuario pulse “Ver más”, podrá consultar aquí toda la información, enlaces y detalles de la novedad.</p>
+            <p class="info-card-description">Cada página tendrá su propio título y explicación. Los usuarios podrán recorrerlas con los botones “Anterior” y “Siguiente”.</p>
 
-            <label for="description-editor" class="info-field-label">Descripción completa</label>
-            <p-editor
-              inputId="description-editor"
-              name="description"
-              class="info-rich-editor"
-              [(ngModel)]="description"
-              [style]="{ height: '300px', width: '100%' }">
-            </p-editor>
+            @if (pages.length === 0) {
+              <button type="button" class="info-empty-pages" (click)="addPage()">
+                <span><i class="fa-regular fa-file-lines"></i></span>
+                <strong>Añade tu primera página</strong>
+                <small>Podrás explicar una mejora, un nuevo examen o cualquier contenido que publiques.</small>
+              </button>
+            }
+
+            <div class="info-pages-list">
+              @for (page of pages; track page; let index = $index) {
+                <article class="info-page-editor" [class.info-page-editor-active]="activePreviewPage === index">
+                  <header class="info-page-editor-header">
+                    <button type="button" class="info-page-number" (click)="selectPreviewPage(index)" [attr.aria-label]="'Previsualizar página ' + (index + 1)">
+                      {{ index + 1 }}
+                    </button>
+                    <div>
+                      <span class="info-card-kicker">Página {{ index + 1 }}</span>
+                      <h3>{{ page.title || 'Página sin título' }}</h3>
+                    </div>
+                    <div class="info-page-actions">
+                      <button type="button" (click)="movePage(index, -1)" [disabled]="index === 0" aria-label="Subir página"><i class="fa-solid fa-arrow-up"></i></button>
+                      <button type="button" (click)="movePage(index, 1)" [disabled]="index === pages.length - 1" aria-label="Bajar página"><i class="fa-solid fa-arrow-down"></i></button>
+                      <button type="button" class="info-page-delete" (click)="removePage(index)" aria-label="Eliminar página"><i class="fa-regular fa-trash-can"></i></button>
+                    </div>
+                  </header>
+
+                  <label [for]="'page-title-' + index" class="info-field-label">Título de la página</label>
+                  <input
+                    [id]="'page-title-' + index"
+                    [name]="'page-title-' + index"
+                    [(ngModel)]="page.title"
+                    (focus)="selectPreviewPage(index)"
+                    maxlength="200"
+                    class="info-title-input"
+                    placeholder="Ej. Hemos añadido nuevos exámenes oficiales">
+
+                  <label [for]="'page-content-' + index" class="info-field-label info-content-label">Explicación completa</label>
+                  <p-editor
+                    [attr.id]="'page-content-' + index"
+                    [attr.aria-label]="'Explicación completa de la página ' + (index + 1)"
+                    [name]="'page-content-' + index"
+                    class="info-rich-editor"
+                    [(ngModel)]="page.content"
+                    (onFocus)="selectPreviewPage(index)"
+                    [style]="{ height: '230px', width: '100%' }">
+                  </p-editor>
+                </article>
+              }
+            </div>
           </section>
+
+          @if (validationMessage) {
+            <div class="info-validation-message" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ validationMessage }}</span>
+            </div>
+          }
 
           <div class="info-save-row">
-            <span><i class="fa-solid fa-cloud-arrow-up"></i> Los cambios se reflejarán en la próxima visita.</span>
-            <button type="submit" class="info-save-button">
-              <i class="fa-solid fa-check"></i>
-              Guardar cambios
+            <span><i class="fa-solid fa-cloud-arrow-up"></i> Se guardará el resumen, el contenido y el orden de todas las páginas.</span>
+            <button type="submit" class="info-save-button" [disabled]="isSaving">
+              <i class="fa-solid" [class.fa-spinner]="isSaving" [class.fa-spin]="isSaving" [class.fa-check]="!isSaving"></i>
+              {{ isSaving ? 'Guardando…' : 'Guardar cambios' }}
             </button>
           </div>
         </form>
@@ -83,23 +137,44 @@
             </div>
             <div class="info-preview-ticker">
               <span class="info-preview-tag"><i class="fa-solid fa-bullhorn"></i> Novedades</span>
-              <span class="info-preview-title">{{ title || 'Tu próxima novedad aparecerá aquí' }}</span>
-              <i class="fa-solid fa-arrow-right"></i>
+              <span class="info-preview-title">{{ summary || 'Tu resumen aparecerá aquí' }}</span>
+              @if (pages.length) { <span class="info-preview-more">Ver más <i class="fa-solid fa-arrow-right"></i></span> }
             </div>
-            <div class="info-preview-body">
-              <span class="info-preview-kicker">Novedades de la plataforma</span>
-              <h3>{{ title || 'Añade un titular para empezar' }}</h3>
-              @if (description) {
-                <div class="info-preview-content" [innerHTML]="description"></div>
-              } @else {
-                <p class="info-preview-placeholder">El contenido ampliado aparecerá al pulsar “Ver más”.</p>
-              }
-            </div>
+
+            @if (pages[activePreviewPage]; as page) {
+              <div class="info-preview-body">
+                <span class="info-preview-kicker">Novedades de la plataforma</span>
+                <h3>{{ page.title || 'Añade un título a esta página' }}</h3>
+                @if (page.content) {
+                  <div class="info-preview-content" [innerHTML]="page.content"></div>
+                } @else {
+                  <p class="info-preview-placeholder">La explicación de esta página aparecerá aquí.</p>
+                }
+                <div class="info-preview-pagination">
+                  <span>{{ activePreviewPage + 1 }} de {{ pages.length }}</span>
+                  <div>
+                    @for (previewPage of pages; track previewPage; let previewIndex = $index) {
+                      <button
+                        type="button"
+                        [class.active]="previewIndex === activePreviewPage"
+                        (click)="selectPreviewPage(previewIndex)"
+                        [attr.aria-label]="'Previsualizar página ' + (previewIndex + 1)">
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="info-preview-empty">
+                <i class="fa-regular fa-file-lines"></i>
+                <p>Añade una página para previsualizar su contenido.</p>
+              </div>
+            }
           </div>
 
           <div class="info-preview-tip">
             <i class="fa-solid fa-lightbulb"></i>
-            <span>Usa el titular para resumir la novedad y la descripción para explicar cómo puede aprovecharla el usuario.</span>
+            <span>El resumen anuncia el conjunto de novedades. Dedica una página diferente a explicar cada cambio.</span>
           </div>
         </aside>
       </div>
@@ -107,12 +182,7 @@
   </main>
 
   @if (showSaveConfirmation) {
-    <div
-      class="site-info-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="info-save-title"
-      (click)="dismissSaveConfirmation()">
+    <div class="site-info-modal" role="dialog" aria-modal="true" aria-labelledby="info-save-title" (click)="dismissSaveConfirmation()">
       <div class="site-info-modal-card" (click)="$event.stopPropagation()">
         <div class="site-info-modal-header">
           <span class="site-info-modal-icon info-save-success-icon"><i class="fa-solid fa-check"></i></span>
@@ -121,12 +191,11 @@
           </button>
         </div>
         <span class="site-info-modal-kicker">Guardado correctamente</span>
-        <h2 id="info-save-title">Los cambios se han guardado correctamente</h2>
+        <h2 id="info-save-title">El resumen y las páginas ya están publicados</h2>
         <button type="button" class="site-info-modal-action" (click)="finishSaveConfirmation()">
           Continuar <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
     </div>
   }
-
 </div>

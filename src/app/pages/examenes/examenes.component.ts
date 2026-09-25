@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { RequestService } from '../../services/request.service';
 import { TextSanitizerComponent } from '../../components/text-sanitizer/text-sanitizer.component';
+import { decodeAnnouncementPages } from '../../services/announcement-content';
 
 @Component({
   selector: 'app-examenes',
@@ -29,7 +30,7 @@ export class ExamenesComponent {
   //************************* FUNCION PARA CARGAR LA INFO DESDE EL SERVICIO ****************************//
   async loadInfo(): Promise<void> {
     const data = await this.requestService.request('GET', `/info`, {}, {}, false);
-      this.description = data.description;
+      this.description = decodeAnnouncementPages(data.description, data.title)[0]?.content ?? '';
   }
 
 

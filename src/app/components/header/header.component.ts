@@ -1,11 +1,29 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, HostListener, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { NavigationEnd, RouterLink, Router, RouterLinkActive } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { RequestService } from '../../services/request.service';
+import { decodeAnnouncementPages } from '../../services/announcement-content';
+
+interface PlatformUpdate {
+  id: string;
+  eyebrow: string;
+  title: string;
+  icon: string;
+  contentHtml: string;
+}
 
 
 @Component({
@@ -14,9 +32,17 @@ import { RequestService } from '../../services/request.service';
   imports: [NgOptimizedImage, RouterLink, CommonModule, RouterLinkActive],
   templateUrl: './header.component.html'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  constructor(private router: Router, private authService: AuthService, private requestService: RequestService) {
+  @ViewChild('promoViewport') private promoViewport?: ElementRef<HTMLElement>;
+  @ViewChild('promoMessage') private promoMessage?: ElementRef<HTMLElement>;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private requestService: RequestService,
+    private ngZone: NgZone
+  ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       takeUntilDestroyed()
@@ -28,9 +54,14 @@ export class HeaderComponent implements OnInit {
     });
   }
   private accessToken: string | null | undefined;
-  title: string = "";
-  description: string = "";
   isAnnouncementOpen = false;
+  activeAnnouncementPage = 0;
+  isPromoOverflowing = false;
+  promoDurationSeconds = 18;
+  announcementSummary = '';
+  announcementPages: PlatformUpdate[] = [];
+  private promoResizeObserver?: ResizeObserver;
+  private promoMeasureTimer?: ReturnType<typeof setTimeout>;
   isAdmin: boolean = this.authService.isAdmin();
   isUser: boolean = this.authService.isUser();
   isNotAuth: boolean = this.authService.isNotAuth();
@@ -46,6 +77,16 @@ export class HeaderComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     void this.loadInfo();
     await this.refreshAuthentication();
+  }
+
+  ngAfterViewInit(): void {
+    this.observePromoWidth();
+    this.schedulePromoMeasurement();
+  }
+
+  ngOnDestroy(): void {
+    this.promoResizeObserver?.disconnect();
+    if (this.promoMeasureTimer) clearTimeout(this.promoMeasureTimer);
   }
 
   private async refreshAuthentication(): Promise<void> {
@@ -141,6 +182,7 @@ export class HeaderComponent implements OnInit {
   @HostListener('document:keydown.escape')
   closeAdminMenuOnEscape(): void {
     this.isAdminMenuOpen = false;
+    this.closeAnnouncement();
   }
 
   isRouteActive(path: string): boolean {
@@ -152,21 +194,80 @@ export class HeaderComponent implements OnInit {
   async loadInfo(): Promise<void> {
     try {
       const data = await this.requestService.request('GET', `/info`, {}, {}, false);
-      this.title = data.title ?? '';
-      this.description = data.description ?? '';
+      this.announcementSummary = (data.title ?? '').trim();
+      this.announcementPages = decodeAnnouncementPages(
+        data.description,
+        data.title,
+        true
+      ).map((page, index) => ({
+        id: String(index),
+        eyebrow: 'Novedades de la plataforma',
+        title: page.title,
+        icon: 'fa-bullhorn',
+        contentHtml: page.content,
+      }));
     } catch {
-      this.title = '';
-      this.description = '';
+      this.announcementSummary = '';
+      this.announcementPages = [];
+    } finally {
+      this.activeAnnouncementPage = Math.min(
+        this.activeAnnouncementPage,
+        Math.max(this.announcementPages.length - 1, 0)
+      );
+      this.observePromoWidth();
+      this.schedulePromoMeasurement();
     }
   }
 
   openAnnouncement(): void {
+    if (!this.announcementPages.length) return;
+    this.activeAnnouncementPage = 0;
     this.isAnnouncementOpen = true;
     this.closeMobileMenu();
   }
 
   closeAnnouncement(): void {
     this.isAnnouncementOpen = false;
+  }
+
+  showAnnouncementPage(index: number): void {
+    if (index < 0 || index >= this.announcementPages.length) return;
+    this.activeAnnouncementPage = index;
+  }
+
+  previousAnnouncement(): void {
+    this.showAnnouncementPage(this.activeAnnouncementPage - 1);
+  }
+
+  nextAnnouncement(): void {
+    this.showAnnouncementPage(this.activeAnnouncementPage + 1);
+  }
+
+  private observePromoWidth(): void {
+    if (typeof ResizeObserver === 'undefined' || !this.promoViewport) return;
+    this.promoResizeObserver?.disconnect();
+    this.promoResizeObserver = new ResizeObserver(() => {
+      this.ngZone.run(() => this.measurePromoOverflow());
+    });
+    this.promoResizeObserver.observe(this.promoViewport.nativeElement);
+  }
+
+  private schedulePromoMeasurement(): void {
+    if (this.promoMeasureTimer) clearTimeout(this.promoMeasureTimer);
+    this.promoMeasureTimer = setTimeout(() => {
+      this.observePromoWidth();
+      this.measurePromoOverflow();
+    });
+  }
+
+  private measurePromoOverflow(): void {
+    const viewport = this.promoViewport?.nativeElement;
+    const message = this.promoMessage?.nativeElement;
+    if (!viewport || !message) return;
+
+    const messageWidth = message.scrollWidth;
+    this.isPromoOverflowing = messageWidth > viewport.clientWidth + 1;
+    this.promoDurationSeconds = Math.max(14, Math.min(32, Math.round(messageWidth / 52)));
   }
 
 

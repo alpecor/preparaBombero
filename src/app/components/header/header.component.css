@@ -28,14 +28,19 @@
   text-decoration: none;
 }
 
-.site-promo-inner:hover .site-promo-text,
-.site-promo-inner:focus-visible .site-promo-text {
+.site-promo-inner:hover .site-promo-track,
+.site-promo-inner:focus-visible .site-promo-track {
   color: #ffd47a;
 }
 
 .site-promo-inner:focus-visible {
   outline: 2px solid #ffd47a;
   outline-offset: -3px;
+}
+
+.site-promo-inner:disabled,
+.site-promo-inner-static {
+  cursor: default;
 }
 
 .site-promo-tag {
@@ -70,14 +75,39 @@
   font-size: .42rem;
 }
 
-.site-promo-text {
+.site-promo-viewport {
+  position: relative;
   overflow: hidden;
   flex: 1 1 auto;
+  min-width: 0;
   max-width: 75rem;
+  mask-image: linear-gradient(90deg, transparent, #000 .65rem, #000 calc(100% - .65rem), transparent);
+}
+
+.site-promo-track {
+  --promo-gap: 3rem;
+  display: flex;
+  align-items: center;
+  gap: var(--promo-gap);
+  width: max-content;
   color: rgba(255, 255, 255, .88);
-  text-overflow: ellipsis;
   transition: color .2s ease;
   white-space: nowrap;
+}
+
+.site-promo-track-moving {
+  animation: site-promo-scroll var(--promo-duration, 18s) linear 3 forwards;
+  will-change: transform;
+}
+
+.site-promo-text {
+  flex: 0 0 auto;
+}
+
+@keyframes site-promo-scroll {
+  to {
+    transform: translateX(calc(-50% - (var(--promo-gap) / 2)));
+  }
 }
 
 .site-promo-more {
@@ -118,6 +148,10 @@
   background: #fff;
   box-shadow: 0 1.4rem 3rem rgba(17, 24, 39, .25);
   padding: 1.6rem;
+}
+
+.site-updates-modal-card {
+  width: min(100%, 42rem);
 }
 
 .site-info-modal-header {
@@ -193,6 +227,159 @@
 
 .site-info-modal-content p:last-child {
   margin-bottom: 0;
+}
+
+.site-updates-modal-content {
+  border-color: #f0d59d;
+  background: linear-gradient(135deg, #fffaf0, #fff 78%);
+}
+
+.site-update-lead {
+  margin: 0;
+  color: #47566c;
+  font-size: .9rem;
+  line-height: 1.7;
+}
+
+.site-update-list {
+  display: grid;
+  gap: .75rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-update-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+}
+
+.site-update-list li > span {
+  display: grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: 0 0 1.45rem;
+  margin-top: .1rem;
+  place-items: center;
+  border-radius: .45rem;
+  background: #fff0cc;
+  color: #c98508;
+  font-size: .58rem;
+}
+
+.site-update-list p {
+  margin: 0;
+}
+
+.site-update-rich-content > :first-child {
+  margin-top: 0;
+}
+
+.site-update-rich-content > :last-child {
+  margin-bottom: 0;
+}
+
+.site-update-rich-content ul,
+.site-update-rich-content ol {
+  display: grid;
+  gap: .45rem;
+  margin: .85rem 0;
+  padding-left: 1.15rem;
+}
+
+.site-update-rich-content ul {
+  list-style: disc;
+}
+
+.site-update-rich-content ol {
+  list-style: decimal;
+}
+
+.site-updates-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  color: #7a8799;
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.site-updates-dots {
+  display: flex;
+  align-items: center;
+  gap: .36rem;
+}
+
+.site-updates-dots button {
+  width: .48rem;
+  height: .48rem;
+  border: 0;
+  border-radius: 999px;
+  background: #d7dee7;
+  cursor: pointer;
+  padding: 0;
+  transition: width .2s ease, background .2s ease;
+}
+
+.site-updates-dots button:hover,
+.site-updates-dots button:focus-visible,
+.site-updates-dots .site-updates-dot-active {
+  width: 1.25rem;
+  background: #de9a17;
+  outline: none;
+}
+
+.site-updates-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-top: 1.1rem;
+}
+
+.site-updates-actions .site-info-modal-action {
+  margin-top: 0;
+}
+
+.site-update-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-height: 2.55rem;
+  border: 1px solid #e0e6ed;
+  border-radius: .65rem;
+  background: #fff;
+  color: #526174;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .7rem;
+  font-weight: 800;
+  padding: .55rem .85rem;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+
+.site-update-nav-button:hover:not(:disabled),
+.site-update-nav-button:focus-visible:not(:disabled) {
+  border-color: #f0d59d;
+  background: #fff9ed;
+  color: #a56800;
+  outline: none;
+}
+
+.site-update-nav-button:disabled {
+  cursor: default;
+  opacity: .38;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-promo-track-moving {
+    animation: none;
+    transform: none;
+  }
 }
 
 .site-info-modal-action {

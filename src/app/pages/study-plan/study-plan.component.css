@@ -74,50 +74,6 @@
   text-align: center;
 }
 
-.study-plan-premium-badge {
-  display: flex;
-  align-items: center;
-  gap: .65rem;
-  flex: 0 0 auto;
-  border: 1px solid #e8c982;
-  border-radius: .8rem;
-  background: rgba(255, 255, 255, .76);
-  padding: .7rem .9rem;
-  text-align: left;
-}
-
-.study-plan-premium-badge > span {
-  display: grid;
-  width: 2.5rem;
-  height: 2.5rem;
-  place-items: center;
-  border-radius: .7rem;
-  background: #fff2d6;
-  color: #c98508;
-}
-
-.study-plan-premium-badge strong,
-.study-plan-premium-badge small {
-  display: block;
-}
-
-.study-plan-premium-badge strong {
-  color: #b97805;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.35rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.study-plan-premium-badge small {
-  max-width: 7rem;
-  margin-top: .25rem;
-  color: #80601f;
-  font-size: .66rem;
-  font-weight: 800;
-  line-height: 1.25;
-}
-
 .study-plan-hero-kicker {
   display: inline-flex;
   align-items: center;

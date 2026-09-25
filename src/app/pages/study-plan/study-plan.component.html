@@ -55,15 +55,6 @@
             }
           </div>
 
-          @if (!isLoading && studyPlanAccess !== 'allowed') {
-            <div class="study-plan-premium-badge">
-              <span><i class="fa-solid fa-lock"></i></span>
-              <div>
-                <strong>Premium</strong>
-                <small>{{ studyPlanAccess === 'renewal-required' ? 'suscripción inactiva' : 'funcionalidad exclusiva' }}</small>
-              </div>
-            </div>
-          }
         </div>
       </section>
     }

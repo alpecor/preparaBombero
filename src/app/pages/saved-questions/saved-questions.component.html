@@ -33,17 +33,19 @@
                 }
               </p>
             </div>
-            <div class="saved-questions-count-badge">
-              <span class="grid h-10 w-10 place-items-center rounded-xl bg-[#fff2d2] text-[#c98508]">
-                <i class="fa-solid" [ngClass]="isLoading ? 'fa-spinner fa-spin' : (!isPackView && !isSubscribed ? 'fa-lock' : 'fa-layer-group')"></i>
-              </span>
-              <div>
-                <strong>{{ isLoading ? '—' : (!isPackView && !isSubscribed ? 'Premium' : totalSavedQuestions) }}</strong>
-                <span class="mt-1 block text-[.68rem] font-bold text-slate-500">
-                  {{ isLoading ? 'cargando datos' : (!isPackView && !isSubscribed ? 'funcionalidad exclusiva' : (isPackView ? 'preguntas del pack' : 'preguntas guardadas')) }}
+            @if (isLoading || isPackView || isSubscribed) {
+              <div class="saved-questions-count-badge">
+                <span class="grid h-10 w-10 place-items-center rounded-xl bg-[#fff2d2] text-[#c98508]">
+                  <i class="fa-solid" [ngClass]="isLoading ? 'fa-spinner fa-spin' : 'fa-layer-group'"></i>
                 </span>
+                <div>
+                  <strong>{{ isLoading ? '—' : totalSavedQuestions }}</strong>
+                  <span class="mt-1 block text-[.68rem] font-bold text-slate-500">
+                    {{ isLoading ? 'cargando datos' : (isPackView ? 'preguntas del pack' : 'preguntas guardadas') }}
+                  </span>
+                </div>
               </div>
-            </div>
+            }
           </div>
 
           @if (packLoadError) {

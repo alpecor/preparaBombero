@@ -7,18 +7,32 @@
   </div>
 }
 
-@if (title) {
+@if (announcementSummary) {
   <div class="site-promo-bar">
     <button
       type="button"
       class="site-promo-inner"
+      [class.site-promo-inner-static]="announcementPages.length === 0"
+      [disabled]="announcementPages.length === 0"
       (click)="openAnnouncement()"
-      aria-haspopup="dialog"
-      aria-controls="announcement-dialog">
+      [attr.aria-haspopup]="announcementPages.length ? 'dialog' : null"
+      [attr.aria-controls]="announcementPages.length ? 'announcement-dialog' : null">
       <span class="site-promo-tag"><i class="fa-solid fa-bullhorn"></i> Novedades</span>
       <span class="site-promo-live"><i class="fa-solid fa-circle"></i> Actualización</span>
-      <span class="site-promo-text">{{ title }}</span>
-      <span class="site-promo-more">Ver más <i class="fa-solid fa-arrow-right"></i></span>
+      <span #promoViewport class="site-promo-viewport">
+        <span
+          class="site-promo-track"
+          [class.site-promo-track-moving]="isPromoOverflowing"
+          [style.--promo-duration]="promoDurationSeconds + 's'">
+          <span #promoMessage class="site-promo-text">{{ announcementSummary }}</span>
+          @if (isPromoOverflowing) {
+            <span class="site-promo-text" aria-hidden="true">{{ announcementSummary }}</span>
+          }
+        </span>
+      </span>
+      @if (announcementPages.length) {
+        <span class="site-promo-more">Ver más <i class="fa-solid fa-arrow-right"></i></span>
+      }
     </button>
   </div>
 }
@@ -31,20 +45,58 @@
     aria-modal="true"
     aria-labelledby="announcement-title"
     (click)="closeAnnouncement()">
-    <div class="site-info-modal-card" (click)="$event.stopPropagation()">
-      <div class="site-info-modal-header">
-        <span class="site-info-modal-icon"><i class="fa-solid fa-bullhorn"></i></span>
-        <button type="button" class="site-info-modal-close" (click)="closeAnnouncement()" aria-label="Cerrar novedades">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+    @if (announcementPages[activeAnnouncementPage]; as update) {
+      <div class="site-info-modal-card site-updates-modal-card" (click)="$event.stopPropagation()">
+        <div class="site-info-modal-header">
+          <span class="site-info-modal-icon"><i class="fa-solid {{ update.icon }}"></i></span>
+          <button type="button" class="site-info-modal-close" (click)="closeAnnouncement()" aria-label="Cerrar novedades">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <span class="site-info-modal-kicker">{{ update.eyebrow }}</span>
+        <h2 id="announcement-title">{{ update.title }}</h2>
+
+        <div class="site-info-modal-content site-updates-modal-content">
+          <div class="site-update-rich-content" [innerHTML]="update.contentHtml"></div>
+        </div>
+
+        <div class="site-updates-progress" aria-label="Páginas de novedades">
+          <span>{{ activeAnnouncementPage + 1 }} de {{ announcementPages.length }}</span>
+          <div class="site-updates-dots">
+            @for (page of announcementPages; track page.id; let index = $index) {
+              <button
+                type="button"
+                [class.site-updates-dot-active]="index === activeAnnouncementPage"
+                (click)="showAnnouncementPage(index)"
+                [attr.aria-label]="'Ver novedad ' + (index + 1)"
+                [attr.aria-current]="index === activeAnnouncementPage ? 'step' : null">
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="site-updates-actions">
+          <button
+            type="button"
+            class="site-update-nav-button"
+            (click)="previousAnnouncement()"
+            [disabled]="activeAnnouncementPage === 0">
+            <i class="fa-solid fa-arrow-left"></i> Anterior
+          </button>
+
+          @if (activeAnnouncementPage < announcementPages.length - 1) {
+            <button type="button" class="site-info-modal-action" (click)="nextAnnouncement()">
+              Siguiente <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          } @else {
+            <button type="button" class="site-info-modal-action" (click)="closeAnnouncement()">
+              Entendido <i class="fa-solid fa-check"></i>
+            </button>
+          }
+        </div>
       </div>
-      <span class="site-info-modal-kicker">Novedades de la plataforma</span>
-      <h2 id="announcement-title">{{ title }}</h2>
-      <div class="site-info-modal-content" [innerHTML]="description"></div>
-      <button type="button" class="site-info-modal-action" (click)="closeAnnouncement()">
-        Entendido <i class="fa-solid fa-check"></i>
-      </button>
-    </div>
+    }
   </div>
 }
 
