@@ -193,7 +193,7 @@
 }
 
 .study-plan-settings-page {
-  background: linear-gradient(180deg, #ffffff 0%, #fffaf1 100%);
+  background: #f7f8fa;
 }
 
 .study-plan-card {
@@ -849,15 +849,14 @@
   content: '';
 }
 
-.study-plan-topic-prefix {
-  flex: 0 0 auto;
-  color: #73551e;
-  font-weight: 800;
-}
-
+.study-plan-topic-prefix,
 .study-plan-topic-name {
   color: #374151;
   font-weight: 500;
+}
+
+.study-plan-topic-prefix {
+  flex: 0 0 auto;
 }
 
 .study-plan-topic-meta {
@@ -1144,8 +1143,8 @@
 }
 
 .study-plan-session-item .study-plan-topic-prefix {
-  color: #73551e;
-  font-weight: 800;
+  color: #374151;
+  font-weight: 500;
 }
 
 .study-plan-session-topics p {
@@ -1296,15 +1295,15 @@
 
 .study-plan-history-summary-code {
   flex: 0 0 auto;
-  border: 1px solid #e8c982;
-  border-radius: 999px;
-  background: #fff5df;
-  color: #73551e;
-  font-family: 'Montserrat', sans-serif;
-  font-size: .66rem;
-  font-weight: 800;
-  line-height: 1;
-  padding: .3rem .45rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  padding: 0;
 }
 
 .study-plan-history-summary-more {
@@ -1904,5 +1903,3 @@
     transform: translateY(0) scale(1);
   }
 }
-
-

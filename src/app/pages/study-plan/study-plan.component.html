@@ -102,9 +102,6 @@
               <i class="fa-solid fa-arrow-left"></i>
               Volver
             </button>
-            <h2>
-              Ajustes del plan
-            </h2>
           </div>
 
           <section class="study-plan-settings-card">
@@ -209,6 +206,8 @@
             <button
               type="button"
               class="study-plan-edit-button"
+              aria-label="Ajustes del plan"
+              title="Ajustes del plan"
               [disabled]="isDeletingPlan"
               (click)="modifyStudyPlan()">
               <i class="fa-solid" [ngClass]="isDeletingPlan ? 'fa-spinner fa-spin' : 'fa-pen-to-square'"></i>
@@ -247,7 +246,7 @@
                       <ul>
                         @for (topic of todaySession.topics; track $index) {
                         <li>
-                          <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                          <span class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</span>
                           <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
                         </li>
                         }
@@ -346,7 +345,7 @@
                             <ul>
                               @for (topic of session.topics; track $index) {
                                 <li>
-                                  <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                                  <span class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</span>
                                   <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
                                 </li>
                               }
@@ -441,7 +440,7 @@
                         <ul>
                             @for (topic of session.topics; track $index) {
                               <li>
-                                <strong class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</strong>
+                                <span class="study-plan-topic-prefix">{{ topicPrefix(topic) }}</span>
                                 <span class="study-plan-topic-name">{{ topicName(topic) }}</span>
                               </li>
                           }
