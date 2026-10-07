@@ -122,7 +122,7 @@ export class InformationComponent {
             "La pregunta quedará en tu colección de Preguntas guardadas, accesible desde Guardadas en el menú.",
             "Vuelve a esa colección para repasarla después. Puedes quitar de guardadas las preguntas que ya no quieras conservar."
           ],
-          "note": "Las preguntas oficiales guardadas requieren Premium. Las preguntas de los packs que hayas comprado también se pueden guardar y consultar sin una suscripción activa."
+          "note": "Las preguntas oficiales guardadas requieren Premium. Las preguntas de los packs que hayas comprado también se pueden guardar y consultar teniendo una suscripción activa."
         },
         {
           "title": "Organiza tus guardadas",

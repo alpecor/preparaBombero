@@ -309,3 +309,12 @@ app-root {
 
   .landing-page .reveal { opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease; }
   .landing-page .reveal.visible { opacity:1;transform:translateY(0); }
+
+/* Los botones y enlaces de acción no usan sombra. */
+button:not(.site-header *),
+[role="button"]:not(.site-header *),
+input[type="button"]:not(.site-header *),
+input[type="submit"]:not(.site-header *),
+a:not(.site-header *) {
+  box-shadow: none !important;
+}

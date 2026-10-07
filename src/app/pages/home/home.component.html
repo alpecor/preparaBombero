@@ -320,6 +320,18 @@
             } @else {
               <p>Consulta el contenido oficial de las oposiciones y descubre todo lo que puedes preparar.</p>
             }
+            @if (isAuthenticated) {
+              <div class="home-primary-actions home-topic-actions">
+                <button type="button" class="home-primary-action" (click)="openQuestionConfigModal('exam')">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  Comenzar examen
+                </button>
+                <button type="button" class="home-secondary-action" (click)="openQuestionConfigModal('review')">
+                  <i class="fa-solid fa-rotate"></i>
+                  Repasar preguntas
+                </button>
+              </div>
+            }
           </div>
           @if (isAuthenticated) {
             <button type="button" class="home-clear-selection" (click)="deselectAllTopics()">
@@ -474,13 +486,13 @@
 
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h2 class="text-3xl font-bold text-gray-900">
+        <h2 class="text-xl font-bold text-gray-900">
             Configurar {{ examConfigMode === 'exam' ? 'examen' : 'repaso' }}
           </h2>
         </div>
 
         <button
-          class="text-4xl leading-none text-gray-600 hover:text-gray-900"
+          class="text-2xl leading-none text-gray-600 hover:text-gray-900"
           (click)="closeExamConfigModal()">
           ×
         </button>
@@ -498,17 +510,17 @@
             </small>
           </div>
         </div>
-        <strong class="shrink-0 text-2xl font-extrabold text-[#a56800]">{{ maxAvailableQuestions | number:'1.0-0' }}</strong>
+        <strong class="shrink-0 text-xl font-extrabold text-[#a56800]">{{ maxAvailableQuestions | number:'1.0-0' }}</strong>
       </div>
 
       <div class="mt-6">
-        <h3 class="font-bold text-gray-800">Número de preguntas</h3>
+        <h3 class="text-sm font-bold text-gray-800">Número de preguntas</h3>
 
         <div class="mt-4 grid grid-cols-2 gap-4 grid-cols-5">
           @for (option of questionOptions; track option) {
             <button
               type="button"
-              class="rounded-xl border px-6 py-4 font-bold transition"
+              class="rounded-xl border px-6 py-4 text-sm font-bold transition"
               [disabled]="option > maxAvailableQuestions"
               [ngClass]="selectedQuestionOption === option && !customQuestionNumber
                 ? 'border-primaryColor bg-orange-50 text-primaryColor'
@@ -521,7 +533,7 @@
           }
         </div>
 
-        <label class="mt-8 block font-semibold text-gray-700">
+        <label class="mt-8 block text-sm font-semibold text-gray-700">
           O introduce un número concreto
         </label>
 
@@ -533,7 +545,7 @@
             [(ngModel)]="customQuestionNumber"
             (input)="onCustomQuestionInput()"
             placeholder="Ej. 77"
-            class="w-full rounded-xl border border-gray-300 px-5 py-4 outline-none focus:border-primaryColor focus:ring-1 focus:ring-primaryColor">
+            class="w-full rounded-xl border border-gray-300 px-5 py-4 text-sm outline-none focus:border-primaryColor focus:ring-1 focus:ring-primaryColor">
 
           <span class="whitespace-nowrap text-gray-500">
             máx 200
@@ -552,14 +564,7 @@
         <div class="flex flex-col gap-4 flex-row">
           <button
             type="button"
-            class="w-full rounded-xl border border-gray-300 px-6 py-4 font-medium text-gray-800 hover:bg-gray-50"
-            (click)="closeExamConfigModal()">
-            Cancelar
-          </button>
-
-          <button
-            type="button"
-            class="w-full rounded-xl bg-primaryColor px-6 py-4 font-bold text-white hover:bg-yellow-600"
+            class="w-full rounded-xl bg-primaryColor px-6 py-4 text-sm font-bold text-white hover:bg-yellow-600"
             (click)="startQuestionMode()">
             Comenzar {{ examConfigMode === 'exam' ? 'examen' : 'repaso' }}
           </button>

@@ -714,6 +714,12 @@
   border: 0;
 }
 
+.site-logout-button,
+.site-logout-button:hover,
+.site-logout-button:focus-visible {
+  box-shadow: none;
+}
+
 .site-mobile-toggle {
   display: none;
   width: 2.5rem;
@@ -777,9 +783,6 @@
   background: #f5c9c5;
   color: #b33b32;
 }
-
-
-
 
 
 
