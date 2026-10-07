@@ -186,7 +186,7 @@ export class topicsComponent implements OnInit {
 
     this.examConfigMode = mode;
     this.specificTopicId = topic.id;
-    this.maxAvailableQuestions = Number(topic.quizCount || 0);
+    this.maxAvailableQuestions = Number(topic.availableQuizCount ?? topic.quizCount ?? 0);
     this.examModalSubtitle = topic.title;
 
     this.selectedQuestionOption = this.maxAvailableQuestions >= 50 ? 50 : this.maxAvailableQuestions;

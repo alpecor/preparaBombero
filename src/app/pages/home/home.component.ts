@@ -268,7 +268,7 @@ export class HomeComponent implements OnInit {
 
   categoryQuestionCount(category: string): number {
     return (this.topics?.[category] ?? [])
-      .reduce((total: number, topic: any) => total + Number(topic.quizCount || 0), 0);
+      .reduce((total: number, topic: any) => total + Number(topic.availableQuizCount ?? topic.quizCount ?? 0), 0);
   }
 
   private refreshHomeMetrics() {
@@ -329,7 +329,7 @@ export class HomeComponent implements OnInit {
     this.questionConfigError = '';
 
     if (topic) {
-      this.maxAvailableQuestions = Number(topic.quizCount || 0);
+      this.maxAvailableQuestions = Number(topic.availableQuizCount ?? topic.quizCount ?? 0);
       this.examModalSubtitle = topic.title;
       this.selectedQuestionOption = this.maxAvailableQuestions >= 50 ? 50 : this.maxAvailableQuestions;
       this.customQuestionNumber = null;
@@ -416,7 +416,7 @@ export class HomeComponent implements OnInit {
 
         // El recuento del padre ya incluye las preguntas de sus descendientes.
         if (isSelected && !hasSelectedAncestor) {
-          total += Number(topic.quizCount || 0);
+          total += Number(topic.availableQuizCount ?? topic.quizCount ?? 0);
         }
 
         if (Array.isArray(topic.topics) && topic.topics.length > 0) {

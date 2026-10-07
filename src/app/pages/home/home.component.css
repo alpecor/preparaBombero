@@ -824,6 +824,11 @@
   white-space: nowrap;
 }
 
+.home-topic-question-count-limited,
+.home-topic-question-count-limited small {
+  color: #dc2626;
+}
+
 .home-topic-question-count small {
   color: #94a3b8;
   font-family: 'Open Sans', sans-serif;
@@ -1242,7 +1247,6 @@
   flex: 0 0 auto;
   white-space: nowrap;
 }
-
 
 
 

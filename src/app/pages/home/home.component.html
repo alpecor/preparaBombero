@@ -378,7 +378,16 @@
                             {{ premiumTopicNoticeMessage }}
                           </span>
                         }
-                        <span class="home-topic-question-count">{{ topic.quizCount | number:'1.0-0' }} <small>preg.</small></span>
+                        <span
+                          class="home-topic-question-count"
+                          [class.home-topic-question-count-limited]="(topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount)"
+                          [attr.title]="(topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount) ? 'Tienes acceso a ' + (topic.availableQuizCount ?? topic.quizCount) + ' preguntas de ' + (topic.totalQuizCount ?? topic.quizCount) : null"
+                        >
+                          {{ (topic.availableQuizCount ?? topic.quizCount) | number:'1.0-0' }} <small>preg.</small>
+                          @if ((topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount)) {
+                            / {{ (topic.totalQuizCount ?? topic.quizCount) | number:'1.0-0' }} <small>preg.</small>
+                          }
+                        </span>
                         @if (isAuthenticated) {
                           <button type="button" class="home-topic-tool" (click)="openQuestionConfigModal('exam', topic)" title="Hacer examen" aria-label="Hacer examen">
                             <i class="fa-solid fa-pen-to-square"></i>

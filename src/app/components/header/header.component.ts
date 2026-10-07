@@ -194,12 +194,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   async loadInfo(): Promise<void> {
     try {
       const data = await this.requestService.request('GET', `/info`, {}, {}, false);
-      this.announcementSummary = (data.title ?? '').trim();
-      this.announcementPages = decodeAnnouncementPages(
-        data.description,
-        data.title,
-        true
-      ).map((page, index) => ({
+      const announcementData = data.announcementData;
+      this.announcementSummary = data.title?.trim() || '';
+      this.announcementPages = decodeAnnouncementPages(announcementData).map((page, index) => ({
         id: String(index),
         eyebrow: 'Novedades de la plataforma',
         title: page.title,

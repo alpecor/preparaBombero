@@ -5,7 +5,6 @@ import { RequestService } from '../../../services/request.service';
 import {
   AnnouncementPageData,
   decodeAnnouncementPages,
-  encodeAnnouncementPages,
 } from '../../../services/announcement-content';
 
 @Component({
@@ -31,12 +30,9 @@ export class ExamsListComponent implements OnInit {
   async loadInfo(): Promise<void> {
     try {
       const data = await this.requestService.request('GET', '/info', {}, {}, false);
+      const announcementData = data.announcementData;
       this.summary = data.title ?? '';
-      this.pages = decodeAnnouncementPages(
-        data.description,
-        data.title,
-        true
-      );
+      this.pages = decodeAnnouncementPages(announcementData);
     } catch (error) {
       console.error('Error cargando la información:', error);
       this.validationMessage = 'No se ha podido cargar la información. Inténtalo de nuevo.';
@@ -109,17 +105,21 @@ export class ExamsListComponent implements OnInit {
         '/info',
         {
           title: this.summary.trim(),
-          description: encodeAnnouncementPages(this.pages.map(page => ({
-            title: page.title.trim(),
-            content: page.content,
-          }))),
+          announcementData: {
+            title: this.summary.trim(),
+            pages: this.pages.map(page => ({
+              title: page.title.trim(),
+              content: page.content,
+            })),
+          },
         },
         {},
         true
       );
 
-      this.summary = saved.title ?? this.summary.trim();
-      this.pages = decodeAnnouncementPages(saved.description, saved.title);
+      const savedAnnouncementData = saved.announcementData ?? saved;
+      this.summary = savedAnnouncementData.title ?? this.summary.trim();
+      this.pages = decodeAnnouncementPages(savedAnnouncementData);
       this.showSaveConfirmation = true;
     } catch (error) {
       console.error('Error actualizando la información:', error);

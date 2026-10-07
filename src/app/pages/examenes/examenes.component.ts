@@ -30,7 +30,9 @@ export class ExamenesComponent {
   //************************* FUNCION PARA CARGAR LA INFO DESDE EL SERVICIO ****************************//
   async loadInfo(): Promise<void> {
     const data = await this.requestService.request('GET', `/info`, {}, {}, false);
-      this.description = decodeAnnouncementPages(data.description, data.title)[0]?.content ?? '';
+      this.description = decodeAnnouncementPages(
+        data.announcementData,
+      )[0]?.content ?? '';
   }
 
 
