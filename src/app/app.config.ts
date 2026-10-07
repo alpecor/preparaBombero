@@ -22,26 +22,17 @@ export const appConfig: ApplicationConfig = {
         },
         "position": "bottom-left",
         "theme": "classic",
-        "palette": {
-          "popup": {
-            "background": "#1f2937",
-            "text": "#ffffff",
-            "link": "#ffffff"
-          },
-          "button": {
-            "background": "var(--primary-color)",
-            "text": "#ffffff",
-            "border": "transparent"
-          }
-        },
+        "layout": "basic-header",
         "type": "opt-out",
         "content": {
-          "message": "Este sitio web utiliza cookies para que usted tenga la mejor experiencia en nuestro sitio web.",
-          "allow": "Aceptar cookies",
-          "deny": "Rechazar cookies",
-          "link": "Saber más",
-          "href": "https://cookiesandyou.com",
-          "policy": "Política de cookies"
+          "header": "Tu privacidad importa",
+          "message": "Utilizamos cookies para mejorar tu experiencia, analizar el uso de la plataforma y ofrecerte un servicio más personalizado.",
+          "allow": "Aceptar todas",
+          "deny": "Solo las necesarias",
+          "link": "Consultar la política de privacidad",
+          "href": "/politica-de-privacidad",
+          "target": "_self",
+          "policy": "Preferencias de cookies"
         }
       })
   ]

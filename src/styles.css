@@ -47,6 +47,188 @@ app-root {
   min-height: 100dvh;
 }
 
+/* Cookie consent */
+.cc-window.cc-floating.cc-theme-classic {
+  box-sizing: border-box;
+  width: min(31rem, calc(100vw - 2rem));
+  max-width: none;
+  border: 1px solid #e2e7ed;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1.25rem 3.5rem rgba(23, 32, 51, .2);
+  color: #526174;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.6;
+  overflow: hidden;
+  padding: 1.6rem;
+}
+
+.cc-window.cc-bottom.cc-left {
+  bottom: 1.25rem;
+  left: 1.25rem;
+}
+
+.cc-window.cc-theme-classic::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: .25rem;
+  background: linear-gradient(90deg, #c98508, #f1c35d);
+  content: '';
+}
+
+.cc-window.cc-theme-classic .cc-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  color: #172033;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+
+.cc-window.cc-theme-classic .cc-header::before {
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 2.35rem;
+  place-items: center;
+  border-radius: .7rem;
+  background: #fff3d8;
+  color: #a56800;
+  content: '\2713';
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.cc-window.cc-theme-classic .cc-message {
+  display: block;
+  margin-top: .9rem;
+  color: #64748b;
+  font-size: .82rem;
+  line-height: 1.65;
+}
+
+.cc-window.cc-theme-classic .cc-link,
+.cc-window.cc-theme-classic .cc-link:active,
+.cc-window.cc-theme-classic .cc-link:visited {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .55rem;
+  padding: 0;
+  color: #936004;
+  font-size: .74rem;
+  font-weight: 700;
+  opacity: 1;
+  text-decoration: none;
+}
+
+.cc-window.cc-theme-classic .cc-link::after {
+  content: '\2192';
+  transition: transform .2s ease;
+}
+
+.cc-window.cc-theme-classic .cc-link:hover {
+  color: #704800;
+  text-decoration: underline;
+}
+
+.cc-window.cc-theme-classic .cc-link:hover::after {
+  transform: translateX(.15rem);
+}
+
+.cc-window.cc-theme-classic .cc-compliance {
+  display: flex;
+  gap: .7rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid #edf0f3;
+  padding-top: 1.1rem;
+}
+
+.cc-window.cc-theme-classic .cc-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: .6rem;
+  box-shadow: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: .76rem;
+  font-weight: 800;
+  line-height: 1.25;
+  padding: .7rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.cc-window.cc-theme-classic .cc-btn.cc-deny {
+  border-color: #dbe2ea;
+  background: #fff;
+  color: #526174;
+}
+
+.cc-window.cc-theme-classic .cc-btn.cc-deny:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.cc-window.cc-theme-classic .cc-btn.cc-allow {
+  border-color: #de9a17;
+  background: #de9a17;
+  color: #172033;
+  box-shadow: 0 .45rem 1rem rgba(222, 154, 23, .24);
+}
+
+.cc-window.cc-theme-classic .cc-btn.cc-allow:hover {
+  border-color: #c98508;
+  background: #edab2f;
+  color: #172033;
+  transform: translateY(-1px);
+}
+
+.cc-window.cc-theme-classic .cc-btn:focus-visible,
+.cc-window.cc-theme-classic .cc-link:focus-visible {
+  border-radius: .45rem;
+  outline: .2rem solid rgba(222, 154, 23, .28);
+  outline-offset: .12rem;
+}
+
+.cc-revoke.cc-bottom {
+  border-radius: .55rem .55rem 0 0;
+  background: #172033;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-size: .68rem;
+  font-weight: 700;
+  padding: .55rem .8rem;
+}
+
+@media (max-width: 36rem) {
+  .cc-window.cc-floating.cc-theme-classic {
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    width: auto;
+    padding: 1.3rem;
+  }
+
+  .cc-window.cc-theme-classic .cc-compliance {
+    flex-direction: column-reverse;
+  }
+
+  .cc-window.cc-theme-classic .cc-btn {
+    width: 100%;
+  }
+}
+
 /* Landing page styles (scoped globally to avoid anyComponentStyle budget in production) */
 .landing-page, .landing-page *, .landing-page *::before, .landing-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .landing-page {
