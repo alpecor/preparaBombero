@@ -151,7 +151,12 @@
 }
 
 .site-updates-modal-card {
+  box-sizing: border-box;
+  display: flex;
+  height: min(34.5rem, calc(100dvh - 2rem));
   width: min(100%, 42rem);
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .site-info-modal-header {
@@ -230,8 +235,12 @@
 }
 
 .site-updates-modal-content {
+  min-height: 0;
+  flex: 1 1 auto;
   border-color: #f0d59d;
   background: linear-gradient(135deg, #fffaf0, #fff 78%);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .site-update-lead {
