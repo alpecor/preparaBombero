@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
   showToast = false;
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
+  toastPlacement: 'hero' | 'topics' = 'hero';
   premiumTopicNoticeId: number | null = null;
   premiumTopicNoticeMessage = '';
   private premiumTopicNoticeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -117,9 +118,14 @@ export class HomeComponent implements OnInit {
 
 
   //************************* FUNCION PARA TOAST ****************************//
-  showToastMsg(msg: string, type: 'success' | 'error' = 'error') {
+  showToastMsg(
+    msg: string,
+    type: 'success' | 'error' = 'error',
+    placement: 'hero' | 'topics' = 'hero'
+  ) {
     this.toastMessage = msg;
     this.toastType = type;
+    this.toastPlacement = placement;
     this.showToast = true;
     setTimeout(() => (this.showToast = false), 2500);
   }
@@ -304,7 +310,11 @@ export class HomeComponent implements OnInit {
 
 
   //************************* FUNCIONES PARA CONFIGURAR PREGUNTAS EN EXAMEN Y REPASO ****************************//
-  openQuestionConfigModal(mode: 'exam' | 'review', topic?: any) {
+  openQuestionConfigModal(
+    mode: 'exam' | 'review',
+    topic?: any,
+    feedbackPlacement: 'hero' | 'topics' = 'hero'
+  ) {
     if (!this.isSubscribed) {
       const message = mode === 'exam'
         ? 'Examen: función Premium'
@@ -318,7 +328,9 @@ export class HomeComponent implements OnInit {
         this.showToastMsg(
           mode === 'exam'
             ? 'Crear un examen personalizado es una funcionalidad Premium.'
-            : 'Repasar preguntas es una funcionalidad Premium.'
+            : 'Repasar preguntas es una funcionalidad Premium.',
+          'error',
+          feedbackPlacement
         );
       }
       return;
@@ -343,7 +355,9 @@ export class HomeComponent implements OnInit {
       this.showToastMsg(
         mode === 'exam'
           ? 'No hay temario seleccionado para realizar el examen.'
-          : 'No hay temario seleccionado para realizar el repaso.'
+          : 'No hay temario seleccionado para realizar el repaso.',
+        'error',
+        feedbackPlacement
       );
       return;
     }

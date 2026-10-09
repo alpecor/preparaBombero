@@ -35,7 +35,7 @@
             </div>
 
             <div class="home-action-feedback-slot" aria-live="polite">
-              @if (showToast) {
+              @if (showToast && toastPlacement === 'hero') {
                 <div
                   class="home-action-feedback"
                   [class.home-action-feedback-success]="toastType === 'success'"
@@ -322,14 +322,26 @@
             }
             @if (isAuthenticated) {
               <div class="home-primary-actions home-topic-actions">
-                <button type="button" class="home-primary-action" (click)="openQuestionConfigModal('exam')">
+                <button type="button" class="home-primary-action" (click)="openQuestionConfigModal('exam', null, 'topics')">
                   <i class="fa-solid fa-pen-to-square"></i>
                   Comenzar examen
                 </button>
-                <button type="button" class="home-secondary-action" (click)="openQuestionConfigModal('review')">
+                <button type="button" class="home-secondary-action" (click)="openQuestionConfigModal('review', null, 'topics')">
                   <i class="fa-solid fa-rotate"></i>
                   Repasar preguntas
                 </button>
+                @if (showToast && toastPlacement === 'topics') {
+                  <div
+                    class="home-action-feedback home-topic-action-feedback"
+                    [class.home-action-feedback-success]="toastType === 'success'"
+                    [class.home-action-feedback-error]="toastType === 'error'"
+                    role="alert"
+                    aria-live="polite">
+                    <i class="fa-solid"
+                       [ngClass]="toastType === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+                    <span>{{ toastMessage }}</span>
+                  </div>
+                }
               </div>
             }
           </div>
