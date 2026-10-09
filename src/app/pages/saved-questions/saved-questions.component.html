@@ -62,7 +62,7 @@
               <div>
                 <h2 class="font-extrabold">{{ isPackView ? 'Practica tu pack' : 'Organiza tu repaso' }}</h2>
                 <p class="mt-0.5 text-xs text-slate-500">
-                  {{ isPackView ? 'Estas son todas las preguntas incluidas en tu pack.' : 'Filtra por tema o cambia el orden de las preguntas.' }}
+                  {{ isPackView ? 'Avanza en bloques de 20 preguntas con corrección inmediata.' : 'Filtra por tema o cambia el orden de las preguntas.' }}
                 </p>
               </div>
             </div>
@@ -137,6 +137,30 @@
               {{ isShuffled ? 'Orden original' : 'Aleatorio' }}
             </button>
           </div>
+
+          @if (isPackView && savedQuestions.length > 0) {
+            <div class="pack-progress-panel">
+              <div class="pack-progress-heading">
+                <div>
+                  <span>Progreso del refuerzo</span>
+                  <strong>{{ packProgressText() }}</strong>
+                </div>
+                <span class="pack-progress-answered">
+                  <i class="fa-solid fa-circle-check"></i>
+                  {{ correctedPackQuestions }} corregidas
+                </span>
+              </div>
+              <div
+                class="pack-progress-track"
+                role="progressbar"
+                aria-label="Progreso del refuerzo"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-valuenow]="packProgress()">
+                <span [style.width.%]="packProgress()"></span>
+              </div>
+            </div>
+          }
         </section>
           }
         </section>
@@ -194,21 +218,21 @@
             </div>
             <span class="inline-flex w-fit items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-slate-500 shadow-sm ring-1 ring-slate-200">
               <i class="fa-solid fa-list-check text-[#c98508]"></i>
-              {{ savedQuestions.length }} {{ savedQuestions.length === 1 ? 'pregunta' : 'preguntas' }} visibles
+              {{ isPackView ? packProgressText() : savedQuestions.length + (savedQuestions.length === 1 ? ' pregunta visible' : ' preguntas visibles') }}
             </span>
           </div>
 
           <div class="saved-questions-list flex flex-col gap-5">
             <article
-              *ngFor="let question of savedQuestions; let i = index"
+              *ngFor="let question of visibleQuestions; let i = index"
               class="saved-question-card overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-[#ecb96c] hover:bg-[#fff0dc] hover:shadow-md">
-              <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-slate-50 px-5 py-3.5">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="inline-flex items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.1em] text-slate-500">
+              <header class="saved-question-header flex items-start justify-between gap-4 border-b border-slate-100 bg-slate-50 px-5 py-3.5">
+                <div class="saved-question-meta flex min-w-0 flex-1 flex-wrap items-center gap-2">
+                  <span class="inline-flex shrink-0 items-center gap-2 text-[.68rem] font-extrabold uppercase tracking-[.1em] text-slate-500">
                     Pregunta
-                    <strong class="text-[#b97805]">{{ i + 1 | number:'2.0-0' }}</strong>
+                    <strong class="text-[#b97805]">{{ (isPackView ? page.first : 0) + i + 1 | number:'2.0-0' }}</strong>
                   </span>
-                  <span class="rounded-full border border-[#ead8ae] bg-[#fffaf0] px-2.5 py-1 text-[.65rem] font-bold text-[#a56800]">
+                  <span class="saved-question-topic min-w-0 rounded-full border border-[#ead8ae] bg-[#fffaf0] px-2.5 py-1 text-[.65rem] font-bold text-[#a56800]" [title]="question.topicTitle || 'Sin tema asociado'">
                     {{ question.topicTitle || 'Sin tema asociado' }}
                   </span>
                   @if (question.isCorrected) {
@@ -223,15 +247,7 @@
                   }
                 </div>
 
-                <div class="flex items-center gap-2">
-                  <button
-                    type="button"
-                    class="saved-question-action inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#f0d9a4] bg-[#fff9ed] text-sm text-[#de9a17] transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
-                    title="Reportar pregunta"
-                    aria-label="Reportar pregunta"
-                    (click)="openReportModal(question.id)">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                  </button>
+                <div class="saved-question-actions flex shrink-0 items-center gap-2">
                   @if (question.isCorrected) {
                     <button
                       type="button"
@@ -242,7 +258,20 @@
                       (click)="showJustification(question.id, !question.showJustification)">
                       <i class="fa-solid fa-circle-info"></i>
                     </button>
+                  } @else if (question.isChecking) {
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-[#ead8ae] bg-[#fffaf0] px-2.5 py-1 text-[.65rem] font-extrabold text-[#a56800]">
+                      <i class="fa-solid fa-spinner fa-spin"></i>
+                      Corrigiendo
+                    </span>
                   }
+                  <button
+                    type="button"
+                    class="saved-question-action inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#f0d9a4] bg-[#fff9ed] text-sm text-[#de9a17] transition hover:-translate-y-px hover:border-[#de9a17] hover:bg-[#fff2d2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#de9a17]/30"
+                    title="Reportar pregunta"
+                    aria-label="Reportar pregunta"
+                    (click)="openReportModal(question.id)">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </button>
                   @if (!isPackView) {
                     <button
                       type="button"
@@ -268,7 +297,7 @@
 
               <div class="px-5 py-5 px-6 py-6">
                 <h3 class="text-lg font-extrabold leading-snug text-[#172033] text-xl">
-                  <span class="mr-1 text-[#b97805]">{{ i + 1 }}.</span>{{ question.title }}
+                  <span class="mr-1 text-[#b97805]">{{ (isPackView ? page.first : 0) + i + 1 }}.</span>{{ question.title }}
                 </h3>
                 <div class="my-5 h-px bg-slate-200"></div>
 
@@ -284,9 +313,9 @@
                         <input
                           type="radio"
                           class="mt-1 h-4 w-4 shrink-0 border-slate-300 text-[#de9a17] focus:ring-[#de9a17]"
-                          [disabled]="question.isCorrected"
-                          [checked]="question.isCorrected && question.optionSelected == question.option1"
-                          (click)="handleButtonClick(question.id, question.option1)" />
+                          [disabled]="question.isCorrected || question.isChecking"
+                          [checked]="question.optionSelected == question.option1"
+                          (change)="handleButtonClick(question.id, question.option1)" />
                         <span class="leading-relaxed">
                           {{ question.option1 }}
                         </span>
@@ -305,9 +334,9 @@
                         <input
                           type="radio"
                           class="mt-1 h-4 w-4 shrink-0 border-slate-300 text-[#de9a17] focus:ring-[#de9a17]"
-                          [disabled]="question.isCorrected"
-                          [checked]="question.isCorrected && question.optionSelected == question.option2"
-                          (click)="handleButtonClick(question.id, question.option2)" />
+                          [disabled]="question.isCorrected || question.isChecking"
+                          [checked]="question.optionSelected == question.option2"
+                          (change)="handleButtonClick(question.id, question.option2)" />
                         <span class="leading-relaxed">
                           {{ question.option2 }}
                         </span>
@@ -326,9 +355,9 @@
                         <input
                           type="radio"
                           class="mt-1 h-4 w-4 shrink-0 border-slate-300 text-[#de9a17] focus:ring-[#de9a17]"
-                          [disabled]="question.isCorrected"
-                          [checked]="question.isCorrected && question.optionSelected == question.option3"
-                          (click)="handleButtonClick(question.id, question.option3)" />
+                          [disabled]="question.isCorrected || question.isChecking"
+                          [checked]="question.optionSelected == question.option3"
+                          (change)="handleButtonClick(question.id, question.option3)" />
                         <span class="leading-relaxed">
                           {{ question.option3 }}
                         </span>
@@ -347,9 +376,9 @@
                         <input
                           type="radio"
                           class="mt-1 h-4 w-4 shrink-0 border-slate-300 text-[#de9a17] focus:ring-[#de9a17]"
-                          [disabled]="question.isCorrected"
-                          [checked]="question.isCorrected && question.optionSelected == question.option4"
-                          (click)="handleButtonClick(question.id, question.option4)" />
+                          [disabled]="question.isCorrected || question.isChecking"
+                          [checked]="question.optionSelected == question.option4"
+                          (change)="handleButtonClick(question.id, question.option4)" />
                         <span class="leading-relaxed">
                           {{ question.option4 }}
                         </span>
@@ -379,6 +408,20 @@
               </div>
             </article>
           </div>
+
+          @if (isPackView && savedQuestions.length > questionsPerPage) {
+            <nav class="pack-pagination" aria-label="Páginas del refuerzo">
+              <div class="pack-pagination-copy">
+                <span>Bloque actual</span>
+                <strong>{{ packProgressText() }}</strong>
+              </div>
+              <p-paginator
+                (onPageChange)="onPackPageChange($event)"
+                [first]="page.first"
+                [rows]="questionsPerPage"
+                [totalRecords]="savedQuestions.length" />
+            </nav>
+          }
         }
       </div>
     </section>

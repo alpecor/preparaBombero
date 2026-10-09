@@ -6,6 +6,7 @@ import { RequestService } from '../../services/request.service';
 import { LocalStorageService } from '../../services/local-storage.service';
 import { TextSanitizerComponent } from "../../components/text-sanitizer/text-sanitizer.component";
 import { SavedQuestionsInitialData } from './saved-questions.resolver';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 // ---- Tipos (fuera de la clase)
 interface Topic { id: string; name: string; }
@@ -14,7 +15,7 @@ type BlockKey = 'all' | 'leg' | 'esp' | 'otr';
 @Component({
   selector: 'app-saved-questions',
   standalone: true,
-  imports: [CommonModule, FormsModule, TextSanitizerComponent],
+  imports: [CommonModule, FormsModule, PaginatorModule, TextSanitizerComponent],
   templateUrl: './saved-questions.component.html',
   styleUrls: ['./saved-questions.component.css']
 })
@@ -41,6 +42,8 @@ export class SavedQuestionsComponent implements OnInit {
   reportReason = '';
   isReportModalOpen = false;
   isSendingReport = false;
+  readonly questionsPerPage = 20;
+  page: { page: number; first: number } = { page: 0, first: 0 };
 
 
   //************************* CONSTRUCTOR ****************************//
@@ -77,6 +80,17 @@ export class SavedQuestionsComponent implements OnInit {
 
   get isPackView(): boolean {
     return this.packId !== null;
+  }
+
+
+  get visibleQuestions(): any[] {
+    if (!this.isPackView) return this.savedQuestions;
+    return this.savedQuestions.slice(this.page.first, this.page.first + this.questionsPerPage);
+  }
+
+
+  get correctedPackQuestions(): number {
+    return this.savedQuestions.filter((question: any) => question.isCorrected).length;
   }
 
 
@@ -151,10 +165,12 @@ export class SavedQuestionsComponent implements OnInit {
       : questions;
     this.savedQuestions.forEach((question: any) => {
       question.isCorrected = false;
+      question.isChecking = false;
       question.showJustification = false;
       question.optionSelected = null;
     });
 
+    this.page = { page: 0, first: 0 };
     this.originalOrder = null;
     this.isShuffled = false;
     this.isTopicMenuOpen = false;
@@ -179,6 +195,12 @@ export class SavedQuestionsComponent implements OnInit {
 
 
   async handleButtonClick(id:number, selectedOption: string) {
+    const selectedQuestion = this.savedQuestions.find((question: any) => question.id === id);
+    if (!selectedQuestion || selectedQuestion.isCorrected || selectedQuestion.isChecking) return;
+
+    selectedQuestion.isChecking = true;
+    selectedQuestion.optionSelected = selectedOption;
+
     const payload = {
       quizzes: [
         {
@@ -198,7 +220,8 @@ export class SavedQuestionsComponent implements OnInit {
           return {
             ...question,
             optionSelected: selectedOption,
-            isCorrected :true,// Marcar como corregida
+            isCorrected: true,
+            isChecking: false,
             correctAnswer: quizResponse.result, // Guardar la respuesta correcta
             showJustification: false // Nueva propiedad para controlar la visibilidad del motivo
           };
@@ -207,7 +230,40 @@ export class SavedQuestionsComponent implements OnInit {
       });
     } catch (error) {
       console.error('Error al corregir la pregunta:', error);
+      selectedQuestion.isChecking = false;
+      selectedQuestion.optionSelected = null;
+      this.showToast('No se ha podido corregir la pregunta. Inténtalo de nuevo.', 'error');
     }
+  }
+
+
+  onPackPageChange(event: PaginatorState): void {
+    this.page = {
+      page: event.page ?? 0,
+      first: event.first ?? 0,
+    };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
+  packProgress(): number {
+    if (!this.savedQuestions.length) return 0;
+    const lastVisibleQuestion = Math.min(
+      this.page.first + this.questionsPerPage,
+      this.savedQuestions.length,
+    );
+    return (lastVisibleQuestion / this.savedQuestions.length) * 100;
+  }
+
+
+  packProgressText(): string {
+    if (!this.savedQuestions.length) return '0 de 0';
+    const firstVisibleQuestion = this.page.first + 1;
+    const lastVisibleQuestion = Math.min(
+      this.page.first + this.questionsPerPage,
+      this.savedQuestions.length,
+    );
+    return `${firstVisibleQuestion}-${lastVisibleQuestion} de ${this.savedQuestions.length}`;
   }
 
 
@@ -243,7 +299,7 @@ private shuffleInPlace(arr: any[]): void {
   }
 }
 
-toggleShuffle(): void {
+  toggleShuffle(): void {
   if (!this.savedQuestions || this.savedQuestions.length === 0) {
     this.showToast('No hay preguntas que barajar.', 'error');
     return;
@@ -262,6 +318,8 @@ toggleShuffle(): void {
     this.originalOrder = null;
     this.isShuffled = false;
   }
+
+  this.page = { page: 0, first: 0 };
 }
 
 

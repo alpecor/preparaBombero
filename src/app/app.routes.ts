@@ -19,7 +19,6 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthRegisterComponent } from './pages/auth/auth-register/auth-register.component';
 import { RecoveryPasswordComponent } from './pages/auth/recovery-password/recovery-password.component';
 import { ResetPasswordComponent } from './pages/auth/reset-password/reset-password.component';
-import { SavedQuestionsComponent } from './pages/saved-questions/saved-questions.component';
 import { ReviewResultComponent } from './pages/review-result/review-result.component';
 import { LandingComponent } from './pages/landing/landing.component';
 import { StudyPlanComponent } from './pages/study-plan/study-plan.component';
@@ -119,7 +118,9 @@ export const routes: Routes = [
         path: 'profile', component: ProfileComponent, canActivate: [userAuthGuard]
       },
       {
-        path: 'preguntas-guardadas', component: SavedQuestionsComponent, canActivate: [userAuthGuard],
+        path: 'preguntas-guardadas',
+        loadComponent: () => import('./pages/saved-questions/saved-questions.component').then(m => m.SavedQuestionsComponent),
+        canActivate: [userAuthGuard],
         resolve: { savedQuestionsData: savedQuestionsResolver }
       },
       {

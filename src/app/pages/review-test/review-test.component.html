@@ -1,224 +1,277 @@
-<!--------------- Añadir header aquí ------------>
-
-
-<!-- Toast para mensaje de preguntas guardadas -->
-<div
-  *ngIf="showSavedToast"
-  class="fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 z-50"
-  [ngClass]="{
-    'bg-primaryColor text-white': toastType === 'success',
-    'bg-red-100 text-red-800': toastType === 'error'
-  }"
->
-  <i class="fa-solid"
-    [ngClass]="{
-      'fa-check-circle': toastType === 'success',
-      'fa-circle-xmark': toastType === 'error'
-    }"
-  ></i>
-  <span>{{ toastMessage }}</span>
-</div>
-
-
-<!--------------- Añadir barra de progreso aquí ------------>
-<div class="flex justify-center">
-  <div class="progress-bar-container relative">
-    <div class="progress-bar" [style.width.%]="progress()"></div>
-    <span class="absolute inset-0 flex items-center justify-center text-xs font-semibold">
-      {{ progressText() }}
-    </span>
-  </div>
-</div>
-
-
-<!--------------- Añadir preguntas del test aquí ------------>
-<div class="flex justify-center p-4">
-  <div class="w-full max-w-3xl">
+<div class="review-test-page">
+  @if (showSavedToast) {
     <div
-      *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
-      class="p-6 mb-12 border rounded-xl bg-gray-50 relative"
-    >
-      <h2 class="text-lg font-semibold mb-2"
-        [innerHTML]="page.page * questionsPerPage + i + 1 + ' . ' + question.title"
-      >
+      class="review-toast"
+      [class.review-toast-success]="toastType === 'success'"
+      [class.review-toast-error]="toastType === 'error'"
+      role="status"
+      aria-live="polite">
+      <span class="review-toast-icon">
+        <i class="fa-solid" [ngClass]="toastType === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+      </span>
+      <span>{{ toastMessage }}</span>
+    </div>
+  }
 
-      </h2>
-      
-      <hr class="border-t border-gray-300 mb-4" />
-
-      <!--------------- si no se ha corregido la pregunta, se muestra icono reporte ------------>
-      @if (!isCorrected) {
-        <i class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-xl text-primaryColor hover:text-yellow-600 transition"
-          (click)="openModal(question.id)"
-          title="Reportar pregunta">
-        </i>
-      }@else{
-        <i class="fa-solid fa-triangle-exclamation absolute top-1 right-2 cursor-pointer text-xl text-primaryColor hover:text-yellow-600 transition"
-          (click)="openModal(question.id)"
-          title="Reportar pregunta">
-        </i>
-        <i
-          title="Ver motivo"
-          class="fa-solid fa-circle-info absolute top-1 right-10 cursor-pointer text-xl text-primaryColor hover:text-yellow-600 transition"
-          style="color: #DE9A17; cursor: pointer;"
-          (click)="toggleJustification(question)"
-        >
-        </i>
-      }
-      
-      <ul class="list-none space-y-2">
-        <li *ngFor="let respuesta of question.respuestas">
-          @if (respuesta !="") {
-            <label class="flex items-center space-x-3">
-              <input
-                type="radio"
-                class="form-radio h-4 w-4 text-yellow-500 border-gray-300 focus:ring-yellow-400"
-                [(ngModel)]="userResponses[(page.page) * questionsPerPage + i].optionSelected"
-                [value]="respuesta"
-                (change)="onSelectAnswer((page.page) * questionsPerPage + i, respuesta)"
-                [disabled]="isCorrected"
-              />
-              <span [ngClass]="{
-                'text-green-500': isCorrected && respuesta === question.correctAnswer,
-                'text-red-500': isCorrected && userResponses[(page.page) * questionsPerPage + i].optionSelected === respuesta && respuesta !== question.correctAnswer
-              }">
-                {{ respuesta }}
-              </span>
-            </label>
-          }
-        </li>
-      
-        <!-- motivo -->
-      @if (question.showJustification) {
-        @if (isSubscribed) {
-          @if (question.justification && question.justification.trim().length > 0) {
-            <div class="mt-4 p-4 bg-gray-200 rounded">
-              <h1 class="text-center font-bold">Motivo de respuesta correcta:</h1>
-              <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
-            </div>
-          } @else {
-            <div class="mt-4 p-4 bg-yellow-50 text-yellow-900 rounded">
-              Esta pregunta todavía no tiene asociada el motivo de la respuesta correcta, seguimos trabajando en ello.
-            </div>
-          }
-        } @else {
-          <div class="mt-4 p-4 bg-red-50 text-red-800 rounded">
-            Para obtener detalles sobre el motivo de la respuesta correcta, debes estar subscrito, es una funcionalidad PREMIUM.
+  <main class="review-test-main">
+    <section class="review-hero">
+      <div class="review-container">
+        <div class="review-hero-heading">
+          <div>
+            <span class="review-kicker">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              Entrenamiento personalizado
+            </span>
+            <h1>Modo repaso</h1>
+            <p>Responde, corrige al instante y afianza cada concepto a tu ritmo.</p>
           </div>
-        }
-      }
-      </ul>
-      <i class="fa-regular fa-floppy-disk absolute bottom-1 right-2 cursor-pointer text-xl"
-        [ngClass]="{
-          'text-gray-400': !isQuestionSaved(question.id),
-          'text-primaryColor': isQuestionSaved(question.id)
-        }"
-        (click)="questionSaved(question.id)"
-        [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'">
-      </i>
-    </div>
 
-    <!--boton de corregir / siguiente pregunta-->
-    <div class="w-full max-w-3xl mx-auto mt-6">
-      <div class="flex justify-center gap-4">
+          <div class="review-question-counter" aria-label="Progreso del repaso">
+            <span class="review-counter-icon"><i class="fa-solid fa-layer-group"></i></span>
+            <div>
+              <strong>{{ progressText() }}</strong>
+              <span>pregunta actual</span>
+            </div>
+          </div>
+        </div>
 
-        <!-- 1) Pregunta anterior -->
-  
-        <button
-          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          (click)="previousQuestion()"
-          [disabled]="page.page === 0"
-          [ngClass]="{ 'opacity-50 cursor-not-allowed': page.page === 0 }"
-        >
-          Pregunta anterior
-        </button>
-        
-
-        <!-- 2) Siguiente pregunta / Corregir (tu botón principal) -->
-        @if (!(isCorrected && isLastQuestion())) {
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-            (click)="handleButtonClick()"
-          >
-            {{ getButtonText() }}
-          </button>
-        }
-
-        <!-- 3) Finalizar repaso -->
-        <button
-          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          (click)="openFinishReviewModal()"
-        >
-          Finalizar repaso
-        </button>
-
-      </div>
-    </div>
-
-
-
-    <!-------------------- Modal de reporte ----------------->
-    <div
-      id="reportModal"
-      class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-    >
-      <div class="bg-white p-8 rounded-lg">
-        <h2 class="text-xl mb-4 font-bold">
-          Indique el motivo de reportar esta pregunta.
-        </h2>
-        <textarea
-          id="reportReason"
-          class="w-full p-2 border rounded-lg resize-none"
-          rows="5"
-          placeholder="Escriba aquí el motivo..."
-        ></textarea>
-        <div class="flex justify-end mt-4">
-          <button
-            class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-4 py-2 mr-2"
-            (click)="sendReport()"
-          >
-            Enviar Reporte
-          </button>
-          <button
-            class="text-gray-600 bg-gray-200 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2"
-            (click)="closeModal()"
-          >
-            Cancelar
-          </button>
+        <div class="review-progress-copy">
+          <span>Tu progreso</span>
+          <strong>{{ progress() | number:'1.0-0' }}% completado</strong>
+        </div>
+        <div
+          class="review-progress-track"
+          role="progressbar"
+          aria-label="Progreso del repaso"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [attr.aria-valuenow]="progress()">
+          <span class="review-progress-bar" [style.width.%]="progress()"></span>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-------------------- Modal finalizar repaso ----------------->
+    <section class="review-content">
+      <div class="review-container review-question-container">
+        <article
+          *ngFor="let question of examQuestion.slice(page.first, page.first + questionsPerPage); let i = index"
+          class="review-question-card">
+          <header class="review-question-header">
+            <div class="review-question-label">
+              <span>Pregunta</span>
+              <strong>{{ page.page * questionsPerPage + i + 1 | number:'2.0-0' }}</strong>
+              @if (isCorrected) {
+                <span
+                  class="review-result-badge"
+                  [class.review-result-correct]="userResponses[page.page * questionsPerPage + i].optionSelected === question.correctAnswer"
+                  [class.review-result-wrong]="userResponses[page.page * questionsPerPage + i].optionSelected !== question.correctAnswer">
+                  <i
+                    class="fa-solid"
+                    [ngClass]="userResponses[page.page * questionsPerPage + i].optionSelected === question.correctAnswer ? 'fa-circle-check' : 'fa-circle-xmark'"></i>
+                  {{ userResponses[page.page * questionsPerPage + i].optionSelected === question.correctAnswer ? 'Respuesta correcta' : 'Respuesta incorrecta' }}
+                </span>
+              }
+            </div>
+
+            <div class="review-question-tools">
+              @if (isCorrected) {
+                <button
+                  type="button"
+                  class="review-icon-button"
+                  [class.review-icon-button-active]="question.showJustification"
+                  (click)="toggleJustification(question)"
+                  [attr.aria-expanded]="question.showJustification"
+                  [title]="question.showJustification ? 'Ocultar explicación' : 'Ver explicación'"
+                  [attr.aria-label]="question.showJustification ? 'Ocultar explicación' : 'Ver explicación'">
+                  <i class="fa-solid fa-circle-info"></i>
+                </button>
+              }
+
+              <button
+                type="button"
+                class="review-icon-button review-icon-button-report"
+                (click)="openModal(question.id)"
+                title="Reportar pregunta"
+                aria-label="Reportar pregunta">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </button>
+
+              <button
+                type="button"
+                class="review-icon-button"
+                [class.review-icon-button-saved]="isQuestionSaved(question.id)"
+                (click)="questionSaved(question.id)"
+                [title]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'"
+                [attr.aria-label]="isQuestionSaved(question.id) ? 'Quitar pregunta guardada' : 'Guardar pregunta'">
+                <i class="fa-regular fa-bookmark"></i>
+              </button>
+            </div>
+          </header>
+
+          <div class="review-question-body">
+            <h2 [innerHTML]="page.page * questionsPerPage + i + 1 + '. ' + question.title"></h2>
+            <div class="review-question-divider"></div>
+
+            <ul class="review-answer-list">
+              <ng-container *ngFor="let respuesta of question.respuestas">
+                @if (respuesta !== '') {
+                  <li
+                    class="review-answer"
+                    [class.review-answer-selected]="!isCorrected && userResponses[page.page * questionsPerPage + i].optionSelected === respuesta"
+                    [class.review-answer-correct]="isCorrected && respuesta === question.correctAnswer"
+                    [class.review-answer-wrong]="isCorrected && userResponses[page.page * questionsPerPage + i].optionSelected === respuesta && respuesta !== question.correctAnswer">
+                    <label>
+                      <input
+                        type="radio"
+                        [(ngModel)]="userResponses[page.page * questionsPerPage + i].optionSelected"
+                        [value]="respuesta"
+                        (change)="onSelectAnswer(page.page * questionsPerPage + i, respuesta)"
+                        [disabled]="isCorrected" />
+                      <span class="review-radio-mark" aria-hidden="true"></span>
+                      <span class="review-answer-text">{{ respuesta }}</span>
+
+                      @if (isCorrected && respuesta === question.correctAnswer) {
+                        <span class="review-answer-status review-answer-status-correct">
+                          <i class="fa-solid fa-check"></i>
+                          Correcta
+                        </span>
+                      } @else if (isCorrected && userResponses[page.page * questionsPerPage + i].optionSelected === respuesta) {
+                        <span class="review-answer-status review-answer-status-wrong">
+                          <i class="fa-solid fa-xmark"></i>
+                          Tu respuesta
+                        </span>
+                      }
+                    </label>
+                  </li>
+                }
+              </ng-container>
+            </ul>
+
+            @if (question.showJustification) {
+              @if (isSubscribed) {
+                @if (question.justification && question.justification.trim().length > 0) {
+                  <div class="review-explanation">
+                    <div class="review-explanation-heading">
+                      <span><i class="fa-solid fa-lightbulb"></i></span>
+                      <div>
+                        <strong>Explicación de la respuesta</strong>
+                        <small>Comprueba el razonamiento y refuerza el concepto.</small>
+                      </div>
+                    </div>
+                    <div class="review-explanation-text">
+                      <app-text-sanitizer [text]="question.justification"></app-text-sanitizer>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="review-notice review-notice-warning">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Esta pregunta todavía no tiene asociada una explicación. Seguimos trabajando en ello.</span>
+                  </div>
+                }
+              } @else {
+                <div class="review-notice review-notice-premium">
+                  <i class="fa-solid fa-lock"></i>
+                  <span>Para consultar la explicación de la respuesta correcta necesitas una suscripción Premium.</span>
+                </div>
+              }
+            }
+          </div>
+        </article>
+
+        <nav class="review-actions" aria-label="Navegación del repaso">
+          <button
+            type="button"
+            class="review-button review-button-secondary"
+            (click)="previousQuestion()"
+            [disabled]="page.page === 0">
+            <i class="fa-solid fa-arrow-left"></i>
+            Pregunta anterior
+          </button>
+
+          <div class="review-actions-right">
+            <button
+              type="button"
+              class="review-button review-button-finish"
+              (click)="openFinishReviewModal()">
+              <i class="fa-solid fa-flag-checkered"></i>
+              Finalizar repaso
+            </button>
+
+            @if (!(isCorrected && isLastQuestion())) {
+              <button
+                type="button"
+                class="review-button review-button-primary"
+                (click)="handleButtonClick()">
+                {{ getButtonText() }}
+                <i class="fa-solid" [ngClass]="isCorrected ? 'fa-arrow-right' : 'fa-check'"></i>
+              </button>
+            }
+          </div>
+        </nav>
+      </div>
+    </section>
+  </main>
+
   <div
-    id="finishReviewModal"
-    class="modal hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-  >
-    <div class="bg-white p-8 rounded-lg max-w-md w-full">
-      <h2 class="text-xl mb-4 font-bold">
-        ¿Seguro que quieres finalizar el repaso?
-      </h2>
-      <p class="text-gray-600">
-        Finalizará el repaso con las preguntas realizadas hasta ahora.
-      </p>
+    id="reportModal"
+    class="review-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="review-report-title">
+    <div class="review-modal-overlay" (click)="closeModal()"></div>
+    <div class="review-modal-card">
+      <button type="button" class="review-modal-close" (click)="closeModal()" aria-label="Cerrar modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <span class="review-modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+      <span class="review-modal-kicker">Ayúdanos a mejorar</span>
+      <h2 id="review-report-title">Reportar esta pregunta</h2>
+      <p>Cuéntanos qué problema has encontrado y lo revisaremos lo antes posible.</p>
 
-      <div class="flex justify-center mt-6">
-        <button
-          class="text-gray-600 bg-gray-200 hover:bg-gray-300 border border-gray-300 focus:outline-none font-medium rounded-lg px-4 py-2 mr-2"
-          (click)="closeFinishReviewModal()"
-        >
-          Cancelar
-        </button>
+      <label for="reportReason">Motivo del reporte</label>
+      <textarea
+        id="reportReason"
+        rows="5"
+        placeholder="Describe brevemente el error..."></textarea>
 
-        <button
-          class="text-white bg-primaryColor hover:bg-yellow-600 border border-primaryColor focus:outline-none font-medium rounded-lg px-5 py-2.5"
-          (click)="confirmFinishReview()"
-        >
-          Finalizar repaso
+      <div class="review-modal-actions">
+        <button type="button" class="review-button review-button-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="button" class="review-button review-button-primary" (click)="sendReport()">
+          Enviar reporte
+          <i class="fa-solid fa-paper-plane"></i>
         </button>
       </div>
     </div>
   </div>
 
+  <div
+    id="finishReviewModal"
+    class="review-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="finish-review-title">
+    <div class="review-modal-overlay" (click)="closeFinishReviewModal()"></div>
+    <div class="review-modal-card review-finish-modal-card">
+      <button type="button" class="review-modal-close" (click)="closeFinishReviewModal()" aria-label="Cerrar modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <span class="review-modal-icon"><i class="fa-solid fa-flag-checkered"></i></span>
+      <span class="review-modal-kicker">Cerrar sesión de estudio</span>
+      <h2 id="finish-review-title">¿Quieres finalizar el repaso?</h2>
+      <p>Guardaremos el resultado de las preguntas realizadas hasta ahora y podrás consultar tu resumen.</p>
+
+      <div class="review-finish-summary">
+        <span><i class="fa-solid fa-list-check"></i> {{ answeredCount }} respondidas</span>
+        <span><i class="fa-solid fa-layer-group"></i> {{ examQuestion.length }} totales</span>
+      </div>
+
+      <div class="review-modal-actions">
+        <button type="button" class="review-button review-button-secondary" (click)="closeFinishReviewModal()">Seguir repasando</button>
+        <button type="button" class="review-button review-button-primary" (click)="confirmFinishReview()">
+          Finalizar repaso
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

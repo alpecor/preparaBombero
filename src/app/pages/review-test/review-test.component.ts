@@ -11,8 +11,7 @@ import { TextSanitizerComponent } from '../../components/text-sanitizer/text-san
   selector: 'app-review-test',
   standalone: true,
   imports: [PaginatorModule, CommonModule, NgOptimizedImage, TextSanitizerComponent],
-  templateUrl: './review-test.component.html',
-  styleUrl: './review-test.component.css'
+  templateUrl: './review-test.component.html'
 })
 export class ReviewTestComponent {
 
