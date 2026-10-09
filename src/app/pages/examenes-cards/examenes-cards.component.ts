@@ -74,7 +74,7 @@ export class ExamenesCardsComponent {
       return `Provincias de ${this.community}`;
     }
 
-    return 'Encuentra tu próximo examen';
+    return 'Buscador de exámenes';
   }
 
   getPageDescription(): string {

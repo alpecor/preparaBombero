@@ -393,7 +393,7 @@
                         <span
                           class="home-topic-question-count"
                           [class.home-topic-question-count-limited]="(topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount)"
-                          [attr.title]="(topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount) ? 'Tienes acceso a ' + (topic.availableQuizCount ?? topic.quizCount) + ' preguntas de ' + (topic.totalQuizCount ?? topic.quizCount) : null"
+                          [attr.title]="(topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount) ? (topic.availableQuizCount ?? topic.quizCount) + ' preguntas oficiales · ' + (topic.totalQuizCount ?? topic.quizCount) + ' en total con los refuerzos' : null"
                         >
                           {{ (topic.availableQuizCount ?? topic.quizCount) | number:'1.0-0' }} <small>preg.</small>
                           @if ((topic.totalQuizCount ?? topic.quizCount) > (topic.availableQuizCount ?? topic.quizCount)) {

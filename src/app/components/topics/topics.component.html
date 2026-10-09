@@ -40,7 +40,7 @@
       <span
         class="topic-question-count"
         [class.topic-question-count-limited]="(item.totalQuizCount ?? item.quizCount) > (item.availableQuizCount ?? item.quizCount)"
-        [attr.title]="(item.totalQuizCount ?? item.quizCount) > (item.availableQuizCount ?? item.quizCount) ? 'Tienes acceso a ' + (item.availableQuizCount ?? item.quizCount) + ' preguntas de ' + (item.totalQuizCount ?? item.quizCount) : null"
+        [attr.title]="(item.totalQuizCount ?? item.quizCount) > (item.availableQuizCount ?? item.quizCount) ? (item.availableQuizCount ?? item.quizCount) + ' preguntas oficiales · ' + (item.totalQuizCount ?? item.quizCount) + ' en total con los refuerzos' : null"
       >
         {{ (item.availableQuizCount ?? item.quizCount) | number:'1.0-0' }} <small>preg.</small>
         @if ((item.totalQuizCount ?? item.quizCount) > (item.availableQuizCount ?? item.quizCount)) {
