@@ -1,3 +1,47 @@
+.topic-tree-row {
+  gap: 1rem;
+  min-height: 3.15rem;
+}
+
+.topic-tree-main {
+  min-width: 0;
+}
+
+.topic-tree-expand,
+.topic-tree-expand-placeholder {
+  display: grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  flex: 0 0 1.45rem;
+  place-items: center;
+}
+
+.topic-tree-expand {
+  border: 0;
+  border-radius: .35rem;
+  background: transparent;
+  color: #9a6505;
+  cursor: pointer;
+  font-size: .62rem;
+  transition: background .2s, box-shadow .2s;
+}
+
+.topic-tree-expand:hover,
+.topic-tree-expand:focus-visible {
+  background: #fff2d2;
+  outline: none;
+}
+
+.topic-tree-expand:focus-visible {
+  box-shadow: 0 0 0 2px rgba(201, 133, 8, .22);
+}
+
+.topic-tree-children {
+  margin: 0 0 .45rem .72rem;
+  border-left: 2px solid #e8bc57;
+  padding-left: .72rem;
+}
+
 .topic-inline-premium-notice {
   display: inline-flex;
   align-items: center;

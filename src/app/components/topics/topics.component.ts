@@ -44,6 +44,7 @@ export class topicsComponent implements OnInit {
     let topicSelected = this.localStorageService.getItem("topicsSelected") ?? [];
     if(this.topics.length > 0){
       this.topics = this.topics.map((x:any) =>{
+          x.expanded = false;
           if (topicSelected.length > 0) {
               const topic = topicSelected.filter((y: any) => x.id == y.id); // Asegúrate de que la comparación sea por 'id'
               if (topic.length > 0) {
@@ -55,6 +56,11 @@ export class topicsComponent implements OnInit {
           return x;
       });
     }
+  }
+
+  toggleTopic(topic: any, event: Event) {
+    event.stopPropagation();
+    topic.expanded = !topic.expanded;
   }
 
   selectedTopic(topicId: number, event: any) {

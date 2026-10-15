@@ -16,10 +16,24 @@
   <span>{{ toastMessage }}</span>
 </div>
 
-@for (item of topics; track $index) {
-<div [ngStyle]="{ 'margin-left': margin + 'rem' }" class="mt-1">
-  <div class="flex justify-between items-center py-2 border-b border-gray-200">
-    <div class="mb-1 flex items-center">
+@for (item of topics; track item.id) {
+<div [ngStyle]="{ 'margin-left': margin + 'rem' }" class="topic-tree-node mt-1">
+  <div class="topic-tree-row flex justify-between items-center py-2 border-b border-gray-200">
+    <div class="topic-tree-main mb-1 flex items-center">
+      @if (item.topics?.length > 0) {
+        <button
+          type="button"
+          class="topic-tree-expand"
+          (click)="toggleTopic(item, $event)"
+          [attr.aria-expanded]="item.expanded === true"
+          [attr.aria-controls]="'topic-children-' + item.id"
+          [attr.aria-label]="item.expanded ? 'Ocultar subtemas' : 'Mostrar subtemas'"
+          [title]="item.expanded ? 'Ocultar subtemas' : 'Mostrar subtemas'">
+          <i class="fa-solid" [ngClass]="item.expanded ? 'fa-chevron-down' : 'fa-chevron-right'" aria-hidden="true"></i>
+        </button>
+      } @else {
+        <span class="topic-tree-expand-placeholder" aria-hidden="true"></span>
+      }
       @if (isAuthenticated) {
         <input
           [checked]="item.selected"
@@ -77,17 +91,23 @@
       }
     </div>
   </div>
+  @if (item.topics?.length > 0) {
+    <div
+      class="topic-tree-children"
+      [id]="'topic-children-' + item.id"
+      [hidden]="!item.expanded">
+      <app-topics
+        [margin]="0"
+        [topics]="item.topics"
+        [isSubscribed]="isSubscribed"
+        [isAuthenticated]="isAuthenticated"
+        (pdfPreview)="showPdfPreview($event)"
+        (topicsSelectionChange)="topicsSelectionChange.emit()"
+      />
+    </div>
+  }
 </div>
-@if (item.topics?.length > 0) {
-<app-topics
-  [margin]="margin + 2"
-  [topics]="item.topics"
-  [isSubscribed]="isSubscribed"
-  [isAuthenticated]="isAuthenticated"
-  (pdfPreview)="showPdfPreview($event)"
-  (topicsSelectionChange)="topicsSelectionChange.emit()"
-/>
-} }
+}
 
 @if (showExamConfigModal) {
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
